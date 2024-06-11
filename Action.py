@@ -1,4 +1,4 @@
-import random
+import numpy as np
 
 def act(observation):
     '''
@@ -23,28 +23,36 @@ def act(observation):
     Returns:
         Integer  : The action to be taken.
     '''
-    # Extracting the necessary components from the observation
-    x_pos = observation[0]
-    y_pos = observation[1]
-    x_vel = observation[2]
-    y_vel = observation[3]
-    angle = observation[4]
-    angular_vel = observation[5]
-    left_contact = observation[6]
-    right_contact = observation[7]
+    x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
+    
+    if left_contact or right_contact:
+        return 3  # Do nothing if we are in contact with lander.
+    
+    # Combining some threshold values
+    THRESHOLD_ANGLE = 0.1
+    THRESHOLD_VELOCITY_X = 0.5
+    THRESHOLD_VELOCITY_Y = -0.5  # descending threshold
 
-    # Implementing decision logic based on the observed data
-    if y_vel < -0.5:  # If the lander is falling quickly
-        return 2  # Fire the main engine to slow descent
-    if abs(angle) > 0.1:  # If the lander is tilted
-        if angle > 0:  # Tilted to the right
-            return 0  # Fire left engine to balance
-        else:  # Tilted to the left
-            return 1  # Fire right engine to balance
-    if x_vel > 0.5:  # If moving too fast horizontally right
-        return 0  # Fire left engine to slow down
-    if x_vel < -0.5:  # If moving too fast horizontally left
-        return 1  # Fire right engine to slow down
-    if y_vel > -0.3 and y_pos > 0.5:  # If the lander is not falling too fast and is still high
-        return 3  # Do nothing or slight adjustments
-    return 2  # Otherwise, fire the main engine to have a controlled descent
+    # Maintain stability; avoid large angles
+    if abs(angle) > THRESHOLD_ANGLE:
+        if angle > 0:
+            return 0  # Fire left engine to balance right tilt
+        else:
+            return 1  # Fire right engine to balance left tilt
+    
+    # Control Horizontal Velocity
+    if x_vel > THRESHOLD_VELOCITY_X:
+        return 0  # Move left to reduce rightward velocity
+    if x_vel < -THRESHOLD_VELOCITY_X:
+        return 1  # Move right to reduce leftward velocity
+    
+    # Ensure the craft descends under controlled speed
+    if y_vel < THRESHOLD_VELOCITY_Y:
+        return 2  # Fire main engine to slow descent
+
+    # Controlled descent part - reduce engine fires
+    if y_vel > -0.3 and y_pos > 0.5: 
+        return 3  # Glide down when there's enough height
+    
+    # Default action to control descent rate
+    return 2  # Fire main engine
