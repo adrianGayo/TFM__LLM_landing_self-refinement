@@ -1,4 +1,4 @@
-import random
+import numpy as np
 
 def act(observation):
     '''
@@ -23,4 +23,8 @@ def act(observation):
     Returns:
         Integer  : The action to be taken.
     '''
-    return random.randint(0, 3)
+    ## Your improved code here
+    if observation[1] > 0:
+        return 2
+    else:
+        return 0
