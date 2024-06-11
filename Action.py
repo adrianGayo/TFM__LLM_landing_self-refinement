@@ -1,5 +1,3 @@
-import random
-
 def act(observation):
     '''
     The function that codifies the action to be taken in each instant of time.
@@ -23,4 +21,18 @@ def act(observation):
     Returns:
         Integer  : The action to be taken.
     '''
-    return random.randint(0, 3)
+    X_position = observation[0]
+    Y_position = observation[1]
+    X_velocity = observation[2]
+    Y_velocity = observation[3]
+    Angle = observation[4]
+    Angular_velocity = observation[5]
+    Left_contact_sensor = observation[6]
+    Right_contact_sensor = observation[7]
+    # Example improvement: consider the X velocity in the decision making
+    if X_velocity > 0.5:
+        return 1  # Move left
+    elif X_velocity < -0.5:
+        return 3  # Move right
+    else:
+        return 2  # Move forward
