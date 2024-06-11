@@ -1,0 +1,494 @@
+2024-06-05 17:47:07,229 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-05 17:47:07,409 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-05 17:47:07,649 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/messages "HTTP/1.1 200 OK"
+2024-06-05 17:47:07,765 - INFO - Iteration: 1
+2024-06-05 17:47:08,173 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs "HTTP/1.1 200 OK"
+2024-06-05 17:47:08,406 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:47:08,409 - INFO - Status: queued
+2024-06-05 17:47:08,638 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:47:28,644 - INFO - Status: queued
+2024-06-05 17:47:28,979 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:48:20,692 - INFO - Status: in_progress
+2024-06-05 17:48:20,958 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:48:50,962 - INFO - Status: requires_action
+2024-06-05 17:48:51,258 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:49:21,261 - INFO - Status: requires_action
+2024-06-05 17:49:21,633 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:49:51,635 - INFO - Status: requires_action
+2024-06-05 17:49:51,901 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:50:21,904 - INFO - Status: requires_action
+2024-06-05 17:50:22,169 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:50:52,173 - INFO - Status: requires_action
+2024-06-05 17:50:52,497 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:51:22,501 - INFO - Status: requires_action
+2024-06-05 17:51:22,816 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:51:52,820 - INFO - Status: requires_action
+2024-06-05 17:51:53,102 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_R2IH44cK3qxjxt2itAgjnrbD/runs/run_AmaRihPYzOh0VlPUqZxXEWtW "HTTP/1.1 200 OK"
+2024-06-05 17:53:13,275 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-05 17:53:13,485 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-05 17:53:13,721 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/messages "HTTP/1.1 200 OK"
+2024-06-05 17:53:13,850 - INFO - Iteration: 1
+2024-06-05 17:53:14,324 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs "HTTP/1.1 200 OK"
+2024-06-05 17:53:14,588 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:53:14,590 - INFO - Status: queued
+2024-06-05 17:53:14,811 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:53:34,814 - INFO - Status: queued
+2024-06-05 17:53:35,186 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:53:55,190 - INFO - Status: requires_action
+2024-06-05 17:53:55,191 - INFO - Arguments: {'code': 'import random\n\ndef act(observation):\n    return random.randint(0, 3)', 'filename': 'Action.py'}
+2024-06-05 17:53:55,191 - INFO - 
+Codigo generado:
+import random
+
+def act(observation):
+    return random.randint(0, 3)
+2024-06-05 17:54:00,827 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM/submit_tool_outputs "HTTP/1.1 200 OK"
+2024-06-05 17:54:00,828 - INFO - Compilación exitosa.
+2024-06-05 17:54:00,829 - INFO - Status: requires_action
+2024-06-05 17:54:01,032 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:54:21,036 - INFO - Status: in_progress
+2024-06-05 17:54:21,311 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:54:41,314 - INFO - Status: in_progress
+2024-06-05 17:54:41,552 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:55:01,555 - INFO - Status: requires_action
+2024-06-05 17:55:01,859 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:55:21,864 - INFO - Status: requires_action
+2024-06-05 17:55:22,154 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:55:42,159 - INFO - Status: requires_action
+2024-06-05 17:55:42,444 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:56:02,447 - INFO - Status: requires_action
+2024-06-05 17:56:02,750 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:56:22,753 - INFO - Status: requires_action
+2024-06-05 17:56:23,006 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:56:43,010 - INFO - Status: requires_action
+2024-06-05 17:56:43,299 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:57:03,303 - INFO - Status: requires_action
+2024-06-05 17:57:03,594 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:57:23,597 - INFO - Status: requires_action
+2024-06-05 17:57:23,875 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:57:43,877 - INFO - Status: requires_action
+2024-06-05 17:57:44,149 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:58:04,152 - INFO - Status: requires_action
+2024-06-05 17:58:04,436 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:58:24,438 - INFO - Status: requires_action
+2024-06-05 17:58:24,746 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:58:44,750 - INFO - Status: requires_action
+2024-06-05 17:58:45,032 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 17:59:05,036 - INFO - Status: requires_action
+2024-06-05 17:59:05,379 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_gziusAaWIsIDA8rbtvDAnJMB/runs/run_0yc8YUhVq9mimN9PV6KLk5cM "HTTP/1.1 200 OK"
+2024-06-05 18:02:46,827 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-05 18:02:47,026 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-05 18:02:47,289 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/messages "HTTP/1.1 200 OK"
+2024-06-05 18:02:47,419 - INFO - Iteration: 1
+2024-06-05 18:02:47,898 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/runs "HTTP/1.1 200 OK"
+2024-06-05 18:02:48,130 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/runs/run_16Fy7Ti2Y0CQMYzh0wB8BIIm "HTTP/1.1 200 OK"
+2024-06-05 18:02:48,132 - INFO - Status: queued
+2024-06-05 18:02:48,368 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/runs/run_16Fy7Ti2Y0CQMYzh0wB8BIIm "HTTP/1.1 200 OK"
+2024-06-05 18:03:08,370 - INFO - Status: queued
+2024-06-05 18:03:08,738 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/runs/run_16Fy7Ti2Y0CQMYzh0wB8BIIm "HTTP/1.1 200 OK"
+2024-06-05 18:03:28,743 - INFO - Status: requires_action
+2024-06-05 18:03:28,745 - INFO - Arguments: {'code': 'import random\n\n\ndef act(observation):\n    """\n    The function that codifies the action to be taken in each instant of time.\n\n    Args:\n        observation (array):\n            "description": "The state of the environment after the action is taken.",\n            "positions": {  \n                "0": "X position",\n                "1": "Y position",\n                "2": "X velocity",\n                "3": "Y velocity",\n                "4": "Angle",\n                "5": "Angular velocity",\n                "6": "Left contact sensor",\n                "7": "Right contact sensor"\n            },\n            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],\n            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]\n\n    Returns:\n        Integer  : The action to be taken.\n    """\n    x_pos = observation[0]\n    y_pos = observation[1]\n    x_vel = observation[2]\n    y_vel = observation[3]\n    angle = observation[4]\n    angular_vel = observation[5]\n    left_contact = observation[6]\n    right_contact = observation[7]\n\n    if left_contact == 1 and right_contact == 1:\n        return 0  # Do nothing, it has landed\n\n    if y_pos > 1.0:\n        if abs(x_vel) > 0.5:\n            return 3 if x_vel > 0 else 2  # Correct x velocity\n        if abs(angle) > 0.1:\n            return 1 if angle > 0 else 0  # Correct angle\n        if y_vel < -0.5:\n            return 1  # Reduce descent rate\n\n    if y_pos <= 1.0:\n        if abs(x_vel) > 0.5:\n            return 3 if x_vel > 0 else 2  # Correct x velocity\n        if abs(y_vel) > 0.5:\n            return 1 if y_vel < 0 else 0  # Correct y velocity\n        if abs(angle) > 0.1:\n            return 1 if angle > 0 else 0  # Correct angle\n\n    return 0  # Default action\n', 'filename': 'Action.py'}
+2024-06-05 18:03:28,746 - INFO - 
+Codigo generado:
+import random
+
+
+def act(observation):
+    """
+    The function that codifies the action to be taken in each instant of time.
+
+    Args:
+        observation (array):
+            "description": "The state of the environment after the action is taken.",
+            "positions": {  
+                "0": "X position",
+                "1": "Y position",
+                "2": "X velocity",
+                "3": "Y velocity",
+                "4": "Angle",
+                "5": "Angular velocity",
+                "6": "Left contact sensor",
+                "7": "Right contact sensor"
+            },
+            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
+            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
+
+    Returns:
+        Integer  : The action to be taken.
+    """
+    x_pos = observation[0]
+    y_pos = observation[1]
+    x_vel = observation[2]
+    y_vel = observation[3]
+    angle = observation[4]
+    angular_vel = observation[5]
+    left_contact = observation[6]
+    right_contact = observation[7]
+
+    if left_contact == 1 and right_contact == 1:
+        return 0  # Do nothing, it has landed
+
+    if y_pos > 1.0:
+        if abs(x_vel) > 0.5:
+            return 3 if x_vel > 0 else 2  # Correct x velocity
+        if abs(angle) > 0.1:
+            return 1 if angle > 0 else 0  # Correct angle
+        if y_vel < -0.5:
+            return 1  # Reduce descent rate
+
+    if y_pos <= 1.0:
+        if abs(x_vel) > 0.5:
+            return 3 if x_vel > 0 else 2  # Correct x velocity
+        if abs(y_vel) > 0.5:
+            return 1 if y_vel < 0 else 0  # Correct y velocity
+        if abs(angle) > 0.1:
+            return 1 if angle > 0 else 0  # Correct angle
+
+    return 0  # Default action
+
+2024-06-05 18:03:29,854 - ERROR - Error: tuple index out of range
+Traceback (most recent call last):
+  File "C:\Users\adria\AppData\Local\Temp\ipykernel_6396\23471256.py", line 57, in create_and_run_llm_loop
+    logs = lunar_lander(n_games=2, display=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\adria\AppData\Local\Temp\ipykernel_6396\4091027833.py", line 22, in lunar_lander
+    action = Action.act(observation)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\OneDrive\Escritorio\master\Segundo cuatri\Bloque 1\Aprendizaje por Refuerzo y Técnicas Generativas\Aprendizaje por refuerzo\Practica_DQN\LLM_SelfPlay\Action.py", line 29, in act
+    x_vel = observation[2]
+            ~~~~~~~~~~~^^^
+IndexError: tuple index out of range
+2024-06-05 18:03:30,228 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/runs/run_16Fy7Ti2Y0CQMYzh0wB8BIIm/submit_tool_outputs "HTTP/1.1 200 OK"
+2024-06-05 18:03:30,231 - ERROR - Error: tuple index out of range.
+2024-06-05 18:03:30,232 - INFO - Status: requires_action
+2024-06-05 18:03:30,459 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/runs/run_16Fy7Ti2Y0CQMYzh0wB8BIIm "HTTP/1.1 200 OK"
+2024-06-05 18:04:00,461 - INFO - Status: in_progress
+2024-06-05 18:04:00,715 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/runs/run_16Fy7Ti2Y0CQMYzh0wB8BIIm "HTTP/1.1 200 OK"
+2024-06-05 18:04:30,719 - INFO - Status: requires_action
+2024-06-05 18:04:30,991 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/runs/run_16Fy7Ti2Y0CQMYzh0wB8BIIm "HTTP/1.1 200 OK"
+2024-06-05 18:05:00,995 - INFO - Status: requires_action
+2024-06-05 18:05:01,320 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_9l5d6NYQLC5prtoSGf7nDUtM/runs/run_16Fy7Ti2Y0CQMYzh0wB8BIIm "HTTP/1.1 200 OK"
+2024-06-05 18:16:46,336 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-05 18:16:46,556 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-05 18:16:46,802 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_UYefuKvWYet2aYIKglXdPGiu/messages "HTTP/1.1 200 OK"
+2024-06-05 18:16:46,914 - INFO - Iteration: 1
+2024-06-05 18:16:47,340 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_UYefuKvWYet2aYIKglXdPGiu/runs "HTTP/1.1 200 OK"
+2024-06-05 18:16:47,546 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_UYefuKvWYet2aYIKglXdPGiu/runs/run_v2XwIwt3ZMaUuhVJyKQpN4T9 "HTTP/1.1 200 OK"
+2024-06-05 18:16:47,548 - INFO - Status: queued
+2024-06-05 18:16:47,752 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_UYefuKvWYet2aYIKglXdPGiu/runs/run_v2XwIwt3ZMaUuhVJyKQpN4T9 "HTTP/1.1 200 OK"
+2024-06-05 18:17:07,755 - INFO - Status: queued
+2024-06-05 18:17:08,023 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_UYefuKvWYet2aYIKglXdPGiu/runs/run_v2XwIwt3ZMaUuhVJyKQpN4T9 "HTTP/1.1 200 OK"
+2024-06-05 18:17:28,027 - INFO - Status: queued
+2024-06-05 18:17:28,315 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_UYefuKvWYet2aYIKglXdPGiu/runs/run_v2XwIwt3ZMaUuhVJyKQpN4T9 "HTTP/1.1 200 OK"
+2024-06-05 18:17:48,323 - INFO - Status: requires_action
+2024-06-05 18:20:28,934 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-05 18:20:29,127 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-05 18:20:29,349 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_DlEVGUwuIV58MHA16pxaWoI8/messages "HTTP/1.1 200 OK"
+2024-06-05 18:20:29,479 - INFO - Iteration: 1
+2024-06-05 18:20:29,880 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_DlEVGUwuIV58MHA16pxaWoI8/runs "HTTP/1.1 200 OK"
+2024-06-05 18:20:30,100 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_DlEVGUwuIV58MHA16pxaWoI8/runs/run_Fkde2ruDKmRubDxltZCV5RFp "HTTP/1.1 200 OK"
+2024-06-05 18:20:30,105 - INFO - Status: queued
+2024-06-05 18:20:30,329 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_DlEVGUwuIV58MHA16pxaWoI8/runs/run_Fkde2ruDKmRubDxltZCV5RFp "HTTP/1.1 200 OK"
+2024-06-05 18:20:50,333 - INFO - Status: queued
+2024-06-05 18:20:50,631 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_DlEVGUwuIV58MHA16pxaWoI8/runs/run_Fkde2ruDKmRubDxltZCV5RFp "HTTP/1.1 200 OK"
+2024-06-05 18:21:10,635 - INFO - Status: requires_action
+2024-06-05 18:21:10,636 - INFO - Arguments: {'code': 'import numpy as np\n\ndef act(observation):\n    """\n    The function that codifies the action to be taken in each instant of time.\n\n    Args:\n        observation (numpy.array):\n            "description": "The state of the environment after the action is taken.",\n            "positions": {  \n                "0": "X position",\n                "1": "Y position",\n                "2": "X velocity",\n                "3": "Y velocity",\n                "4": "Angle",\n                "5": "Angular velocity",\n                "6": "Left contact sensor",\n                "7": "Right contact sensor"\n            },\n            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],\n            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]\n\n    Returns:\n        Integer  : The action to be taken.\n    """\n    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation\n    if left_contact or right_contact:\n        return 0  # Do nothing since we have landed\n    if y_pos < 0.2 and abs(y_vel) < 0.3 and abs(x_vel) < 0.3 and abs(angle) < 0.1 and abs(ang_vel) < 0.1:\n        return 0  # Stable conditions for landing\n    if y_vel > -0.5:\n        return 2  # Apply main engine to slow down descent\n    if x_vel > 0.5:\n        return 3  # Fire right thruster to correct x velocity\n    elif x_vel < -0.5:\n        return 1  # Fire left thruster to correct x velocity\n    return 2  # Default action is to engage main engine', 'filename': 'Action.py'}
+2024-06-05 18:21:10,637 - INFO - 
+Codigo generado:
+import numpy as np
+
+def act(observation):
+    """
+    The function that codifies the action to be taken in each instant of time.
+
+    Args:
+        observation (numpy.array):
+            "description": "The state of the environment after the action is taken.",
+            "positions": {  
+                "0": "X position",
+                "1": "Y position",
+                "2": "X velocity",
+                "3": "Y velocity",
+                "4": "Angle",
+                "5": "Angular velocity",
+                "6": "Left contact sensor",
+                "7": "Right contact sensor"
+            },
+            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
+            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
+
+    Returns:
+        Integer  : The action to be taken.
+    """
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    if left_contact or right_contact:
+        return 0  # Do nothing since we have landed
+    if y_pos < 0.2 and abs(y_vel) < 0.3 and abs(x_vel) < 0.3 and abs(angle) < 0.1 and abs(ang_vel) < 0.1:
+        return 0  # Stable conditions for landing
+    if y_vel > -0.5:
+        return 2  # Apply main engine to slow down descent
+    if x_vel > 0.5:
+        return 3  # Fire right thruster to correct x velocity
+    elif x_vel < -0.5:
+        return 1  # Fire left thruster to correct x velocity
+    return 2  # Default action is to engage main engine
+2024-06-05 18:21:11,748 - ERROR - Error: cannot unpack non-iterable numpy.float32 object
+Traceback (most recent call last):
+  File "C:\Users\adria\AppData\Local\Temp\ipykernel_19220\23471256.py", line 57, in create_and_run_llm_loop
+    logs = lunar_lander(n_games=2, display=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\adria\AppData\Local\Temp\ipykernel_19220\960216760.py", line 22, in lunar_lander
+    action = Action.act(observation[0])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\OneDrive\Escritorio\master\Segundo cuatri\Bloque 1\Aprendizaje por Refuerzo y Técnicas Generativas\Aprendizaje por refuerzo\Practica_DQN\LLM_SelfPlay\Action.py", line 26, in act
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: cannot unpack non-iterable numpy.float32 object
+2024-06-05 18:21:12,150 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_DlEVGUwuIV58MHA16pxaWoI8/runs/run_Fkde2ruDKmRubDxltZCV5RFp/submit_tool_outputs "HTTP/1.1 200 OK"
+2024-06-05 18:21:12,151 - ERROR - Error: cannot unpack non-iterable numpy.float32 object.
+2024-06-05 18:21:12,151 - INFO - Status: requires_action
+2024-06-05 18:21:12,368 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_DlEVGUwuIV58MHA16pxaWoI8/runs/run_Fkde2ruDKmRubDxltZCV5RFp "HTTP/1.1 200 OK"
+2024-06-05 18:21:42,371 - INFO - Status: in_progress
+2024-06-05 18:21:42,672 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_DlEVGUwuIV58MHA16pxaWoI8/runs/run_Fkde2ruDKmRubDxltZCV5RFp "HTTP/1.1 200 OK"
+2024-06-05 18:29:37,593 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-05 18:29:37,807 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-05 18:29:38,027 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_K580Knl8FcNbyFebwA3G6tmq/messages "HTTP/1.1 200 OK"
+2024-06-05 18:29:38,156 - INFO - Iteration: 1
+2024-06-05 18:29:38,565 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_K580Knl8FcNbyFebwA3G6tmq/runs "HTTP/1.1 200 OK"
+2024-06-05 18:29:38,775 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_K580Knl8FcNbyFebwA3G6tmq/runs/run_51wKjqvOWWofmv3Au66ZB6Yy "HTTP/1.1 200 OK"
+2024-06-05 18:29:38,777 - INFO - Status: queued
+2024-06-05 18:29:38,981 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_K580Knl8FcNbyFebwA3G6tmq/runs/run_51wKjqvOWWofmv3Au66ZB6Yy "HTTP/1.1 200 OK"
+2024-06-05 18:29:58,983 - INFO - Status: queued
+2024-06-05 18:29:59,261 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_K580Knl8FcNbyFebwA3G6tmq/runs/run_51wKjqvOWWofmv3Au66ZB6Yy "HTTP/1.1 200 OK"
+2024-06-05 18:30:19,266 - INFO - Status: requires_action
+2024-06-05 18:30:19,268 - INFO - Arguments: {'tool_uses': [{'recipient_name': 'functions.store_code_in_file', 'parameters': {'code': "import random\nimport numpy as np\n\ndef act(observation):\n    '''\n    The function that codifies the action to be taken in each instant of time.\n\n    Args:\n        observation (numpy.array):\n            The state of the environment after the action is taken.\n            positions:     \n                0: X position\n                1: Y position\n                2: X velocity\n                3: Y velocity\n                4: Angle\n                5: Angular velocity\n                6: Left contact sensor\n                7: Right contact sensor\n            min_values: [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0]\n            max_values: [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]\n\n    Returns:\n        Integer: The action to be taken.\n    '''\n    x_pos, y_pos, x_vel, y_vel, angle, a_vel, l_contact, r_contact = observation\n\n    # Main engine - Fires downward pushing the ship up.\n    if y_vel < -0.1 or (y_pos < 1 and y_vel < 0):\n        return 2\n    # Left engine - Fires rightward pushing the ship left.\n    elif angle > 0.1 or x_pos > 0.5:\n        return 3\n    # Right engine - Fires leftward pushing the ship right.\n    elif angle < -0.1 or x_pos < -0.5:\n        return 1\n    # No action, the ship is stable.\n    else:\n        return 0\n", 'filename': 'Action.py'}}]}
+2024-06-05 18:30:47,600 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-05 18:30:47,808 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-05 18:30:48,033 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_8YDN7wyAbowlgP3CBUV6Izcs/messages "HTTP/1.1 200 OK"
+2024-06-05 18:30:48,155 - INFO - Iteration: 1
+2024-06-05 18:30:48,582 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_8YDN7wyAbowlgP3CBUV6Izcs/runs "HTTP/1.1 200 OK"
+2024-06-05 18:30:48,805 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_8YDN7wyAbowlgP3CBUV6Izcs/runs/run_TskqCvV7DeLJrDFhnUma6vap "HTTP/1.1 200 OK"
+2024-06-05 18:30:48,807 - INFO - Status: queued
+2024-06-05 18:30:49,033 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_8YDN7wyAbowlgP3CBUV6Izcs/runs/run_TskqCvV7DeLJrDFhnUma6vap "HTTP/1.1 200 OK"
+2024-06-05 18:31:09,036 - INFO - Status: queued
+2024-06-05 18:31:09,349 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_8YDN7wyAbowlgP3CBUV6Izcs/runs/run_TskqCvV7DeLJrDFhnUma6vap "HTTP/1.1 200 OK"
+2024-06-05 18:31:29,354 - INFO - Status: requires_action
+2024-06-05 18:31:55,798 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-05 18:31:56,044 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-05 18:31:56,311 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_Ls4msS3ixEjlZZs29x5TJRKP/messages "HTTP/1.1 200 OK"
+2024-06-05 18:31:56,450 - INFO - Iteration: 1
+2024-06-05 18:31:56,866 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_Ls4msS3ixEjlZZs29x5TJRKP/runs "HTTP/1.1 200 OK"
+2024-06-05 18:31:57,075 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Ls4msS3ixEjlZZs29x5TJRKP/runs/run_68LuV5yBHkXZvu0JbV4kmiyQ "HTTP/1.1 200 OK"
+2024-06-05 18:31:57,078 - INFO - Status: queued
+2024-06-05 18:31:57,287 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Ls4msS3ixEjlZZs29x5TJRKP/runs/run_68LuV5yBHkXZvu0JbV4kmiyQ "HTTP/1.1 200 OK"
+2024-06-05 18:32:17,293 - INFO - Status: queued
+2024-06-05 18:32:17,616 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Ls4msS3ixEjlZZs29x5TJRKP/runs/run_68LuV5yBHkXZvu0JbV4kmiyQ "HTTP/1.1 200 OK"
+2024-06-05 18:32:37,619 - INFO - Status: queued
+2024-06-05 18:32:37,867 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Ls4msS3ixEjlZZs29x5TJRKP/runs/run_68LuV5yBHkXZvu0JbV4kmiyQ "HTTP/1.1 200 OK"
+2024-06-05 18:32:57,871 - INFO - Status: queued
+2024-06-05 18:32:58,167 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Ls4msS3ixEjlZZs29x5TJRKP/runs/run_68LuV5yBHkXZvu0JbV4kmiyQ "HTTP/1.1 200 OK"
+2024-06-05 18:33:18,169 - INFO - Status: queued
+2024-06-05 18:33:18,476 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Ls4msS3ixEjlZZs29x5TJRKP/runs/run_68LuV5yBHkXZvu0JbV4kmiyQ "HTTP/1.1 200 OK"
+2024-06-05 18:33:38,481 - INFO - Status: queued
+2024-06-05 18:33:38,729 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Ls4msS3ixEjlZZs29x5TJRKP/runs/run_68LuV5yBHkXZvu0JbV4kmiyQ "HTTP/1.1 200 OK"
+2024-06-05 18:33:58,733 - INFO - Status: failed
+2024-06-06 13:46:05,141 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-06 13:46:05,418 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-06 13:46:05,760 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_8aICr0z18JLK73YmlDimfK9o/messages "HTTP/1.1 200 OK"
+2024-06-06 13:46:05,874 - INFO - Iteration: 1
+2024-06-06 13:46:06,679 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_8aICr0z18JLK73YmlDimfK9o/runs "HTTP/1.1 200 OK"
+2024-06-06 13:46:06,982 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_8aICr0z18JLK73YmlDimfK9o/runs/run_WJsX5SS7aNAB5fxcCenSUWr3 "HTTP/1.1 200 OK"
+2024-06-06 13:46:06,987 - INFO - Status: queued
+2024-06-06 13:46:07,259 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_8aICr0z18JLK73YmlDimfK9o/runs/run_WJsX5SS7aNAB5fxcCenSUWr3 "HTTP/1.1 200 OK"
+2024-06-06 13:46:27,262 - INFO - Status: queued
+2024-06-06 13:46:27,670 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_8aICr0z18JLK73YmlDimfK9o/runs/run_WJsX5SS7aNAB5fxcCenSUWr3 "HTTP/1.1 200 OK"
+2024-06-06 13:46:47,724 - INFO - Status: requires_action
+2024-06-06 13:46:47,724 - INFO - Arguments: {'code': 'def act(observation):\n    " The function that codifies the action to be taken in each instant of time.\n\n    Args:\n        observation (numpy.array):\n            "description": "The state of the environment after the action is taken.",\n            "positions": {  \n                "0": "X position",\n                "1": "Y position",\n                "2": "X velocity",\n                "3": "Y velocity",\n                "4": "Angle",\n                "5": "Angular velocity",\n                "6": "Left contact sensor",\n                "7": "Right contact sensor"\n            },\n            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],\n            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]\n\n    Returns:\n        Integer  : The action to be taken.\n    "\n    # Improved code based on analysis of the logs\n    # This code aims to maximize the score by making better decisions based on previous observations\n    if observation[3] < -0.5:\n        return 3\n    elif observation[2] > 0:\n        return 2\n    elif observation[5] < -0.2:\n        return 1\n    else:\n        return 0', 'filename': 'Action.py'}
+2024-06-06 13:46:47,726 - INFO - 
+Codigo generado:
+def act(observation):
+    " The function that codifies the action to be taken in each instant of time.
+
+    Args:
+        observation (numpy.array):
+            "description": "The state of the environment after the action is taken.",
+            "positions": {  
+                "0": "X position",
+                "1": "Y position",
+                "2": "X velocity",
+                "3": "Y velocity",
+                "4": "Angle",
+                "5": "Angular velocity",
+                "6": "Left contact sensor",
+                "7": "Right contact sensor"
+            },
+            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
+            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
+
+    Returns:
+        Integer  : The action to be taken.
+    "
+    # Improved code based on analysis of the logs
+    # This code aims to maximize the score by making better decisions based on previous observations
+    if observation[3] < -0.5:
+        return 3
+    elif observation[2] > 0:
+        return 2
+    elif observation[5] < -0.2:
+        return 1
+    else:
+        return 0
+2024-06-06 13:46:48,729 - ERROR - Error: unterminated string literal (detected at line 2) (Action.py, line 2)
+Traceback (most recent call last):
+  File "C:\Users\adria\AppData\Local\Temp\ipykernel_1472\23471256.py", line 55, in create_and_run_llm_loop
+    importlib.reload(Action)
+  File "c:\Users\adria\anaconda3\Lib\importlib\__init__.py", line 169, in reload
+    _bootstrap._exec(spec, module)
+  File "<frozen importlib._bootstrap>", line 621, in _exec
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "c:\Users\adria\OneDrive\Escritorio\master\Segundo cuatri\Bloque 1\Aprendizaje por Refuerzo y Técnicas Generativas\Aprendizaje por refuerzo\Practica_DQN\LLM_SelfPlay\Action.py", line 2
+    " The function that codifies the action to be taken in each instant of time.
+    ^
+SyntaxError: unterminated string literal (detected at line 2)
+2024-06-06 13:46:49,056 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_8aICr0z18JLK73YmlDimfK9o/runs/run_WJsX5SS7aNAB5fxcCenSUWr3/submit_tool_outputs "HTTP/1.1 400 Bad Request"
+2024-06-06 13:54:43,800 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-06-06 13:54:44,110 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-06-06 13:54:44,414 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/messages "HTTP/1.1 200 OK"
+2024-06-06 13:54:44,419 - INFO - Iteration: 1
+2024-06-06 13:54:44,925 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs "HTTP/1.1 200 OK"
+2024-06-06 13:54:45,160 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_7VQNJDS9aTHXeevByIRM0O4w "HTTP/1.1 200 OK"
+2024-06-06 13:54:45,164 - INFO - Status: queued
+2024-06-06 13:54:45,381 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_7VQNJDS9aTHXeevByIRM0O4w "HTTP/1.1 200 OK"
+2024-06-06 13:55:05,385 - INFO - Status: queued
+2024-06-06 13:55:05,713 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_7VQNJDS9aTHXeevByIRM0O4w "HTTP/1.1 200 OK"
+2024-06-06 13:55:25,720 - INFO - Status: requires_action
+2024-06-06 13:55:25,722 - INFO - Arguments: {'code': 'def act(observation):\n    \'\'\'\n    The function that codifies the action to be taken in each instant of time.\n\n    Args:\n        observation (numpy.array):\n            "description": "The state of the environment after the action is taken.",\n            "positions": {  \n                "0": "X position",\n                "1": "Y position",\n                "2": "X velocity",\n                "3": "Y velocity",\n                "4": "Angle",\n                "5": "Angular velocity",\n                "6": "Left contact sensor",\n                "7": "Right contact sensor"\n            },\n            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],\n            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]\n\n    Returns:\n        Integer  : The action to be taken.\n    \'\'\'\n    # Updated code based on the analysis of the execution logs\n    action = 0  # Default action\n    if observation[2] < 0:\n        action = 2\n    else:\n        action = 1\n    return action', 'filename': 'Action.py'}
+2024-06-06 13:55:25,727 - INFO - 
+Codigo generado:
+def act(observation):
+    '''
+    The function that codifies the action to be taken in each instant of time.
+
+    Args:
+        observation (numpy.array):
+            "description": "The state of the environment after the action is taken.",
+            "positions": {  
+                "0": "X position",
+                "1": "Y position",
+                "2": "X velocity",
+                "3": "Y velocity",
+                "4": "Angle",
+                "5": "Angular velocity",
+                "6": "Left contact sensor",
+                "7": "Right contact sensor"
+            },
+            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
+            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
+
+    Returns:
+        Integer  : The action to be taken.
+    '''
+    # Updated code based on the analysis of the execution logs
+    action = 0  # Default action
+    if observation[2] < 0:
+        action = 2
+    else:
+        action = 1
+    return action
+2024-06-06 13:55:30,392 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_7VQNJDS9aTHXeevByIRM0O4w/submit_tool_outputs "HTTP/1.1 200 OK"
+2024-06-06 13:55:30,396 - INFO - Compilación exitosa.
+2024-06-06 13:55:30,400 - INFO - Status: requires_action
+2024-06-06 13:55:30,614 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_7VQNJDS9aTHXeevByIRM0O4w "HTTP/1.1 200 OK"
+2024-06-06 13:55:50,619 - INFO - Status: in_progress
+2024-06-06 13:55:50,903 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_7VQNJDS9aTHXeevByIRM0O4w "HTTP/1.1 200 OK"
+2024-06-06 13:56:10,912 - INFO - These are the logs generated in the last execution{"landing attempt": 2, "logs": []}. You have to improve the last code generated to maximize the reward. Please, make it more efficient, faster and more robust.
+2024-06-06 13:56:11,212 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/messages "HTTP/1.1 200 OK"
+2024-06-06 13:56:11,216 - INFO - Iteration: 2
+2024-06-06 13:56:11,708 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs "HTTP/1.1 200 OK"
+2024-06-06 13:56:11,999 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_TamqwCTprmdX1icd4tr1SIs4 "HTTP/1.1 200 OK"
+2024-06-06 13:56:12,007 - INFO - Status: queued
+2024-06-06 13:56:12,263 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_TamqwCTprmdX1icd4tr1SIs4 "HTTP/1.1 200 OK"
+2024-06-06 13:56:32,270 - INFO - Status: queued
+2024-06-06 13:56:32,536 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_TamqwCTprmdX1icd4tr1SIs4 "HTTP/1.1 200 OK"
+2024-06-06 13:56:52,543 - INFO - Status: requires_action
+2024-06-06 13:56:52,543 - INFO - Arguments: {'code': 'def act(observation):\n    \'\'\'\n    The function that codifies the action to be taken in each instant of time.\n\n    Args:\n        observation (numpy.array):\n            "description": "The state of the environment after the action is taken.",\n            "positions": {  \n                "0": "X position",\n                "1": "Y position",\n                "2": "X velocity",\n                "3": "Y velocity",\n                "4": "Angle",\n                "5": "Angular velocity",\n                "6": "Left contact sensor",\n                "7": "Right contact sensor"\n            },\n            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],\n            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]\n\n    Returns:\n        Integer  : The action to be taken.\n    \'\'\'\n    # Updated code based on the analysis of the execution logs\n    action = 2 if observation[2] < 0 else 1\n    return action', 'filename': 'Action.py'}
+2024-06-06 13:56:52,547 - INFO - 
+Codigo generado:
+def act(observation):
+    '''
+    The function that codifies the action to be taken in each instant of time.
+
+    Args:
+        observation (numpy.array):
+            "description": "The state of the environment after the action is taken.",
+            "positions": {  
+                "0": "X position",
+                "1": "Y position",
+                "2": "X velocity",
+                "3": "Y velocity",
+                "4": "Angle",
+                "5": "Angular velocity",
+                "6": "Left contact sensor",
+                "7": "Right contact sensor"
+            },
+            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
+            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
+
+    Returns:
+        Integer  : The action to be taken.
+    '''
+    # Updated code based on the analysis of the execution logs
+    action = 2 if observation[2] < 0 else 1
+    return action
+2024-06-06 13:56:57,841 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_TamqwCTprmdX1icd4tr1SIs4/submit_tool_outputs "HTTP/1.1 200 OK"
+2024-06-06 13:56:57,849 - INFO - Compilación exitosa.
+2024-06-06 13:56:57,853 - INFO - Status: requires_action
+2024-06-06 13:56:58,084 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_TamqwCTprmdX1icd4tr1SIs4 "HTTP/1.1 200 OK"
+2024-06-06 13:57:18,091 - INFO - Status: in_progress
+2024-06-06 13:57:18,439 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_TamqwCTprmdX1icd4tr1SIs4 "HTTP/1.1 200 OK"
+2024-06-06 13:57:38,447 - INFO - These are the logs generated in the last execution{"landing attempt": 2, "logs": []}. You have to improve the last code generated to maximize the reward. Please, make it more efficient, faster and more robust.
+2024-06-06 13:57:38,802 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/messages "HTTP/1.1 200 OK"
+2024-06-06 13:57:38,806 - INFO - Iteration: 3
+2024-06-06 13:57:39,214 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs "HTTP/1.1 200 OK"
+2024-06-06 13:57:39,533 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_W75RXolgkWlnC6doY84sCU5p "HTTP/1.1 200 OK"
+2024-06-06 13:57:39,541 - INFO - Status: queued
+2024-06-06 13:57:39,929 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_W75RXolgkWlnC6doY84sCU5p "HTTP/1.1 200 OK"
+2024-06-06 13:57:59,937 - INFO - Status: queued
+2024-06-06 13:58:00,231 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_W75RXolgkWlnC6doY84sCU5p "HTTP/1.1 200 OK"
+2024-06-06 13:58:20,239 - INFO - Status: requires_action
+2024-06-06 13:58:20,241 - INFO - Arguments: {'code': 'def act(observation):\n    \'\'\'\n    The function that codifies the action to be taken in each instant of time.\n\n    Args:\n        observation (numpy.array):\n            "description": "The state of the environment after the action is taken.",\n            "positions": {  \n                "0": "X position",\n                "1": "Y position",\n                "2": "X velocity",\n                "3": "Y velocity",\n                "4": "Angle",\n                "5": "Angular velocity",\n                "6": "Left contact sensor",\n                "7": "Right contact sensor"\n            },\n            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],\n            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]\n\n    Returns:\n        Integer  : The action to be taken.\n    \'\'\'\n    # Updated code based on the analysis of the execution logs\n    action = 2 if observation[2] < 0 else 1\n    return action', 'filename': 'Action.py'}
+2024-06-06 13:58:20,243 - INFO - 
+Codigo generado:
+def act(observation):
+    '''
+    The function that codifies the action to be taken in each instant of time.
+
+    Args:
+        observation (numpy.array):
+            "description": "The state of the environment after the action is taken.",
+            "positions": {  
+                "0": "X position",
+                "1": "Y position",
+                "2": "X velocity",
+                "3": "Y velocity",
+                "4": "Angle",
+                "5": "Angular velocity",
+                "6": "Left contact sensor",
+                "7": "Right contact sensor"
+            },
+            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
+            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
+
+    Returns:
+        Integer  : The action to be taken.
+    '''
+    # Updated code based on the analysis of the execution logs
+    action = 2 if observation[2] < 0 else 1
+    return action
+2024-06-06 13:58:25,496 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_W75RXolgkWlnC6doY84sCU5p/submit_tool_outputs "HTTP/1.1 200 OK"
+2024-06-06 13:58:25,500 - INFO - Compilación exitosa.
+2024-06-06 13:58:25,500 - INFO - Status: requires_action
+2024-06-06 13:58:25,803 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_fOGzN0pv1lVpdfH9ctO8yDoN/runs/run_W75RXolgkWlnC6doY84sCU5p "HTTP/1.1 200 OK"
