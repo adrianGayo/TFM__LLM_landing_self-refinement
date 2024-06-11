@@ -33,19 +33,20 @@ def act(observation):
     if left_contact or right_contact:
         return 3
 
-    if abs(angle) > THRESHOLD_ANGLE:
+    # More aggressive control for managing descent and stability
+    if abs(angle) > THRESHOLD_ANGLE / 2:
         if angle > 0:
             return 0
         else:
             return 1
 
-    if abs(x_vel) > THRESHOLD_VELOCITY_X:
+    if abs(x_vel) > THRESHOLD_VELOCITY_X / 2:
         if x_vel > 0:
             return 0
         else:
             return 1
 
-    if y_pos > HOVER_HEIGHT and y_vel > THRESHOLD_VELOCITY_Y:
+    if y_pos > HOVER_HEIGHT * 1.5 and y_vel > 1.5 * THRESHOLD_VELOCITY_Y:
         return 3
 
     if y_vel < THRESHOLD_VELOCITY_Y or y_pos > 0.3:
