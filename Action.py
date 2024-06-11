@@ -25,11 +25,11 @@ def act(observation):
     '''
     x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
 
-    THRESHOLD_ANGLE = 0.2
-    THRESHOLD_VELOCITY_X = 0.3
+    THRESHOLD_ANGLE = 0.1
+    THRESHOLD_VELOCITY_X = 0.2
     THRESHOLD_VELOCITY_Y = -0.5
-    HOVER_HEIGHT = 0.5
-
+    HOVER_HEIGHT = 0.6
+    
     if left_contact or right_contact:
         return 3
 
@@ -48,10 +48,7 @@ def act(observation):
     if y_pos > HOVER_HEIGHT and y_vel > THRESHOLD_VELOCITY_Y:
         return 3
 
-    if y_vel < THRESHOLD_VELOCITY_Y:
-        return 2
-
-    if y_vel < -0.1:
+    if y_vel < THRESHOLD_VELOCITY_Y or y_pos > 0.3:
         return 2
 
     return 3
