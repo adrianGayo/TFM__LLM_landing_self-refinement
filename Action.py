@@ -24,35 +24,34 @@ def act(observation):
         Integer  : The action to be taken.
     '''
     x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
-    
-    if left_contact or right_contact:
-        return 3  # Do nothing if we are in contact with lander.
-    
-    # Combining some threshold values
-    THRESHOLD_ANGLE = 0.1
-    THRESHOLD_VELOCITY_X = 0.5
-    THRESHOLD_VELOCITY_Y = -0.5  # descending threshold
 
-    # Maintain stability; avoid large angles
+    THRESHOLD_ANGLE = 0.2
+    THRESHOLD_VELOCITY_X = 0.3
+    THRESHOLD_VELOCITY_Y = -0.5
+    HOVER_HEIGHT = 0.5
+
+    if left_contact or right_contact:
+        return 3
+
     if abs(angle) > THRESHOLD_ANGLE:
         if angle > 0:
-            return 0  # Fire left engine to balance right tilt
+            return 0
         else:
-            return 1  # Fire right engine to balance left tilt
-    
-    # Control Horizontal Velocity
-    if x_vel > THRESHOLD_VELOCITY_X:
-        return 0  # Move left to reduce rightward velocity
-    if x_vel < -THRESHOLD_VELOCITY_X:
-        return 1  # Move right to reduce leftward velocity
-    
-    # Ensure the craft descends under controlled speed
-    if y_vel < THRESHOLD_VELOCITY_Y:
-        return 2  # Fire main engine to slow descent
+            return 1
 
-    # Controlled descent part - reduce engine fires
-    if y_vel > -0.3 and y_pos > 0.5: 
-        return 3  # Glide down when there's enough height
-    
-    # Default action to control descent rate
-    return 2  # Fire main engine
+    if abs(x_vel) > THRESHOLD_VELOCITY_X:
+        if x_vel > 0:
+            return 0
+        else:
+            return 1
+
+    if y_pos > HOVER_HEIGHT and y_vel > THRESHOLD_VELOCITY_Y:
+        return 3
+
+    if y_vel < THRESHOLD_VELOCITY_Y:
+        return 2
+
+    if y_vel < -0.1:
+        return 2
+
+    return 3
