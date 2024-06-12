@@ -24,18 +24,18 @@ def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
 
     # Rule 1: If the craft is too tilted and in air, correct the tilt by firing side engines
-    if abs(angle) > 0.15:  # Increased threshold for robustness
+    if abs(angle) > 0.1:  # Reduce the tilt threshold to be more responsive
         if angle < 0:
             return 3  # Fire left engine to tilt right
         else:
             return 1  # Fire right engine to tilt left
 
     # Rule 2: If descending too fast, slow descent
-    if y_vel < -0.3:
+    if y_vel < -0.2:  # Adjust downward velocity threshold for quicker correction
         return 2  # Fire main engine to reduce descent rate
     
     # Rule 3: If moving horizontally too fast, reduce horizontal speed
-    if abs(x_vel) > 0.3:
+    if abs(x_vel) > 0.2:  # Adjust horizontal velocity threshold for quicker correction
         if x_vel > 0:
             return 3  # Fire left engine to move left
         else:
