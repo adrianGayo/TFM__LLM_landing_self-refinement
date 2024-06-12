@@ -1,3 +1,5 @@
+import numpy as np
+
 def act(observation):
     '''
     The function that codifies the action to be taken in each instant of time.
@@ -21,39 +23,38 @@ def act(observation):
     Returns:
         Integer  : The action to be taken.
     '''
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    x, y, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
 
-    # Rule 1: If the craft is too tilted and in air, correct the tilt by firing side engines
-    if abs(angle) > 0.1:  # Reduce the tilt threshold to be more responsive
-        if angle < 0:
-            # Check angular velocity for better decision making
-            if ang_vel < -0.5:
-                return 2  # Fire main engine to reduce rotation
-            return 3  # Fire left engine to tilt right
+    # Define thresholds
+    x_vel_threshold = 0.1
+    y_vel_threshold = 0.1
+    angle_threshold = 0.1
+    ang_vel_threshold = 0.1
+
+    # Prioritize reducing y velocity if it's too high (falling too fast)
+    if y_vel < -y_vel_threshold:
+        return 2  # Main engine on
+
+    # Stabilize angular velocity if needed
+    elif abs(ang_vel) > ang_vel_threshold:
+        if ang_vel > 0:
+            return 3  # Turn right engine on
         else:
-            if ang_vel > 0.5:
-                return 2  # Fire main engine to reduce rotation
-            return 1  # Fire right engine to tilt left
+            return 1  # Turn left engine on
 
-    # Rule 2: If descending too fast, slow descent
-    if y_vel < -0.2:  # Adjust downward velocity threshold for quicker correction
-        return 2  # Fire main engine to reduce descent rate
-    
-    # Rule 3: If moving horizontally too fast, reduce horizontal speed
-    if abs(x_vel) > 0.2:  # Adjust horizontal velocity threshold for quicker correction
+    # Stabilize angle if needed
+    elif abs(angle) > angle_threshold:
+        if angle > 0:
+            return 3  # Turn right engine on
+        else:
+            return 1  # Turn left engine on
+
+    # Reduce x velocity if it's too high
+    elif abs(x_vel) > x_vel_threshold:
         if x_vel > 0:
-            return 3  # Fire left engine to move left
+            return 1  # Turn left engine on
         else:
-            return 1  # Fire right engine to move right
+            return 3  # Turn right engine on
 
-    # Rule 4: If already landed, stop firing engines
-    if left_contact == 1 and right_contact == 1:
-        return 0
-
-    # Rule 5: Favor main engine for fine control near landing zone
-    if ((left_contact == 1 and right_contact == 0) or
-        (left_contact == 0 and right_contact == 1)):
-        return 2  # Fire main engine to stabilize descent
-
-    # Default action - Do nothing to save fuel
+    # If all is stable, keep main engine off for gentle descent
     return 0
