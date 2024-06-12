@@ -34,9 +34,9 @@ class LunarLanderController:
             return 0
 
         # If the angle is too large, attempt to correct it
-        if angle < -0.05:
+        if angle < -0.1:
             return 1  # fire right engine
-        elif angle > 0.05:
+        elif angle > 0.1:
             return 3  # fire left engine
 
         # If the lander is moving too fast horizontally, attempt to correct it
@@ -46,20 +46,26 @@ class LunarLanderController:
             return 3  # fire left engine
 
         # If the lander is falling too fast, fire the main engine
-        if y_vel < -0.2:
+        if y_vel < -0.3:
             return 2
 
         # If the lander is not descending, start descending
         if y_vel >= 0:
             return 2  # fire main engine
 
+        # Increment the steps without well score
+        self.steps_without_scoring_well += 1
+
         # Edge case: if point threshold without well score perform random step
-        if self.steps_without_scoring_well >= 5:
+        if self.steps_without_scoring_well >= 7:
             self.steps_without_scoring_well = 0
             return random.randint(0, 3)
 
-        self.steps_without_scoring_well += 1
+        # Default action
         return 0
 
 # Initialize the controller instance
 lander_controller = LunarLanderController()
+
+# Wrapper function to use the controller in the environment
+get_action = lander_controller.act
