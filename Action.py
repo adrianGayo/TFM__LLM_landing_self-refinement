@@ -51,7 +51,8 @@ def act(observation):
         return 0
 
     # Rule 5: Favor main engine for fine control near landing zone
-    if left_contact == 1 or right_contact == 1:
+    if ((left_contact == 1 and right_contact == 0) or
+        (left_contact == 0 and right_contact == 1)):
         return 2  # Fire main engine to stabilize descent
 
     # Default action - Do nothing to save fuel
