@@ -27,7 +27,7 @@ def act(observation):
 
     # Define thresholds for velocities and angles 
     x_vel_threshold = 0.1 
-    y_vel_threshold = 0.2 
+    y_vel_threshold = 0.15 
     angle_threshold = 0.1 
     ang_vel_threshold = 0.1 
 
