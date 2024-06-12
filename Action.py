@@ -27,15 +27,16 @@ def act(observation):
 
     # Define thresholds for velocities and angles 
     x_vel_threshold = 0.1 
-    y_vel_threshold = 0.1 
+    y_vel_threshold = 0.2 
     angle_threshold = 0.1 
     ang_vel_threshold = 0.1 
 
-    # Check if either contact sensor is triggered (landing or crash) 
+    # Ensure that everything is within the thresholds before cutting the engines 
     if left_contact == 1 or right_contact == 1: 
-        return 0  # Cut all engines to settle 
+        if abs(x_vel) < x_vel_threshold and abs(y_vel) < y_vel_threshold and abs(angle) < angle_threshold and abs(ang_vel) < ang_vel_threshold: 
+            return 0  # Cut all engines to settle 
 
-    # Paragraph order of priority 
+    # Order of priority 
     # 1. Reduce y velocity if it's too high (falling too fast) 
     if y_vel < -y_vel_threshold: 
         return 2  # Main engine on
