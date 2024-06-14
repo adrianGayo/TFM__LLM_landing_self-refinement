@@ -29,30 +29,30 @@ def act(observation):
                 '3' : "Push right engine"
             }
     '''
-    #Extract values from observation
+    # Extract values from observation
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-    
+
     # Decision Making Logic based on observed status
     if left_contact == 1 or right_contact == 1:  # If any landing gear has made contact
         return 0  # Switch off engines for gentle landing
-    
+
     # Horizontal stabilization
-    if abs(x_vel) > 0.1:  # If horizontal speed is significant
-        if x_vel > 0:
-            return 1  # Push left engine to reduce rightward motion
-        else:
-            return 3  # Push right engine to reduce leftward motion
-    
+    if abs(x_vel) > 0.2:  # If horizontal speed is significant
+        if x_vel > 0:  # Move to the right
+            return 1  # Push left engine to reduce rightward movement
+        else:  # Move to the left
+            return 3  # Push right engine to reduce leftward movement
+
     # Angular stabilization
     if abs(angle) > 0.1 or abs(ang_vel) > 0.1:  # If angle or angular velocity is significant
         if angle > 0 or ang_vel > 0:  # If angle or angular velocity is to the right
-            return 1 # Push left engine 
-        else:
-            return 3 # Push right engine
-    
-    # Descend gently if everything is stable
-    if y_vel < -0.1:  # If falling too fast
-        return 2  # Push both engines upwards to slow descent
-    
-    # Otherwise, control descent gently
+            return 1  # Push left engine
+        else:  # If angle or angular velocity is to the left
+            return 3  # Push right engine
+
+    # Vertical stabilization
+    if y_vel < -0.2:  # If falling too fast
+        return 2  # Push both engines (upwards) to slow descent
+
+    # Default case
     return 0
