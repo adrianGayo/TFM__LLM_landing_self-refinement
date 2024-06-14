@@ -31,18 +31,17 @@ def act(observation):
     action = 0  # Default action is to switch off engines
 
     # Stabilize angle and angular velocity
-    if angle < -0.1 or ang_vel < -0.1:
+    if angle < -0.05 or ang_vel < -0.05:
         action = 1  # Push left engine
-    elif angle > 0.1 or ang_vel > 0.1:
+    elif angle > 0.05 or ang_vel > 0.05:
         action = 3  # Push right engine
     # Control descent rate more aggressively
-    elif y_vel < -0.3:
+    elif y_vel < -0.2:
         action = 2  # Push both engines (upwards)
-    # Control horizontal position only if descent rate is acceptable
-    elif abs(y_vel) < 0.3:
-        if x_pos < -0.1:
-            action = 3  # Push right engine
-        elif x_pos > 0.1:
-            action = 1  # Push left engine
+    # Control horizontal position more strictly
+    elif x_pos < -0.05:
+        action = 3  # Push right engine
+    elif x_pos > 0.05:
+        action = 1  # Push left engine
 
     return action
