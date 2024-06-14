@@ -4,8 +4,7 @@ def act(observation):
 
     Args:
         observation (numpy.array):
-            "description": "The state of the environment after the action is taken.",
-            "positions": {  
+            "description": "The state of the environment after the action is taken.",n            "positions": {
                 "0": "X position",
                 "1": "Y position",
                 "2": "X velocity",
@@ -27,23 +26,23 @@ def act(observation):
     # 1. Angle Stabilization
     if abs(angle) > 0.1 or abs(angular_vel) > 0.1:
         if angle > 0.1 or angular_vel > 0.1:
-            return 2  # Fire main engine
+            return 3  # Fire left engine to stabilize
         elif angle < -0.1 or angular_vel < -0.1:
-            return 2  # Fire main engine
+            return 1  # Fire right engine to stabilize
 
     # 2. Vertical Speed Stabilization
     if y_vel < -0.5:
-        return 3  # Fire left engine to reduce vertical speed
+        return 2  # Fire main engine to reduce vertical speed
 
     # 3. Horizontal Speed Stabilization
-    if abs(x_vel) > 0.2:
-        if x_vel > 0.2:
+    if abs(x_vel) > 0.5:
+        if x_vel > 0.5:
             return 1  # Fire right engine to reduce horizontal speed
-        elif x_vel < -0.2:
-            return 0  # Fire no engine
+        elif x_vel < -0.5:
+            return 3  # Fire left engine to reduce horizontal speed
 
     # 4. Gentle Descent with Vertical Positioning
-    if y_pos > 0.2:
+    if y_pos > 0.1 and abs(y_vel) < 0.5:
         return 2  # Fire main engine to gently descend
 
     return 0  # No action needed if everything is stable
