@@ -1,18 +1,5 @@
 import random
 
-PUSH_OFF = 0
-PUSH_LEFT = 1
-PUSH_BOTH = 2
-PUSH_RIGHT = 3
-
-thresholds = {
-    "x_velocity": 0.1,
-    "y_velocity": 0.1,
-    "angle": 0.1,
-    "angular_velocity": 0.1,
-}
-
-
 def act(observation):
     '''
     The function that codifies the action to be taken in each instant of time.
@@ -42,22 +29,24 @@ def act(observation):
                 '3' : "Push right engine"
             }
     '''
-    xpos, ypos, xvel, yvel, angle, angvel, lcontact, rcontact = observation
-
-    # Stabilize x-velocity
-    if abs(xvel) > thresholds["x_velocity"]:
-        return PUSH_LEFT if xvel > 0 else PUSH_RIGHT
-
-    # Stabilize angular velocity
-    if abs(angvel) > thresholds["angular_velocity"]:
-        return PUSH_LEFT if angvel > 0 else PUSH_RIGHT
-
+    x, y, vx, vy, angle, angular_velocity, left_contact, right_contact = observation
+    # Stabilize angular velocity first
+    if angular_velocity > 0.1:
+        return 1  # apply left engine
+    elif angular_velocity < -0.1:
+        return 3  # apply right engine
     # Stabilize angle
-    if abs(angle) > thresholds["angle"]:
-        return PUSH_LEFT if angle > 0 else PUSH_RIGHT
-
-    # Stabilize y-velocity
-    if abs(yvel) > thresholds["y_velocity"]:
-        return PUSH_BOTH if yvel > 0 else PUSH_OFF
-
-    return PUSH_OFF
+    if angle > 0.1:
+        return 1  # apply left engine
+    elif angle < -0.1:
+        return 3  # apply right engine
+    # Stabilize horizontal velocity towards zero
+    if vx > 0.1:
+        return 1  # apply left engine
+    elif vx < -0.1:
+        return 3  # apply right engine
+    # Ensure y velocity is safe for landing
+    if vy < -1.0:
+        return 2  # apply both engines upwards
+    # Safe to turn off engines
+    return 0
