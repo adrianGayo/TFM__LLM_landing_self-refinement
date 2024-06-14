@@ -35,21 +35,14 @@ def act(observation):
         action = 1  # Push left engine
     elif angle > 0.1 or ang_vel > 0.1:
         action = 3  # Push right engine
-    # When the spaceship is near the ground, try to land gently
-    elif y_pos < 0.3:
-        if y_vel < -0.3 or abs(x_vel) > 0.3:
-            action = 2  # Push both engines to reduce vertical and horizontal speed
-        elif x_pos < -0.1:
-            action = 3  # Push right engine to stabilize horizontal position
-        elif x_pos > 0.1:
-            action = 1  # Push left engine to stabilize horizontal position
-    # Safely control the descent rate
-    elif y_vel < -0.5:
+    # Control descent rate
+    elif y_vel < -0.4:
         action = 2  # Push both engines (upwards)
-    # Control horizontal position
-    elif x_pos < -0.1:
+    # When position is in the lower range, act to reduce velocities
+    elif y_pos <= 0.5 and y_vel < -0.2:
+        action = 2  # Push both engines (upwards)
+    elif y_pos <= 0.5 and x_pos < -0.1:
         action = 3  # Push right engine
-    elif x_pos > 0.1:
+    elif y_pos <= 0.5 and x_pos > 0.1:
         action = 1  # Push left engine
-
     return action
