@@ -35,14 +35,14 @@ def act(observation):
         action = 1  # Push left engine
     elif angle > 0.1 or ang_vel > 0.1:
         action = 3  # Push right engine
-    # Control descent rate
-    elif y_vel < -0.4:
+    # Control descent rate more aggressively
+    elif y_vel < -0.3:
         action = 2  # Push both engines (upwards)
-    # When position is in the lower range, act to reduce velocities
-    elif y_pos <= 0.5 and y_vel < -0.2:
-        action = 2  # Push both engines (upwards)
-    elif y_pos <= 0.5 and x_pos < -0.1:
-        action = 3  # Push right engine
-    elif y_pos <= 0.5 and x_pos > 0.1:
-        action = 1  # Push left engine
+    # Control horizontal position only if descent rate is acceptable
+    elif abs(y_vel) < 0.3:
+        if x_pos < -0.1:
+            action = 3  # Push right engine
+        elif x_pos > 0.1:
+            action = 1  # Push left engine
+
     return action
