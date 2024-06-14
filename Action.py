@@ -24,43 +24,26 @@ def act(observation):
     x, y, vx, vy, angle, angular_velocity, left_contact, right_contact = observation
 
     # Thresholds
-    vx_threshold_high = 0.1
-    vy_threshold_high = 0.1
-    angle_threshold_high = 0.1
-    vx_threshold_low = 0.01
-    vy_threshold_low = 0.01
-    angle_threshold_low = 0.01
+    vx_threshold = 0.1
+    vy_threshold = 0.1
+    angle_threshold = 0.1
 
     if left_contact or right_contact:
         return 0  # Do nothing if landed
 
-    if abs(vx) > vx_threshold_high or abs(vy) > vy_threshold_high or abs(angle) > angle_threshold_high:
-        # If any critical parameter is too high, control it strictly
-        if abs(vx) > vx_threshold_high:
-            if vx > 0:
-                return 3  # Fire left to correct vx
-            else:
-                return 1  # Fire right to correct vx
-        if abs(vy) > vy_threshold_high:
-            return 2  # Fire main engine to correct vy
-        if abs(angle) > angle_threshold_high:
-            if angle > 0:
-                return 3  # Fire left to correct angle
-            else:
-                return 1  # Fire right to correct angle
-    else:
-        # Fine control
-        if abs(vx) > vx_threshold_low:
-            if vx > 0:
-                return 1  # Fire right to slightly correct vx
-            else:
-                return 3  # Fire left to slightly correct vx
-        if abs(vy) > vy_threshold_low:
-            return 2  # Fire main engine to slightly correct vy
-        if abs(angle) > angle_threshold_low:
-            if angle > 0:
-                return 1  # Fire right to slightly correct angle
-            else:
-                return 3  # Fire left to slightly correct angle
+    if abs(vx) > vx_threshold:
+        if vx > 0:
+            return 3  # Fire left to correct vx
+        else:
+            return 1  # Fire right to correct vx
+
+    if abs(vy) > vy_threshold:
+        return 2  # Fire main engine to correct vy
+
+    if abs(angle) > angle_threshold:
+        if angle > 0:
+            return 3  # Fire left to correct angle
+        else:
+            return 1  # Fire right to correct angle
 
     return 0  # No action needed
