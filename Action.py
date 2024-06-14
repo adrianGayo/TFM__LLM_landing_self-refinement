@@ -24,29 +24,25 @@ def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
     
     # Stabilizing Angles first
-    if abs(angle) > 0.1 or abs(angular_vel) > 0.1:
+    if abs(angle) > 0.1:
         if angle > 0.1:
-            return 1  # Fire right engine
+            return 3  # Fire left engine
         elif angle < -0.1:
-            return 3  # Fire left engine
-        elif angular_vel > 0.1:
             return 1  # Fire right engine
-        else:
-            return 3  # Fire left engine
-    
+
     # Stabilize vertical speed
-    if y_vel < -1.0:
+    if y_vel < -0.5:
         return 2  # Fire main engine to reduce speed
     
-    # Stabilize horizontal position and speed
+    # Stabilize horizontal speed
     if abs(x_vel) > 0.5:
         if x_vel > 0.5:
             return 3  # Fire left engine to reduce right drift
-        else:
+        elif x_vel < -0.5:
             return 1  # Fire right engine to reduce left drift
-    
-    # If already stable
+
+    # Gentle descent if everything is stable
     if y_pos > 0.1:
         return 2  # Fire main engine to gently descend
-    
-    return 0  # No action if everything is stable
+
+    return 0  # No action needed if everything is stable
