@@ -1,5 +1,3 @@
-import numpy as np
-
 def act(observation):
     '''
     The function that codifies the action to be taken in each instant of time.
@@ -23,37 +21,32 @@ def act(observation):
     Returns:
         Integer  : The action to be taken.
     '''
-    x, y, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-
-    # Define thresholds for velocities and angles
-    x_pos_threshold = 0.1
-    y_pos_threshold = 0.1
-    x_vel_threshold = 0.1
-    y_vel_threshold = 0.15
-    angle_threshold = 0.1
-    ang_vel_threshold = 0.1
-
-    # Ensure that everything is within the thresholds before cutting the engines
-    if left_contact == 1 or right_contact == 1:
-        if abs(x) < x_pos_threshold and abs(y) < y_pos_threshold and abs(x_vel) < x_vel_threshold and abs(y_vel) < y_vel_threshold and abs(angle) < angle_threshold and abs(ang_vel) < ang_vel_threshold:
-            return 0  # Cut all engines to settle
-
-    # Order of priority
-    # 1. Reduce y velocity if it's too high (falling too fast)
-    if y_vel < -y_vel_threshold:
-        return 2  # Main engine on
-
-    # 2. Stabilize angular velocity if needed
-    if abs(ang_vel) > ang_vel_threshold:
-        return 3 if ang_vel > 0 else 1  # Turn on the appropriate side engine
-
-    # 3. Stabilize angle if needed
-    if abs(angle) > angle_threshold:
-        return 3 if angle > 0 else 1  # Turn on the appropriate side engine
-
-    # 4. Reduce x velocity if it's too high
-    if abs(x_vel) > x_vel_threshold:
-        return 1 if x_vel > 0 else 3  # Turn on the appropriate side engine
-
-    # 5. Keep main engine off for gentle descent if all conditions are stable
-    return 0
+    x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
+    
+    # Stabilizing Angles first
+    if abs(angle) > 0.1 or abs(angular_vel) > 0.1:
+        if angle > 0.1:
+            return 1  # Fire right engine
+        elif angle < -0.1:
+            return 3  # Fire left engine
+        elif angular_vel > 0.1:
+            return 1  # Fire right engine
+        else:
+            return 3  # Fire left engine
+    
+    # Stabilize vertical speed
+    if y_vel < -1.0:
+        return 2  # Fire main engine to reduce speed
+    
+    # Stabilize horizontal position and speed
+    if abs(x_vel) > 0.5:
+        if x_vel > 0.5:
+            return 3  # Fire left engine to reduce right drift
+        else:
+            return 1  # Fire right engine to reduce left drift
+    
+    # If already stable
+    if y_pos > 0.1:
+        return 2  # Fire main engine to gently descend
+    
+    return 0  # No action if everything is stable
