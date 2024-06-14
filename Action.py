@@ -1,4 +1,17 @@
-import numpy as np
+import random
+
+PUSH_OFF = 0
+PUSH_LEFT = 1
+PUSH_BOTH = 2
+PUSH_RIGHT = 3
+
+thresholds = {
+    "x_velocity": 0.1,
+    "y_velocity": 0.1,
+    "angle": 0.1,
+    "angular_velocity": 0.1,
+}
+
 
 def act(observation):
     '''
@@ -29,30 +42,22 @@ def act(observation):
                 '3' : "Push right engine"
             }
     '''
-    # Extract values from observation
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    xpos, ypos, xvel, yvel, angle, angvel, lcontact, rcontact = observation
 
-    # Decision Making Logic based on observed status
-    if left_contact == 1 or right_contact == 1:  # If any landing gear has made contact
-        return 0  # Switch off engines for gentle landing
+    # Stabilize x-velocity
+    if abs(xvel) > thresholds["x_velocity"]:
+        return PUSH_LEFT if xvel > 0 else PUSH_RIGHT
 
-    # Horizontal stabilization
-    if abs(x_vel) > 0.2:  # If horizontal speed is significant
-        if x_vel > 0:  # Move to the right
-            return 1  # Push left engine to reduce rightward movement
-        else:  # Move to the left
-            return 3  # Push right engine to reduce leftward movement
+    # Stabilize angular velocity
+    if abs(angvel) > thresholds["angular_velocity"]:
+        return PUSH_LEFT if angvel > 0 else PUSH_RIGHT
 
-    # Angular stabilization
-    if abs(angle) > 0.1 or abs(ang_vel) > 0.1:  # If angle or angular velocity is significant
-        if angle > 0 or ang_vel > 0:  # If angle or angular velocity is to the right
-            return 1  # Push left engine
-        else:  # If angle or angular velocity is to the left
-            return 3  # Push right engine
+    # Stabilize angle
+    if abs(angle) > thresholds["angle"]:
+        return PUSH_LEFT if angle > 0 else PUSH_RIGHT
 
-    # Vertical stabilization
-    if y_vel < -0.2:  # If falling too fast
-        return 2  # Push both engines (upwards) to slow descent
+    # Stabilize y-velocity
+    if abs(yvel) > thresholds["y_velocity"]:
+        return PUSH_BOTH if yvel > 0 else PUSH_OFF
 
-    # Default case
-    return 0
+    return PUSH_OFF
