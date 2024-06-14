@@ -33,20 +33,20 @@ def act(observation):
     # Handle contact sensors, if either are activated, stabilize and turn off engines
     if left_contact == 1 or right_contact == 1:
         return 0
-    # Stabilize angular velocity
-    if abs(angular_velocity) > 0.1:
-        return 1 if angular_velocity > 0 else 3
-    # Stabilize angle
-    if abs(angle) > 0.1:
-        return 1 if angle > 0 else 3
-    # Stabilize horizontal velocity
+    # Prioritize stabilizing horizontal velocity
     if abs(vx) > 0.1:
         return 1 if vx > 0 else 3
+    # Then, stabilize angular velocity
+    if abs(angular_velocity) > 0.1:
+        return 1 if angular_velocity > 0 else 3
+    # Then, stabilize angle
+    if abs(angle) > 0.1:
+        return 1 if angle > 0 else 3
     # If descending too quickly, apply both engines
     if vy < -0.5:
         return 2
     # Apply gentle thrust upwards if needed
     if y < 1.0:
         return 2
-    # If none of the above, turn off engines
+    # If none of the above are critical, turn off engines
     return 0
