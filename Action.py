@@ -30,9 +30,9 @@ def act(observation):
     # Priority 4: Correct horizontal position (move towards center)
     if abs(X_pos) > central_x_threshold:
         if X_pos > 0:
-            return 3  # Fire left engine
-        else:
             return 1  # Fire right engine
+        else:
+            return 3  # Fire left engine
 
     # Default action is no action to save fuel
     return 0
