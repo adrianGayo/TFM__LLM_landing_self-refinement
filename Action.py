@@ -1,38 +1,49 @@
 def act(observation):
-    X_pos, Y_pos, X_vel, Y_vel, Angle, Angular_vel, Left_contact, Right_contact = observation
+    '''
+    The function that codifies the action to be taken in each instant of time.
 
-    # Initialize constants
-    central_x_threshold = 0.1
-    x_vel_threshold = 0.1
-    y_vel_threshold = -0.1
+    Args:
+        observation (numpy.array):
+            "description": "The state of the environment after the action is taken.",
+            "positions": {  
+                "0": "X position",
+                "1": "Y position",
+                "2": "X velocity",
+                "3": "Y velocity",
+                "4": "Angle",
+                "5": "Angular velocity",
+                "6": "Left contact sensor",
+                "7": "Right contact sensor"
+            },
+            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
+            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
+
+    Returns:
+        Integer  : The action to be taken.
+    '''
+    x, y, vx, vy, angle, angular_velocity, left_contact, right_contact = observation
+
+    # Thresholds
+    vx_threshold = 0.1
+    vy_threshold = 0.1
     angle_threshold = 0.1
-    angular_vel_threshold = 0.1
 
-    # If the spaceship has landed, stop all maneuvers
-    if Left_contact == 1 or Right_contact == 1:
-        return 0
-    
-    # Priority 1: Correct the angle and angular velocity
-    if abs(Angle) > angle_threshold or abs(Angular_vel) > angular_vel_threshold:
-        return 2  # Fire main engine to stabilize
+    if left_contact or right_contact:
+        return 0  # Do nothing if landed
 
-    # Priority 2: Correct vertical velocity if descending too fast
-    if Y_vel < y_vel_threshold:
-        return 2  # Fire main engine
-
-    # Priority 3: Correct horizontal velocity
-    if abs(X_vel) > x_vel_threshold:
-        if X_vel > 0:
-            return 3  # Fire left engine
+    if abs(vx) > vx_threshold:
+        if vx > 0:
+            return 3  # Fire left to correct vx
         else:
-            return 1  # Fire right engine
+            return 1  # Fire right to correct vx
 
-    # Priority 4: Correct horizontal position (move towards center)
-    if abs(X_pos) > central_x_threshold:
-        if X_pos > 0:
-            return 1  # Fire right engine
+    if abs(vy) > vy_threshold:
+        return 2  # Fire main engine to correct vy
+
+    if abs(angle) > angle_threshold:
+        if angle > 0:
+            return 3  # Fire left to correct angle
         else:
-            return 3  # Fire left engine
+            return 1  # Fire right to correct angle
 
-    # Default action is no action to save fuel
-    return 0
+    return 0  # No action needed
