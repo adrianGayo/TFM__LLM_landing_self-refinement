@@ -31,15 +31,18 @@ def act(observation):
     if left_contact or right_contact:
         return 0  # Do nothing if landed
 
+    # Control horizontal velocity
     if abs(vx) > vx_threshold:
         if vx > 0:
             return 3  # Fire left to correct vx
         else:
             return 1  # Fire right to correct vx
 
-    if abs(vy) > vy_threshold:
+    # Control vertical velocity
+    if vy < -vy_threshold:  # Only control descent speed (negative vy)
         return 2  # Fire main engine to correct vy
 
+    # Control angle
     if abs(angle) > angle_threshold:
         if angle > 0:
             return 3  # Fire left to correct angle
