@@ -13,23 +13,19 @@ def act(observation):
     if abs(X_pos) > central_x_threshold:
         # Correct horizontal position
         if X_pos > 0:
-            return 3  # Fire left engine
-        else:
-            return 1  # Fire right engine
-    if Y_vel < y_vel_threshold:
-        # Correct vertical velocity
-        return 2  # Fire main engine
-    if abs(X_vel) > x_vel_threshold:
-        # Correct horizontal velocity
-        if X_vel > 0:
-            return 3  # Fire left engine
-        else:
-            return 1  # Fire right engine
-    if abs(Angle) > angle_threshold or abs(Angular_vel) > angular_vel_threshold:
-        # Correct angle
-        if Angle > 0:
             return 3
         else:
             return 1
-    # Default action
+    if abs(X_vel) > x_vel_threshold:
+        # Correct horizontal velocity
+        if X_vel > 0:
+            return 3
+        else:
+            return 1
+    if abs(Angle) > angle_threshold or abs(Angular_vel) > angular_vel_threshold:
+        # Correct angle
+        return 2    # Fire main engine to stabilize
+    if Y_vel < y_vel_threshold:
+        # Correct vertical velocity
+        return 2     # Fire main engine
     return 0
