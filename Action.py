@@ -27,20 +27,20 @@ def act(observation):
     # 1. Angle Stabilization
     if abs(angle) > 0.1 or abs(angular_vel) > 0.1:
         if angle > 0.1 or angular_vel > 0.1:
-            return 3  # Fire left engine
+            return 2  # Fire main engine
         elif angle < -0.1 or angular_vel < -0.1:
-            return 1  # Fire right engine
+            return 2  # Fire main engine
 
     # 2. Vertical Speed Stabilization
     if y_vel < -0.5:
-        return 2  # Fire main engine to reduce speed
+        return 3  # Fire left engine to reduce vertical speed
 
     # 3. Horizontal Speed Stabilization
     if abs(x_vel) > 0.2:
         if x_vel > 0.2:
-            return 3  # Fire left engine to reduce right drift
+            return 1  # Fire right engine to reduce horizontal speed
         elif x_vel < -0.2:
-            return 1  # Fire right engine to reduce left drift
+            return 0  # Fire no engine
 
     # 4. Gentle Descent with Vertical Positioning
     if y_pos > 0.2:
