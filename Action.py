@@ -1,27 +1,35 @@
-import random
-
 def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
-    
-    if left_contact or right_contact:  # If contact sensors are triggered, we assume landing
-        return 0  # Idle to stop engines
-    
-    if abs(x_vel) > 0.2:  # Stabilize horizontal velocity
-        if x_vel > 0:
-            return 3  # Fire left engine to reduce x velocity
-        else:
-            return 1  # Fire right engine to reduce x velocity
-    
-    if abs(angle) > 0.1 or abs(angular_vel) > 0.1:  # Stabilize orientation
-        if angle > 0 or angular_vel > 0:
-            return 1  # Fire right engine to rotate counter-clockwise
-        else:
-            return 3  # Fire left engine to rotate clockwise
-            
-    if y_vel < -0.3:  # Stabilize vertical velocity
-        return 2  # Fire main engine to reduce y velocity
-    
-    if abs(x_vel) < 0.2 and abs(y_vel) < 0.3 and abs(angle) < 0.1 and abs(angular_vel) < 0.1:
-        return 0  # Idle if everything is stabilized
+    X_pos, Y_pos, X_vel, Y_vel, Angle, Angular_vel, Left_contact, Right_contact = observation
+    # Central x-axis position
+    central_x_threshold = 0.1
+    # Gently landing threshold
+    x_vel_threshold = 0.1
+    y_vel_threshold = -0.1
+    angle_threshold = 0.1
+    angular_vel_threshold = 0.1
 
-    return 2  # Default action is to fire the main engine to stabilize descent
+    if Left_contact == 1 or Right_contact == 1:
+        return 0 
+    if abs(X_pos) > central_x_threshold:
+        # Correct horizontal position
+        if X_pos > 0:
+            return 3  # Fire left engine
+        else:
+            return 1  # Fire right engine
+    if Y_vel < y_vel_threshold:
+        # Correct vertical velocity
+        return 2  # Fire main engine
+    if abs(X_vel) > x_vel_threshold:
+        # Correct horizontal velocity
+        if X_vel > 0:
+            return 3  # Fire left engine
+        else:
+            return 1  # Fire right engine
+    if abs(Angle) > angle_threshold or abs(Angular_vel) > angular_vel_threshold:
+        # Correct angle
+        if Angle > 0:
+            return 3
+        else:
+            return 1
+    # Default action
+    return 0
