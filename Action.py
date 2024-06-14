@@ -1,3 +1,5 @@
+import numpy as np
+
 def act(observation):
     '''
     The function that codifies the action to be taken in each instant of time.
@@ -20,33 +22,37 @@ def act(observation):
 
     Returns:
         Integer  : The action to be taken.
+        "options": {
+                '0' : "Switch off engines",
+                '1' : "Push left engine",
+                '2' : "Push both engines (upwards)",
+                '3' : "Push right engine"
+            }
     '''
-    x, y, vx, vy, angle, angular_velocity, left_contact, right_contact = observation
-
-    # Thresholds
-    vx_threshold = 0.1
-    vy_threshold = 0.1
-    angle_threshold = 0.1
-
-    if left_contact or right_contact:
-        return 0  # Do nothing if landed
-
-    # Control horizontal velocity
-    if abs(vx) > vx_threshold:
-        if vx > 0:
-            return 3  # Fire left to correct vx
+    #Extract values from observation
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    
+    # Decision Making Logic based on observed status
+    if left_contact == 1 or right_contact == 1:  # If any landing gear has made contact
+        return 0  # Switch off engines for gentle landing
+    
+    # Horizontal stabilization
+    if abs(x_vel) > 0.1:  # If horizontal speed is significant
+        if x_vel > 0:
+            return 1  # Push left engine to reduce rightward motion
         else:
-            return 1  # Fire right to correct vx
-
-    # Control vertical velocity
-    if vy < -vy_threshold:  # Only control descent speed (negative vy)
-        return 2  # Fire main engine to correct vy
-
-    # Control angle
-    if abs(angle) > angle_threshold:
-        if angle > 0:
-            return 3  # Fire left to correct angle
+            return 3  # Push right engine to reduce leftward motion
+    
+    # Angular stabilization
+    if abs(angle) > 0.1 or abs(ang_vel) > 0.1:  # If angle or angular velocity is significant
+        if angle > 0 or ang_vel > 0:  # If angle or angular velocity is to the right
+            return 1 # Push left engine 
         else:
-            return 1  # Fire right to correct angle
-
-    return 0  # No action needed
+            return 3 # Push right engine
+    
+    # Descend gently if everything is stable
+    if y_vel < -0.1:  # If falling too fast
+        return 2  # Push both engines upwards to slow descent
+    
+    # Otherwise, control descent gently
+    return 0
