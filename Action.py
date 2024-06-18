@@ -30,26 +30,27 @@ def act(observation):
                 '3' : "Push right engine"
             }
     '''
-    # Unpack the observation values
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-    action = 0
+    x_pos = observation[0]
+    y_pos = observation[1]
+    x_vel = observation[2]
+    y_vel = observation[3]
+    angle = observation[4]
+    angular_vel = observation[5]
 
-    # Stabilizing the ship: reduce horizontal speed and angle
-    if abs(angle) > 0.1 or abs(ang_vel) > 0.1:
-        if angle > 0:
-            action = 1  # Push left engine
-        else:
-            action = 3  # Push right engine
-    elif abs(x_vel) > 0.5:
-        if x_vel > 0:
-            action = 1  # Push left engine to counter rightwards movement
-        else:
-            action = 3  # Push right engine to counter leftwards movement
-    else:
-        # Control descent speed
-        if y_vel < -0.3:
-            action = 2
-        if abs(y_vel) < 0.1 and not left_contact and not right_contact:
-            action = 2
+    # Stabilization
+    if abs(angle) > 0.1:
+        return 1 if angle < 0 else 3  # Fire left or right engine to counteract angle
 
-    return action
+    # Slowing descent
+    if y_vel < -0.5:
+        return 2  # Fire both engines to control descent
+
+    # Centering horizontally
+    if abs(x_pos) > 0.1:
+        return 1 if x_pos > 0 else 3  # Fire engines to move towards the center
+
+    # If everything is stable, do nothing or minor adjustments
+    if abs(angular_vel) > 0.1:
+        return 1 if angular_vel > 0 else 3
+
+    return 0
