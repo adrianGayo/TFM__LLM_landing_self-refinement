@@ -28,21 +28,22 @@ def act(observation):
             }
     '''
     x, y, x_vel, y_vel, angle, angle_vel, left_contact, right_contact = observation
-    # Stabilize ship's angle first if it is more than 0.1 radians (5.7 degrees)
-    if angle < -0.1 or angle_vel < -0.1:
-        return 3  # Push right engine to reduce left tilt
-    elif angle > 0.1 or angle_vel > 0.1:
-        return 1  # Push left engine to reduce right tilt
-    # If angle is relatively stable, manage horizontal velocity
+    # Emphasize initial stabilization
+    if abs(angle) > 0.1 or abs(angle_vel) > 0.1:
+        if angle < -0.1 or angle_vel < -0.1:
+            return 3  # Push right engine to reduce left tilt
+        elif angle > 0.1 or angle_vel > 0.1:
+            return 1  # Push left engine to reduce right tilt
+    # Focus on reducing horizontal velocity next
     if abs(x_vel) > 0.1:
         if x_vel < 0:
             return 3  # Push right engine to counter leftward velocity
         else:
             return 1  # Push left engine to counter rightward velocity
-    # Control vertical velocity to prepare for landing
+    # Control descent to safe levels
     if y_vel < -0.5:
         return 2  # Push both engines upwards to slow descent
-    # More precise adjustments near surface
+    # Execute fine-tuned adjustments near the surface
     if y < 0.3:
         if abs(x_vel) > 0.05:
             if x_vel < 0:
@@ -51,4 +52,4 @@ def act(observation):
                 return 1
         if y_vel < -0.2:
             return 2
-    return 0  # If everything is stable, switch off engines
+    return 0  # Switch off engines as the default
