@@ -1,5 +1,6 @@
 import random
 
+
 def act(observation):
     '''
     The function that codifies the action to be taken in each instant of time.
@@ -7,7 +8,7 @@ def act(observation):
     Args:
         observation (numpy.array):
             "description": "The state of the environment after the action is taken.",
-            "positions": {  
+            "positions": {
                 "0": "X position",
                 "1": "Y position",
                 "2": "X velocity",
@@ -29,18 +30,28 @@ def act(observation):
                 '3' : "Push right engine"
             }
     '''
-    X_position, Y_position, X_velocity, Y_velocity, Angle, Angular_velocity, Left_contact, Right_contact = observation
-    if abs(Angle) > 0.1:
-        if Angle < 0:
-            return 1
-        else:
-            return 3
-    elif abs(X_velocity) > 0.2:
-        if X_velocity < 0:
-            return 3
-        else:
-            return 1
-    elif Y_velocity < -0.3 or Y_position > 0.2:
-        return 2
-    else:
+    # Unpack the state vector for easier comprehension
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    
+    # If contact sensors are active, no action is required.
+    if left_contact or right_contact:
         return 0
+    
+    # Stabilize angle first
+    if angle < -0.1:
+        return 1  # Push left engine to rotate right
+    elif angle > 0.1:
+        return 3  # Push right engine to rotate left
+    
+    # Control vertical speed
+    if y_vel < -0.5:
+        return 2  # Push both engines (upwards) to slow descent
+    
+    # Control horizontal position and speed
+    if x_vel < -0.5:
+        return 3  # Push right engine to move left
+    elif x_vel > 0.5:
+        return 1  # Push left engine to move right
+    
+    # If everything is stable, keep engines off
+    return 0
