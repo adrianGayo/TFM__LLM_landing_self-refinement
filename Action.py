@@ -28,28 +28,27 @@ def act(observation):
             }
     '''
     x, y, x_vel, y_vel, angle, angle_vel, left_contact, right_contact = observation
-    # Emphasize initial stabilization
-    if abs(angle) > 0.1 or abs(angle_vel) > 0.1:
-        if angle < -0.1 or angle_vel < -0.1:
-            return 3  # Push right engine to reduce left tilt
-        elif angle > 0.1 or angle_vel > 0.1:
-            return 1  # Push left engine to reduce right tilt
-    # Focus on reducing horizontal velocity next
-    if abs(x_vel) > 0.1:
-        if x_vel < 0:
-            return 3  # Push right engine to counter leftward velocity
-        else:
-            return 1  # Push left engine to counter rightward velocity
-    # Control descent to safe levels
+    if left_contact or right_contact: 
+        return 0  # turn off engines if landed
+    # Angle correction
+    if angle < -0.1:
+        return 3  # Push right engine
+    elif angle > 0.1:
+        return 1  # Push left engine
+    # Speed correction (X axis)
+    if x_vel < -0.1:
+        return 3  # Push right engine
+    elif x_vel > 0.1:
+        return 1  # Push left engine
+    # Speed correction (Y axis)
     if y_vel < -0.5:
-        return 2  # Push both engines upwards to slow descent
-    # Execute fine-tuned adjustments near the surface
-    if y < 0.3:
-        if abs(x_vel) > 0.05:
-            if x_vel < 0:
-                return 3
-            else:
-                return 1
-        if y_vel < -0.2:
-            return 2
-    return 0  # Switch off engines as the default
+        return 2  # Push both engines
+    # General corrections for stable landing
+    if y < 0.3 and abs(x_vel) > 0.05:
+        if x_vel < 0:
+            return 3  # Push right engine
+        else:
+            return 1  # Push left engine
+    if y < 0.3 and y_vel < -0.2:
+        return 2  # Push both engines
+    return 0  # Switch off engines
