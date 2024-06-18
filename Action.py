@@ -1,47 +1,46 @@
+import random
+
+# This helper function normalizes the angle between -pi and pi
+import numpy as np
+
+def normalize_angle(angle):
+    while angle < -np.pi:
+        angle += 2 * np.pi
+    while angle > np.pi:
+        angle -= 2 * np.pi
+    return angle
+
+# Main act function
+
 def act(observation):
-    '''
-    The function that codifies the action to be taken in each instant of time.
+    X, Y, X_v, Y_v, angle, ang_v, left_contact, right_contact = observation
+    action = 0
+    
+    # Normalize the angle
+    angle = normalize_angle(angle)
 
-    Args:
-        observation (numpy.array):
-            "description": "The state of the environment after the action is taken.",
-            "positions": {  
-                "0": "X position",
-                "1": "Y position",
-                "2": "X velocity",
-                "3": "Y velocity",
-                "4": "Angle",
-                "5": "Angular velocity",
-                "6": "Left contact sensor",
-                "7": "Right contact sensor"
-            },
-            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
-            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
-
-    Returns:
-        Integer  : The action to be taken.
-        "options": {
-                '0' : "Switch off engines",
-                '1' : "Push left engine",
-                '2' : "Push both engines (upwards)",
-                '3' : "Push right engine"
-            }
-    '''
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-    action = 0  # Default action is to switch off engines
-
-    # Stabilize angle and angular velocity
-    if angle < -0.05 or ang_vel < -0.05:
-        action = 1  # Push left engine
-    elif angle > 0.05 or ang_vel > 0.05:
-        action = 3  # Push right engine
-    # Control descent rate more aggressively
-    elif y_vel < -0.2:
-        action = 2  # Push both engines (upwards)
-    # Control horizontal position more strictly
-    elif x_pos < -0.05:
-        action = 3  # Push right engine
-    elif x_pos > 0.05:
-        action = 1  # Push left engine
+    # Attempt to stabilize the spacecraft's orientation first
+    if abs(angle) > 0.1:
+        if angle > 0:
+            action = 1
+        else:
+            action = 3
+    
+    # If orientation is stabilized, control the horizontal velocity
+    elif abs(X_v) > 0.1:
+        if X_v > 0:
+            action = 1
+        else:
+            action = 3
+    
+    # If both orientation and horizontal velocity are controlled, manage descent with center engine
+    elif Y_v < -0.1:
+        action = 2
+    elif Y_v > 0.1:
+        action = 0
+    
+    # Fine adjustments to make smoother landing when close to the ground
+    if Y < 0.1 and abs(X_v) < 0.1 and abs(Y_v) < 0.1 and abs(angle) < 0.1:
+        action = 0
 
     return action
