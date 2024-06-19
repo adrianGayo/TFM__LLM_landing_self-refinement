@@ -1,16 +1,31 @@
 def act(observation):
+    
     # Extract relevant information from the observation
-    current_status = observation['current status']
-    speed_x, speed_y, position_x, position_y, rotation, speed_rotation, main_engine, side_engine = current_status
-    score = observation['score']
-    action = 0  # Default action to do nothing
+    position_x = observation[0]
+    position_y = observation[1]
+    speed_x = observation[2]
+    speed_y = observation[3]
+    angle = observation[4]
+    angular_speed = observation[5]
+    side_engine_1 = observation[6]
+    side_engine_2 = observation[7]
     
-    # Modify the action based on the current_status
-    if speed_y < 0.0:
-        action = 3  # Fire the main engine to slow down the descent
-    elif rotation < 0.0:
-        action = 1  # Fire the right side engine to rotate counterclockwise
-    elif rotation > 0.0:
-        action = 2  # Fire the left side engine to rotate clockwise
+    score = 0
+    action = 0  # Default: Do nothing
     
+    # Custom logic for landing
+    if position_y > 1.4:  # Ship is too high, reduce height
+        if speed_y > 0.1:  # Ship is moving upward, slow it down
+            action = 3  # Fire the main engine upwards
+        else:
+            action = 0  # Do nothing
+    else:
+        if angle > 0.1 or angle < -0.1:  # Ship is tilted, adjust angle
+            if angle > 0.1:
+                action = 1  # Rotate counter-clockwise
+            else:
+                action = 2  # Rotate clockwise
+        else:
+            action = 2  # Maintain stability while landing
+        
     return action
