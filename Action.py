@@ -1,25 +1,18 @@
-def act(data):
-    
-    acc_x = data[2]
-    acc_y = data[3]
-    vel_x = data[4]
-    vel_y = data[5]
-    landing_status = data[1]
-    score = data[6]
-    action = 0
-    
-    # Implement your decision-making process here
-    if landing_status == 3:  # If the landing is out of bounds
-        action = 0
-    elif acc_y < -0.2:  # Increase altitude if falling too fast
-        action = 1
-    elif acc_y > 0.2:  # Decrease altitude if ascending too fast
-        action = 3
-    elif vel_x > 0.05:  # Move left
-        action = 2
-    elif vel_x < -0.05:  # Move right
-        action = 4
+def act(obs):
+    # Analyzing observations
+    speed_x = obs[0]
+    speed_y = obs[1]
+    pos_x = obs[2]
+    pos_y = obs[3]
+    angle = obs[4]
+    left_engine = obs[5]
+    main_engine = obs[6]
+    right_engine = obs[7]
+    score = obs[8]
+    # Decision-making
+    if pos_x < 0:
+        return 3  # Fire left engine to correct position
+    elif pos_x > 0:
+        return 1  # Fire right engine to correct position
     else:
-        action = 0  # Stay still
-    
-    return action
+        return 2  # Fire main engine to stabilize
