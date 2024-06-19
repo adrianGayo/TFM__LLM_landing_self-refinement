@@ -1,18 +1,23 @@
-def act(obs):
-    # Analyzing observations
-    speed_x = obs[0]
-    speed_y = obs[1]
-    pos_x = obs[2]
-    pos_y = obs[3]
-    angle = obs[4]
-    left_engine = obs[5]
-    main_engine = obs[6]
-    right_engine = obs[7]
-    score = obs[8]
-    # Decision-making
-    if pos_x < 0:
-        return 3  # Fire left engine to correct position
-    elif pos_x > 0:
-        return 1  # Fire right engine to correct position
+def act(observation):
+    
+    # Check if time is less than 100 for initial maneuvers
+    if observation[0] < 100:
+        # Accelerate downwards to stabilize the descending ship
+        if observation[3] < -0.25:
+            return 3
+        # Slow down the ship to control landing speed
+        elif observation[2] > 0.1:
+            return 1
+        # Make small adjustments before landing
+        else:
+            return 2
+    
+    # After time 100, start the landing procedure
     else:
-        return 2  # Fire main engine to stabilize
+        # Land gently by adjusting the ship's tilt and speed
+        if observation[3] < -0.15:
+            return 3
+        elif observation[2] > 0.06:
+            return 1
+        else:
+            return 2
