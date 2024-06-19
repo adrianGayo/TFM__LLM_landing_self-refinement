@@ -1,23 +1,29 @@
 def act(observation):
-    
-    # Check if time is less than 100 for initial maneuvers
-    if observation[0] < 100:
-        # Accelerate downwards to stabilize the descending ship
-        if observation[3] < -0.25:
-            return 3
-        # Slow down the ship to control landing speed
-        elif observation[2] > 0.1:
-            return 1
-        # Make small adjustments before landing
+    # Extract relevant information from the observation
+    position_x = observation[0]
+    position_y = observation[1]
+    speed_x = observation[2]
+    speed_y = observation[3]
+    angle = observation[4]
+    angular_speed = observation[5]
+    left_engine = observation[6]
+    right_engine = observation[7]
+    # Initialize action to 0
+    action = 0
+    # Logic for the decision-making process
+    if angle > 0.05 or angle < -0.05:
+        # If the spacecraft is tilted, correct the angle with the left or right engine
+        if angle > 0.05:
+            action = 2  # Fire left engine
         else:
-            return 2
-    
-    # After time 100, start the landing procedure
+            action = 1  # Fire right engine
+    elif speed_y < 0:
+        # If the spacecraft is moving upwards, fire the main engine
+        action = 3
+    elif speed_y < -1:
+        # If the spacecraft is moving downwards too quickly, fire the main engine
+        action = 3
     else:
-        # Land gently by adjusting the ship's tilt and speed
-        if observation[3] < -0.15:
-            return 3
-        elif observation[2] > 0.06:
-            return 1
-        else:
-            return 2
+        # Otherwise, keep the action as 0 (no engine firing)
+        action = 0
+    return action
