@@ -1,31 +1,49 @@
-def act(observation):
+def act(data):
     
-    # Extract relevant information from the observation
-    position_x = observation[0]
-    position_y = observation[1]
-    speed_x = observation[2]
-    speed_y = observation[3]
-    angle = observation[4]
-    angular_speed = observation[5]
-    side_engine_1 = observation[6]
-    side_engine_2 = observation[7]
+    # Parameters
+    min_speed_x = -0.1
+    max_speed_x = 0.1
+    target_pos_x = 0.0
+    safe_range_x = 0.01
+    min_speed_y = -0.05
+    max_speed_y = 0.05
+    target_pos_y = 1.0
+    safe_range_y = 0.1
+    crash_threshold = -1.0
+    success_threshold = 100.0
+    center_engine_penalty = 0.3
+    side_engine_penalty = 0.03
+    tilt_penalty = 0.03
     
-    score = 0
-    action = 0  # Default: Do nothing
+    # Extracting data
+    current_status = data['current_status']
+    time = data['time']
     
-    # Custom logic for landing
-    if position_y > 1.4:  # Ship is too high, reduce height
-        if speed_y > 0.1:  # Ship is moving upward, slow it down
-            action = 3  # Fire the main engine upwards
-        else:
-            action = 0  # Do nothing
-    else:
-        if angle > 0.1 or angle < -0.1:  # Ship is tilted, adjust angle
-            if angle > 0.1:
-                action = 1  # Rotate counter-clockwise
+    # Calculating values
+    pos_x = current_status[0]
+    pos_y = current_status[1]
+    speed_x = current_status[4]
+    speed_y = current_status[5]
+    tilt = current_status[3]
+    action = 0
+    
+    # If the position is safe
+    if (pos_x >= target_pos_x - safe_range_x and pos_x <= target_pos_x + safe_range_x) and \
+        (pos_y >= target_pos_y - safe_range_y and pos_y <= target_pos_y + safe_range_y):
+        if speed_x >= min_speed_x and speed_x <= max_speed_x and speed_y >= min_speed_y and speed_y <= max_speed_y:
+            if tilt <= tilt_penalty:  # Tilt penalty
+                action = 0
             else:
-                action = 2  # Rotate clockwise
+                action = 2  # Main engine
         else:
-            action = 2  # Maintain stability while landing
-        
+            action = 3  # Down engine
+    else:
+        if crash_threshold <= current_status[7] <= success_threshold:  # Checking if the landing is successful or a crash
+            if pos_x < target_pos_x:
+                action = 1  # Right engine
+            else:
+                action = 4  # Left engine
+        else:
+            action = 3  # Down engine
+    
     return action
