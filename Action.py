@@ -29,13 +29,6 @@ def act(observation):
                 '3' : "Push right engine"
             }
     '''
-    # Stabilize ship
-    angle_threshold = 0.05
-    velocity_threshold = 0.1
-    target_y_velocity = -0.5
-    angle_correction_factor = 10
-    position_tolerance = 0.1
-
     x_position = observation[0]
     y_position = observation[1]
     x_velocity = observation[2]
@@ -45,24 +38,39 @@ def act(observation):
     left_contact = observation[6]
     right_contact = observation[7]
 
+    # Parameters
+    angle_threshold = 0.1
+    velocity_threshold = 0.1
+    y_velocity_threshold = -0.5
+    position_tolerance = 0.1
+    critical_distance = 0.2
+
     if left_contact or right_contact:
         return 0
 
-    # Maintain vertical stability
-    if abs(angle) > angle_threshold:
-        if angle < 0:
-            return 1  # Fire left engine to rotate clockwise
+    # Step 1: Maintain vertical orientation
+    if abs(angle) > angle_threshold or abs(angular_velocity) > angle_threshold:
+        if angle < 0 or angular_velocity < -angle_threshold:
+            return 1
         else:
-            return 3  # Fire right engine to rotate counter-clockwise
+            return 3
 
-    # Control horizontal and vertical speed
-    if abs(x_position) > position_tolerance or abs(x_velocity) > velocity_threshold:
+    # Step 2: Slow down horizontal movement
+    if math.fabs(x_velocity) > velocity_threshold and math.fabs(x_position) > critical_distance:
         if x_velocity > 0:
-            return 1  # Fire left engine to move left
+            return 1
         else:
-            return 3  # Fire right engine to move right
-
-    if y_velocity < target_y_velocity:
-        return 2  # Fire main engine to reduce descent speed
+            return 3
+        
+    # Step 3: Control descent speed
+    if y_velocity < y_velocity_threshold:
+        return 2
+        
+    # Step 4: Minor adjustments - based on height
+    if y_position < critical_distance and abs(x_position) > position_tolerance:
+        if x_position > 0:
+            return 1
+        else:
+            return 3
 
     return 0
