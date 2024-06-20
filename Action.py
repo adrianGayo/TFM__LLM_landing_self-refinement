@@ -7,7 +7,7 @@ def act(observation):
     Args:
         observation (numpy.array):
             "description": "The state of the environment after the action is taken.",
-            "positions": { 
+            "positions": {  
                 "0": "X position",
                 "1": "Y position",
                 "2": "X velocity",
@@ -29,11 +29,15 @@ def act(observation):
                 '3' : "Push right engine"
             }
     '''
+    # Unpack the observation vector
     x_position = observation[0]
+    y_position = observation[1]
     x_velocity = observation[2]
     y_velocity = observation[3]
     angle = observation[4]
     angular_velocity = observation[5]
+    left_contact = observation[6]
+    right_contact = observation[7]
 
     # Parameters
     angle_threshold = 0.1
@@ -41,6 +45,10 @@ def act(observation):
     velocity_threshold = 0.1
     y_velocity_threshold = -0.5
     position_tolerance = 0.1
+    critical_height = 0.1
+
+    if left_contact or right_contact:
+        return 0
 
     # Step 1: Maintain vertical orientation
     if abs(angle) > angle_threshold or abs(angular_velocity) > angular_velocity_threshold:
@@ -50,7 +58,7 @@ def act(observation):
             return 3
 
     # Step 2: Slow down horizontal movement
-    if abs(x_velocity) > velocity_threshold:
+    if abs(x_velocity) > velocity_threshold and y_position > critical_height:
         if x_velocity > 0:
             return 1
         else:
@@ -60,8 +68,8 @@ def act(observation):
     if y_velocity < y_velocity_threshold:
         return 2
 
-    # Step 4: Minor adjustments - based on proximity to center position
-    if abs(x_position) > position_tolerance:
+    # Step 4: Minor adjustments - based on height and x position
+    if y_position < critical_height and abs(x_position) > position_tolerance:
         if x_position > 0:
             return 1
         else:
