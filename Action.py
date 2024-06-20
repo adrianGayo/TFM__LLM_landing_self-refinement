@@ -43,9 +43,10 @@ def act(observation):
     angle_threshold = 0.1
     angular_velocity_threshold = 0.3
     velocity_threshold = 0.1
-    y_velocity_threshold = -0.5
+    critical_y_velocity_threshold = -0.2
+    stable_y_velocity_threshold = -0.5
     position_tolerance = 0.1
-    critical_height = 0.1
+    critical_height = 0.3
 
     if left_contact or right_contact:
         return 0
@@ -58,14 +59,16 @@ def act(observation):
             return 3
 
     # Step 2: Slow down horizontal movement
-    if abs(x_velocity) > velocity_threshold and y_position > critical_height:
+    if abs(x_velocity) > velocity_threshold:
         if x_velocity > 0:
             return 1
         else:
             return 3
 
     # Step 3: Control descent speed
-    if y_velocity < y_velocity_threshold:
+    if y_velocity < critical_y_velocity_threshold and y_position < critical_height:
+        return 2
+    elif y_velocity < stable_y_velocity_threshold:
         return 2
 
     # Step 4: Minor adjustments - based on height and x position
