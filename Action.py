@@ -7,7 +7,7 @@ def act(observation):
     Args:
         observation (numpy.array):
             "description": "The state of the environment after the action is taken.",
-            "positions": {  
+            "positions": { 
                 "0": "X position",
                 "1": "Y position",
                 "2": "X velocity",
@@ -30,44 +30,38 @@ def act(observation):
             }
     '''
     x_position = observation[0]
-    y_position = observation[1]
     x_velocity = observation[2]
     y_velocity = observation[3]
     angle = observation[4]
     angular_velocity = observation[5]
-    left_contact = observation[6]
-    right_contact = observation[7]
 
     # Parameters
     angle_threshold = 0.1
+    angular_velocity_threshold = 0.3
     velocity_threshold = 0.1
     y_velocity_threshold = -0.5
     position_tolerance = 0.1
-    critical_distance = 0.2
-
-    if left_contact or right_contact:
-        return 0
 
     # Step 1: Maintain vertical orientation
-    if abs(angle) > angle_threshold or abs(angular_velocity) > angle_threshold:
-        if angle < 0 or angular_velocity < -angle_threshold:
+    if abs(angle) > angle_threshold or abs(angular_velocity) > angular_velocity_threshold:
+        if angle < 0 or angular_velocity < -angular_velocity_threshold:
             return 1
         else:
             return 3
 
     # Step 2: Slow down horizontal movement
-    if math.fabs(x_velocity) > velocity_threshold and math.fabs(x_position) > critical_distance:
+    if abs(x_velocity) > velocity_threshold:
         if x_velocity > 0:
             return 1
         else:
             return 3
-        
+
     # Step 3: Control descent speed
     if y_velocity < y_velocity_threshold:
         return 2
-        
-    # Step 4: Minor adjustments - based on height
-    if y_position < critical_distance and abs(x_position) > position_tolerance:
+
+    # Step 4: Minor adjustments - based on proximity to center position
+    if abs(x_position) > position_tolerance:
         if x_position > 0:
             return 1
         else:
