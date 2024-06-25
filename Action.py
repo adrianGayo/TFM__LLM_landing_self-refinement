@@ -32,25 +32,25 @@ def act(observation):
     '''
     x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_cont, right_cont = observation
     
-    # Main engine thrust
-    if y_vel < -0.3:  # Falling too fast
-        return 2
-    
-    # Side engines for horizontal movement
+    # Stabilize angle first
+    if angle < -0.1:  # Tilting too much left
+        return 1
+    if angle > 0.1:  # Tilting too much right
+        return 3
+
+    # Correct horizontal position
     if x_pos < -0.2:  # Too far left
         return 3
     if x_pos > 0.2:  # Too far right
         return 1
 
-    # Side engines for angular correction
-    if angle < -0.1:  # Tilting too much left
-        return 1
-    if angle > 0.1:  # Tilting too much right
-        return 3
+    # Use main engine to reduce vertical speed if falling too fast
+    if y_vel < -0.3 or (y_pos > 0.3 and y_vel < -0.1):  # Falling too fast or too high with some vertical speed
+        return 2
+
+    # If the velocity is small in both directions and the angle is small, turn off engines
+    if abs(y_vel) < 0.1 and abs(x_vel) < 0.1 and abs(angle) < 0.1:
+        return 0 
     
-    # If close to the ground and stable
-    if y_pos < 0.1 and abs(x_vel) < 0.02 and abs(y_vel) < 0.02 and abs(angle) < 0.02:
-        return 0
-    
-    # Otherwise do nothing
+    # In other cases do nothing
     return 0
