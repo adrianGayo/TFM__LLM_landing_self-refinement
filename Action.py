@@ -1,4 +1,5 @@
-import math
+import numpy as np
+
 
 def act(observation):
     '''
@@ -29,53 +30,27 @@ def act(observation):
                 '3' : "Push right engine"
             }
     '''
-    # Unpack the observation vector
-    x_position = observation[0]
-    y_position = observation[1]
-    x_velocity = observation[2]
-    y_velocity = observation[3]
-    angle = observation[4]
-    angular_velocity = observation[5]
-    left_contact = observation[6]
-    right_contact = observation[7]
+    x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_cont, right_cont = observation
+    
+    # Main engine thrust
+    if y_vel < -0.3:  # Falling too fast
+        return 2
+    
+    # Side engines for horizontal movement
+    if x_pos < -0.2:  # Too far left
+        return 3
+    if x_pos > 0.2:  # Too far right
+        return 1
 
-    # Parameters
-    angle_threshold = 0.1
-    angular_velocity_threshold = 0.3
-    velocity_threshold = 0.1
-    critical_y_velocity_threshold = -0.2
-    stable_y_velocity_threshold = -0.5
-    position_tolerance = 0.1
-    critical_height = 0.3
-
-    if left_contact or right_contact:
+    # Side engines for angular correction
+    if angle < -0.1:  # Tilting too much left
+        return 1
+    if angle > 0.1:  # Tilting too much right
+        return 3
+    
+    # If close to the ground and stable
+    if y_pos < 0.1 and abs(x_vel) < 0.02 and abs(y_vel) < 0.02 and abs(angle) < 0.02:
         return 0
-
-    # Step 1: Maintain vertical orientation
-    if abs(angle) > angle_threshold or abs(angular_velocity) > angular_velocity_threshold:
-        if angle < 0 or angular_velocity < -angular_velocity_threshold:
-            return 1
-        else:
-            return 3
-
-    # Step 2: Slow down horizontal movement
-    if abs(x_velocity) > velocity_threshold:
-        if x_velocity > 0:
-            return 1
-        else:
-            return 3
-
-    # Step 3: Control descent speed
-    if y_velocity < critical_y_velocity_threshold and y_position < critical_height:
-        return 2
-    elif y_velocity < stable_y_velocity_threshold:
-        return 2
-
-    # Step 4: Minor adjustments - based on height and x position
-    if y_position < critical_height and abs(x_position) > position_tolerance:
-        if x_position > 0:
-            return 1
-        else:
-            return 3
-
+    
+    # Otherwise do nothing
     return 0
