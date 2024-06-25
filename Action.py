@@ -32,10 +32,10 @@ def act(observation):
     '''
     x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_cont, right_cont = observation
     
-    # Stabilize angle first
-    if angle < -0.1:  # Tilting too much left
+    # Stabilize angle first if it is too tilted
+    if angle < -0.1 or angular_vel < -0.1:  # Tilting too much left or rotating too fast counterclockwise
         return 1
-    if angle > 0.1:  # Tilting too much right
+    if angle > 0.1 or angular_vel > 0.1:  # Tilting too much right or rotating too fast clockwise
         return 3
 
     # Correct horizontal position
@@ -45,12 +45,12 @@ def act(observation):
         return 1
 
     # Use main engine to reduce vertical speed if falling too fast
-    if y_vel < -0.3 or (y_pos > 0.3 and y_vel < -0.1):  # Falling too fast or too high with some vertical speed
+    if y_vel < -0.3:  # Falling too fast
         return 2
 
     # If the velocity is small in both directions and the angle is small, turn off engines
     if abs(y_vel) < 0.1 and abs(x_vel) < 0.1 and abs(angle) < 0.1:
         return 0 
-    
+
     # In other cases do nothing
     return 0
