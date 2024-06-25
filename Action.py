@@ -32,25 +32,33 @@ def act(observation):
     '''
     x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_cont, right_cont = observation
     
-    # Stabilize angle first if it is too tilted
-    if angle < -0.1 or angular_vel < -0.1:  # Tilting too much left or rotating too fast counterclockwise
+    # Thresholds
+    angle_threshold = 0.1
+    angular_velocity_threshold = 0.1
+    horizontal_distance_threshold = 0.2
+    horizontal_velocity_threshold = 0.2
+    vertical_velocity_threshold = -0.3
+    stabilization_threshold = 0.1
+
+    # Stabilize angle first if it is too tilted or rotating too fast
+    if angle < -angle_threshold or angular_vel < -angular_velocity_threshold:  # Tilting too much left or rotating too fast counterclockwise
         return 1
-    if angle > 0.1 or angular_vel > 0.1:  # Tilting too much right or rotating too fast clockwise
+    if angle > angle_threshold or angular_vel > angular_velocity_threshold:  # Tilting too much right or rotating too fast clockwise
         return 3
 
-    # Correct horizontal position
-    if x_pos < -0.2:  # Too far left
+    # Correct horizontal position if too far from the center
+    if x_pos < -horizontal_distance_threshold or x_vel < -horizontal_velocity_threshold:  # Too far left or moving too fast to the left
         return 3
-    if x_pos > 0.2:  # Too far right
+    if x_pos > horizontal_distance_threshold or x_vel > horizontal_velocity_threshold:  # Too far right or moving too fast to the right
         return 1
 
     # Use main engine to reduce vertical speed if falling too fast
-    if y_vel < -0.3:  # Falling too fast
+    if y_vel < vertical_velocity_threshold:  # Falling too fast
         return 2
 
-    # If the velocity is small in both directions and the angle is small, turn off engines
-    if abs(y_vel) < 0.1 and abs(x_vel) < 0.1 and abs(angle) < 0.1:
-        return 0 
+    # If the velocity and angle are small, turn off engines to stabilize
+    if abs(y_vel) < stabilization_threshold and abs(x_vel) < stabilization_threshold and abs(angle) < stabilization_threshold:
+        return 0
 
-    # In other cases do nothing
+    # In other cases, do nothing
     return 0
