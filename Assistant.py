@@ -127,7 +127,7 @@ class AssistantOpenAI:
         self.messages.append(response.id)
         return response
     
-    def run(self, thread_id, assistant_id, **kwargs):
+    def run(self, thread_id, assistant_id, tool_choice='auto', **kwargs):
         """ Ejecuta un hilo.
         
         Args:
@@ -138,7 +138,7 @@ class AssistantOpenAI:
         Returns:
             dict: Información de la ejecución.
         """
-        response = self.client.beta.threads.runs.create(thread_id=thread_id, assistant_id=assistant_id, tool_choice='required', **kwargs)
+        response = self.client.beta.threads.runs.create(thread_id=thread_id, assistant_id=assistant_id, tool_choice=tool_choice, **kwargs)
         self.runs.append(response.id)
         return response
     

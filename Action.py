@@ -1,47 +1,28 @@
-import numpy as np
-
-def act(ob):
-    distance_to_center = np.sqrt(ob[0] ** 2 + ob[1] ** 2)
+def act(observation):
+    # Observation Format: [x, y, v_x, v_y, angle, v_angle, leg1_contact, leg2_contact]
+    # Decision Codes: 0: Do nothing, 1: Fire left engine, 2: Fire main engine, 3: Fire right engine
     
-    # Speed control
-    if ob[1] > -0.4:
-        action = 2  # Decrease altitude
+    # Define actions
+    main_engine = 2
+    left_engine = 1
+    right_engine = 3
+    
+    # Extract relevant data from observation
+    x, y, v_x, v_y, angle, v_angle, leg1_contact, leg2_contact = observation
+    
+    # Criteria for actions
+    if angle > 0.1 or angle < -0.1:
+        # If the angle is too much, fire the side engines to stabilize
+        return left_engine if angle < 0 else right_engine
+    elif y > 1.4:
+        # If the spacecraft is still high, fire the main engine to go down
+        return main_engine
+    elif v_y < -0.1:
+        # If the spacecraft is descending too fast, fire the main engine to slow down the descent
+        return main_engine
+    elif abs(v_x) > 0.05:
+        # If the horizontal speed is too high, fire the side engines to adjust the horizontal position
+        return left_engine if v_x < 0 else right_engine
     else:
-        # Position control
-        if distance_to_center > 0.24:  # Move closer to the center
-            if ob[0] > 0:
-                action = 1  # Move to the left
-            else:
-                action = 3  # Move to the right
-        else:
-            action = 0  # Maintain current position
-    
-    # Tilt control
-    if ob[3] > 0.2:
-        action = 1  # Correct left tilt
-    if ob[3] < -0.2:
-        action = 3  # Correct right tilt
-    
-    # Firing engine penalty
-    if action == 1 or action == 3:
-        ob_action = ob[action + 5]
-        if ob_action > 0:
-            if action == 1:
-                ob[7] -= 0.3  # Penalty for left engine firing
-            else:
-                ob[7] -= 0.3  # Penalty for right engine firing
-        else:
-            ob[7] -= 0.03  # Penalty for side engine firing
-    
-    # Score calculation
-    score = ob[7]
-    if action == 0:
-        score += 100  # Successful landing
-    
-    return action, score
-
-# Test the function with the last observation
-test_observation = [0.087, -0.001, 0.0, -0.0, 0.001, 0.0, 1.0, 1.0]
-action, score = act(test_observation)
-print("Action to take:", action)
-print("Score:", score)
+        # Otherwise, stay stable
+        return 0
