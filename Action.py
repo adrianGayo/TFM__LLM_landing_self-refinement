@@ -1,20 +1,21 @@
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
     
-    # Step 1: Stabilize the Spacecraft
-    if angular_vel < -0.5 or angle < -0.1:  # Rotating too fast left or tilted left
+    # Prioritize stabilization
+    if angle < -0.1 or angular_vel < -0.5:  # Too tilted to the left, apply right thrust
         return 1
-    if angular_vel > 0.5 or angle > 0.1:  # Rotating too fast right or tilted right
+    elif angle > 0.1 or angular_vel > 0.5:  # Too tilted to the right, apply left thrust
         return 3
     
-    # Step 2: Reduce Horizontal Velocity
-    if x_vel < -0.5:  # Moving too fast to the left
+    # Manage horizontal position and velocity
+    if x_pos < -0.1 or x_vel < -0.5:  # Too far left, apply right thrust
         return 3
-    if x_vel > 0.5:  # Moving too fast to the right
+    elif x_pos > 0.1 or x_vel > 0.5:  # Too far right, apply left thrust
         return 1
-    
-    # Step 3: Prepare for Landing (Control Vertical Velocity)
-    if y_vel < -0.5:  # Falling too fast
+
+    # Control descent speed
+    if y_vel < -0.5:  # Falling too fast, apply main engine
         return 2
 
+    # Default action if all parameters are in acceptable range
     return 0
