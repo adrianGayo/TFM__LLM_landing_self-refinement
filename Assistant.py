@@ -168,7 +168,7 @@ class AssistantOpenAI:
         Returns:
             dict: Información de la respuesta.
         """
-        response = self.client.beta.threads.runs.submit_tool_outputs(run_id, thread_id=thread_id, tool_outputs=tool_outputs, **kwargs)
+        response = self.client.beta.threads.runs.submit_tool_outputs(run_id, thread_id=thread_id, **kwargs)
         return response
     
     
@@ -181,10 +181,12 @@ class AssistantOpenAI:
         Returns:
             list: Lista de mensajes.
         """
+        ids = []
         response = self.client.beta.threads.messages.list(thread_id)
         for message in response.data:
             print(f"{message.role}: {message.content}")
-        return response
+            ids.append(message.id)
+        return response, ids
     
     
     
