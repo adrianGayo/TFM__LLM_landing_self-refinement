@@ -2,22 +2,39 @@ import numpy as np
 
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-    action = 0  # Default action is to turn off all engines
 
-    # Correct significant tilt first
-    if abs(angle) > 0.2:
-        action = 1 if angle > 0 else 3
+    # Constants for decision-making thresholds
+    ANGLE_THRESHOLD = 0.1  # radians
+    HORIZONTAL_VELOCITY_THRESHOLD = 0.1  # m/s
+    VERTICAL_VELOCITY_THRESHOLD = -0.2  # m/s
+    POSITION_THRESHOLD = 0.1  # meters
 
-    # Consistent reduction of horizontal speed
-    elif abs(x_vel) > 0.2:
-        action = 1 if x_vel > 0 else 3
+    # If the spacecraft is close to landing and aligned, shut off engines
+    if (abs(x_pos) < POSITION_THRESHOLD and abs(x_vel) < HORIZONTAL_VELOCITY_THRESHOLD and 
+        abs(y_vel) < VERTICAL_VELOCITY_THRESHOLD and abs(angle) < ANGLE_THRESHOLD):
+        return 0  # Switch off engines
+    
+    # Correct horizontal position if drifting
+    if x_pos > POSITION_THRESHOLD:
+        return 1  # Push left engine to move right
+    elif x_pos < -POSITION_THRESHOLD:
+        return 3  # Push right engine to move left
+    
+    # Reduce horizontal velocity if too high
+    if x_vel > HORIZONTAL_VELOCITY_THRESHOLD:
+        return 3  # Push right engine to reduce positive x velocity
+    elif x_vel < -HORIZONTAL_VELOCITY_THRESHOLD:
+        return 1  # Push left engine to reduce negative x velocity
+    
+    # If descending too quickly, push both engines to slow down
+    if y_vel < VERTICAL_VELOCITY_THRESHOLD:
+        return 2
 
-    # Maintain slow descent continuously
-    elif y_vel <= -0.1:
-        action = 2  # Central engine to manage slow descent
+    # Correct angle
+    if angle > ANGLE_THRESHOLD:
+        return 1  # Push left engine to reduce positive angle
+    elif angle < -ANGLE_THRESHOLD:
+        return 3  # Push right engine to reduce negative angle
 
-    # Aggressive vertical velocity reduction
-    elif y_vel <= -0.5:
-        action = 2  # Further central engine consistent vertical control
-
-    return action
+    # Default action to push both engines to maintain control
+    return 2
