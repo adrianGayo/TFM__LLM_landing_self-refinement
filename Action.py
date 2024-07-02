@@ -35,23 +35,25 @@ def act(observation):
     angle_threshold = 0.1  # Near vertical
     velocity_threshold = 0.1  # Near zero velocity
     position_threshold = 0.1  # Near landing area
+    descent_speed_limit = -0.5  # Maximum safe descent speed
 
-    # Determine actions based on current state
-    # Maintain vertical orientation (angle near zero)
-    if angle < -angle_threshold:
-        return 1  # Push left engine to rotate right
-    elif angle > angle_threshold:
-        return 3  # Push right engine to rotate left
+    # Regulate angle and angular velocity
+    if abs(angle) > angle_threshold or abs(ang_vel) > velocity_threshold:
+        if angle < 0:
+            return 1  # Push left engine to rotate right
+        elif angle > 0:
+            return 3  # Push right engine to rotate left
+        
+    # Reduce vertical descent speed
+    elif Y_vel < descent_speed_limit:
+        return 2  # Push both engines to slow descent
 
-    # Control horizontal position (X velocity near zero)
-    if X_pos < -position_threshold or X_vel < -velocity_threshold:
-        return 3  # Push right engine to move left
-    elif X_pos > position_threshold or X_vel > velocity_threshold:
-        return 1  # Push left engine to move right
-
-    # Control vertical descent (Y velocity near zero)
-    if Y_vel < -velocity_threshold:
-        return 2  # Push both engines (upwards) to slow descent
+    # Control horizontal position
+    elif abs(X_pos) > position_threshold or abs(X_vel) > velocity_threshold:
+        if X_pos < 0:
+            return 3  # Push right engine to move left
+        elif X_pos > 0:
+            return 1  # Push left engine to move right
 
     # Maintain current status (engines off)
     return 0
