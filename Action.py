@@ -1,33 +1,32 @@
+import numpy as np
+
 def act(observation):
-    x_position = observation[0]
-    y_position = observation[1]
-    x_velocity = observation[2]
-    y_velocity = observation[3]
-    angle = observation[4]
-    angular_velocity = observation[5]
-    left_contact = observation[6]
-    right_contact = observation[7]
+    x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
 
-    # If already landed successfully
-    if left_contact == 1 and right_contact == 1:
-        return 0
+    # Constants for decision making
+    X_LIMIT = 0.5
+    VERTICAL_VELOCITY_LIMIT = -0.5
+    ANGLE_LIMIT = 0.1
+    HORIZONTAL_VELOCITY_LIMIT = 0.1
+    ANGULAR_VELOCITY_LIMIT = 0.1
 
-    # Correcting angle for stability as top priority if exceeds safe threshold
-    if angle > 0.1:
-        return 1  # Tilted right, push left engine to stabilize
-    elif angle < -0.1:
-        return 3  # Tilted left, push right engine to stabilize
+    # If we are close to landing, consider precision controlling
+    if y_position < 0.5:
+        # Stabilize downward speed
+        if y_velocity < VERTICAL_VELOCITY_LIMIT:
+            return 2  # Push both engines to slow descent
+        if np.abs(x_velocity) > HORIZONTAL_VELOCITY_LIMIT and np.abs(x_position) > X_LIMIT:
+            return 1 if x_velocity > 0 else 3  # Correct horizontal drift
+        # Correct angle if it's tilted
+        if np.abs(angle) > ANGLE_LIMIT or np.abs(angular_velocity) > ANGULAR_VELOCITY_LIMIT:
+            return 1 if angle > 0 else 3
 
-    # If descent speed is high, balance it correctly
-    if y_velocity < -0.1:
-        return 2  # Push up to reduce descent speed
+    # Default actions for general control considering priority
+    if y_velocity < VERTICAL_VELOCITY_LIMIT:
+        return 2  # Slow descent generally
+    if np.abs(angle) > ANGLE_LIMIT or np.abs(angular_velocity) > ANGULAR_VELOCITY_LIMIT:
+        return 1 if angle > 0 else 3  # Correct angle
+    if np.abs(x_position) > X_LIMIT:
+        return 1 if x_position > 0 else 3  # Correct horizontal position
 
-    # Control horizontal drift if high
-    if abs(x_velocity) > 0.1:
-        if x_velocity > 0:
-            return 1  # Push left engine to counteract right drift
-        else:
-            return 3  # Push right engine to counteract left drift
-
-    # Ensure minimal use of engines when stable
-    return 0  # Default to switch off engines
+    return 0  # Switch off engines if everything is within controlled limits
