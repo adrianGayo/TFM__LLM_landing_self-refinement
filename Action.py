@@ -7,25 +7,25 @@ def act(observation):
     if y_pos < 0.1 and abs(x_pos) < 0.05 and abs(x_vel) < 0.1 and abs(y_vel) < 0.1 and abs(angle) < 0.1 and abs(angular_vel) < 0.1:
         return 0  # Switch off engines for gentle landing
 
-    # 1. Correct significant angle deviation first
-    if abs(angle) >= 0.5: # more significant threshold to prevent oscillation
+    # Correct significant angle deviation first
+    if abs(angle) >= 0.2:  # Adjusted angle threshold
         if angle > 0:
             return 1  # Push left engine to correct clockwise tilt
         else:
             return 3  # Push right engine to correct counterclockwise tilt
 
-    # 2. Correct horizontal velocity for alignment
-    if abs(x_vel) >= 0.3: # higher threshold for smoother control
+    # Correct horizontal velocity for alignment
+    if abs(x_vel) >= 0.3:  # Threshold for smoother horizontal control
         if x_vel > 0:
             return 1  # Push left engine to mitigate rightward movement
         else:
             return 3  # Push right engine to mitigate leftward movement
 
-    # 3. Control vertical descent velocity for smoother descent
-    if y_vel <= -0.3 and y_pos >= 0.5: # control descent depending on the height
+    # Control vertical descent velocity for smoother descent
+    if y_vel <= -0.3 and y_pos >= 0.5:  # Manage descent speed based on altitude
         return 2  # Use both engines to slow down
 
-    if y_pos > 0.3:
-        return 2  # Use both engines to ensure smooth descent
+    if y_pos > 0.2 and y_vel < 0:  # Use vertical thrust for controlled descent
+        return 2  # Push both engines upwards
 
-    return 0
+    return 0  # Default action: switch off engines if stable
