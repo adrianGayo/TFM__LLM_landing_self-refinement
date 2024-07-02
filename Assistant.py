@@ -1,4 +1,5 @@
 from openai import OpenAI
+import json
 
 
 class AssistantOpenAI:
@@ -38,6 +39,28 @@ class AssistantOpenAI:
             description=description,
             instructions=instructions,
             tools=tools)
+        self.assistants.append(response.id)
+        return response
+    
+    def create_assistant_json_mode(self, name="Default assistant", model="gpt-3.5-turbo", description="", instructions=""):
+        """ Crea un asistente en OpenAI cuyo formato de respuesta es un objeto JSON.
+    
+        Args:
+            name (str, optional): El nombre del asistente. Por defecto es "Default assistant".
+            model (str, optional): El modelo de IA a utilizar. Por defecto es "gpt-4".
+            description (str, optional): Una descripción del asistente. Por defecto es "".
+            instructions (str, optional): Instrucciones para el asistente. Por defecto es "".
+            **kwargs: Argumentos adicionales.
+            
+        Returns:
+            dict: Información del asistente.
+        """
+        response = self.client.beta.assistants.create(
+            model=model,
+            name=name,
+            description=description,
+            instructions=instructions,
+            response_format={ "type": "json_object" })
         self.assistants.append(response.id)
         return response
     
