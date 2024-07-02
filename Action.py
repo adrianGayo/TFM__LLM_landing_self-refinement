@@ -5,41 +5,40 @@ def act(observation):
 
     # Constants for decision-making thresholds and corrective steps
     ANGLE_THRESHOLD = 0.1  # radians
-    HORIZONTAL_VELOCITY_THRESHOLD = 0.2  # m/s
-    VERTICAL_VELOCITY_THRESHOLD = -0.5  # m/s
-    POSITION_THRESHOLD = 0.1  # meters
-    MAX_ANGLE = 0.3  # radians to prevent over-tilting
+    ANGLE_CORRECT_THRESHOLD = 0.05  # radians
+    HORIZONTAL_VELOCITY_THRESHOLD = 0.1  # m/s
+    VERTICAL_VELOCITY_THRESHOLD = -0.2  # m/s
+    POSITION_THRESHOLD = 0.05  # meters
 
-    # If the spacecraft is close to landing and aligned, shut off engines
+    # Base dynamic reassessment ensuring stable control across state elements
     if abs(x_pos) < POSITION_THRESHOLD and \
        abs(x_vel) < HORIZONTAL_VELOCITY_THRESHOLD and \
        abs(y_vel) < VERTICAL_VELOCITY_THRESHOLD and \
-       abs(angle) < ANGLE_THRESHOLD and \
-       y_pos < POSITION_THRESHOLD:
+       abs(angle) < ANGLE_THRESHOLD and y_pos < POSITION_THRESHOLD:
         return 0  # Switch off engines
 
-    # Correct angle if tilting excessively
-    if angle > ANGLE_THRESHOLD or ang_vel > ANGLE_THRESHOLD:
-        return 1  # Push left engine to reduce positive angle and angular velocity
-    elif angle < -ANGLE_THRESHOLD or ang_vel < -ANGLE_THRESHOLD:
-        return 3  # Push right engine to reduce negative angle and angular velocity
+    # Handle pre-actions for stabilizing angle
+    if abs(angle) > ANGLE_THRESHOLD:
+        if angle > 0:
+            return 1  # Push left engine on exceeding positive angle
+        else:
+            return 3  # Push right engine on exceeding negative angle
 
-    # Correct horizontal drift and dynamic angular velocity simultaneously
-    if abs(angle) < MAX_ANGLE:
-        if x_pos > POSITION_THRESHOLD:
-            if ang_vel <= 0: return 1  # Push left engine to move right when stable
-        elif x_pos < -POSITION_THRESHOLD:
-            if ang_vel >= 0: return 3  # Push right engine to move left when stable
+    # Prioritize correcting angular velocity beyond specific bounds for safety
+    if ang_vel > ANGLE_CORRECT_THRESHOLD:
+        return 1  # Engaging correction steps preferentially using left
+    elif ang_vel < -ANGLE_CORRECT_THRESHOLD:
+        return 3  # Engaging correction steps preferentially using right
 
-    # Reduce horizontal velocity if too high
-    if x_vel > HORIZONTAL_VELOCITY_THRESHOLD:
-        return 3  # Push right engine to reduce positive x velocity
-    elif x_vel < -HORIZONTAL_VELOCITY_THRESHOLD:
-        return 1  # Push left engine to reduce negative x velocity
+    # Sequentially mitigate descent and dynamically allocate for velocity
+    if y_vel <= VERTICAL_VELOCITY_THRESHOLD:
+        return 2  # Start reducing drastic descent where necessary
 
-    # Minimizing vertical speed dynamically
-    if y_vel < VERTICAL_VELOCITY_THRESHOLD:
-        return 2  # Push both engines to reduce descent rate
+    # Divert corrections ensuring balance for horizontal velocity proactively
+    if x_vel >= HORIZONTAL_VELOCITY_THRESHOLD:
+        return 3  # Start corrective engagements for horizontal velocity rightwards
+    elif x_vel <= -HORIZONTAL_VELOCITY_THRESHOLD:
+        return 1  # Start corrective engagements for horizontal velocity leftwards
 
-    # Default action to push both engines to maintain control
-    return 2
+    # Default process ensuring two-way downward thrust aligning stability
+    return 2  # Engaging downward thrust process balancing in default flights
