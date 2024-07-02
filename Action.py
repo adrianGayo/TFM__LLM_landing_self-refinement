@@ -29,39 +29,32 @@ def act(observation):
                 '3' : "Push right engine"
             }
     '''
+
     X_pos, Y_pos, X_vel, Y_vel, angle, ang_vel, left_contact, right_contact = observation
 
-    # Define thresholds for decision making
-    angle_threshold = 0.1  # Near vertical
-    velocity_threshold = 0.1  # Near zero velocity
-    position_threshold = 0.1  # Near landing area
-    descent_speed_limit = -0.5  # Maximum safe descent speed
+    angle_threshold = 0.1  # Angle limit for near upright
+    vel_threshold = 0.1  # Close to zero velocity
+    pos_threshold = 0.1  # Close to landing area
+    descent_speed_limit = -0.5  # Max descent speed
 
-    # Combined approach for angle and angular velocity management
-    if abs(angle) > angle_threshold or abs(ang_vel) > velocity_threshold:
-        if angle < 0 and ang_vel <= 0:
-            return 1  # Push left engine to rotate right
-        elif angle > 0 and ang_vel >= 0:
-            return 3  # Push right engine to rotate left
-        elif angle < 0 and ang_vel > 0:
-            return 1  # Push left engine to reduce angular velocity
-        elif angle > 0 and ang_vel < 0:
-            return 3  # Push right engine to reduce angular velocity
+    def safe_firing_combined(angle, ang_vel):
+        if angle < 0 or ang_vel < 0:
+            return 1  # Firing left engine to balance right?
+        return 3  # Firing right engine to balance left?
+
+    # Regulate angle exclusively 
+    if abs(angle) > angle_threshold:
+        return safe_firing_combined(angle, ang_vel)
         
-    # Adjust vertical descent speed only when critically needed
-    elif Y_vel < descent_speed_limit:
-        return 2  # Push both engines to slow descent 
+    # Single approach for vertical stability
+    elif Y_vel < descent_speed_limit>:
+        return 2
 
-    # Correct horizontal position primarily when angle is stable
-    elif abs(X_pos) > position_threshold or abs(X_vel) > velocity_threshold:
-        if X_pos < 0 and X_vel <= 0:
-            return 3  # Push right engine to move left
-        elif X_pos > 0 and X_vel >= 0:
-            return 1  # Push left engine to move right
-        elif X_pos < 0 and X_vel > 0:
-            return 1  # Counter velocity to balance
-        elif X_pos > 0 and X_vel < 0:
-            return 3  # Counter velocity to balance
-    
-    # Maintain current status (engines off) to conserve score
+    # Manage primary positional keeps with X-axis corrections
+    elif abs(X_pos) > pos_threshold or abs(X_vel) > vel_threshold:
+        if X_pos < 0 or X_vel < 0:
+            return 3  # Push Move Left Engine back level
+        return 1  # Push Right level moves horizontally back.
+
+    # Optimize conserving System
     return 0
