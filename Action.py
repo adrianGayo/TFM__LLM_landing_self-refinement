@@ -1,6 +1,8 @@
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_sensor, right_sensor = observation
 
+    if left_sensor and right_sensor:
+        return 0  # Engine off if landed.
     if y_pos < 0.2 and abs(x_pos) < 0.1 and abs(x_vel) < 0.1 and abs(y_vel) < 0.1:
         return 0  # Switch off engines for minor adjustments when close to the ground.
     if y_vel < -0.5:
@@ -15,5 +17,3 @@ def act(observation):
         return 3  # Adjust right for tilt correction.
 
     return 0  # Default action to Switch off engines to conserve fuel.
-
-filename = 'Action.py'
