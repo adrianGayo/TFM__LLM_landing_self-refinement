@@ -1,31 +1,42 @@
-def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
+import numpy as np
 
-    if left_contact or right_contact:  # Already landed
+def act(observation):
+    x_pos = observation[0]
+    y_pos = observation[1]
+    x_vel = observation[2]
+    y_vel = observation[3]
+    angle = observation[4]
+    ang_vel = observation[5]
+    left_contact = observation[6]
+    right_contact = observation[7]
+
+    # Define thresholds for better control
+    VELOCITY_THRESHOLD = 0.1
+    ALTITUDE_THRESHOLD = 0.1
+
+    # If already landed, switch off engines
+    if left_contact and right_contact:
         return 0
 
-    if y_pos < 0.1 and abs(x_pos) < 0.05 and abs(x_vel) < 0.1 and abs(y_vel) < 0.1 and abs(angle) < 0.1 and abs(angular_vel) < 0.1:
-        return 0  # Switch off engines for gentle landing
-
-    # Correct significant angle deviation first when necessary
-    if abs(angle) >= 0.1:  # Adjusted angle threshold
-        if angle > 0:
-            return 3  # Push right engine to correct clockwise tilt
-        else:
-            return 1  # Push left engine to correct counterclockwise tilt
-
-    # Correct horizontal velocity for alignment dynamically
-    if abs(x_vel) >= 0.2:  # threshold for smoother horizontal velocity control
+    # Main descent control
+    if y_vel < -VELOCITY_THRESHOLD:  # Falling too fast
+        return 2
+    elif ang_vel > VELOCITY_THRESHOLD:  # Rotating too fast clockwise
+        return 1
+    elif ang_vel < -VELOCITY_THRESHOLD:  # Rotating too fast counterclockwise
+        return 3
+    if abs(x_vel) > VELOCITY_THRESHOLD:  # Moving horizontally too fast
         if x_vel > 0:
-            return 1  # Push left engine to mitigate rightward movement
+            return 1
         else:
-            return 3  # Push right engine to mitigate leftward movement
-
-    # Manage vertical descent velocities for smoother landing control
-    if y_vel <= -0.5 and y_pos >= 0.3:  # Manage descent speed considering altitude
-        return 2  # Use center engine to slow down descent progressively
-
-    if y_pos > 0.2 and y_vel < 0:  # Use center engine upright thrust for controlled descent
-        return 2  # Push both engines upwards strategically
-
-    return 0  # Default action: switch off engines if stable
+            return 3
+    if abs(angle) > 0.1:  # Angle is off-centered
+        if angle > 0:
+            return 3
+        else:
+            return 1
+    # Safe descending
+    if y_vel > -0.1 and y_pos > ALTITUDE_THRESHOLD:  # Slightly pushing up for controlled descent
+        return 2
+    # Rest
+    return 0
