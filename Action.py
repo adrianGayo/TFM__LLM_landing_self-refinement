@@ -14,32 +14,33 @@ def act(observation):
     if left_contact and right_contact:
         return 0
 
-    # Control horizontal velocity
-    if x_vel > 0.1:  # Moving too fast to the right
-        return 1  # Push left engine to slow down movement
-    elif x_vel < -0.1:  # Moving too fast to the left
-        return 3  # Push right engine to slow down movement
+    # Function to determine if thrust up is needed, either slightly or substantially
+    def thrust_up(y_vel, y_pos, significant=False):
+        if significant:
+            return y_vel < -0.5 or (y_pos > 0.3 and y_vel < -0.1)
+        return y_vel < -0.1
 
-    # Control angle (keep near 0)
-    if angle > 0.1:  # Tilted right
-        return 3  # Push right engine to counteract tilt
-    elif angle < -0.1:  # Tilted left
-        return 1  # Push left engine to counteract tilt
+    # Handling horizontal velocity
+    if x_vel > 0.1:
+        return 1
+    elif x_vel < -0.1:
+        return 3
 
-    # Control descent velocity
-    if y_vel < -0.5:  # Falling too quickly
-        return 2  # Push both engines to slow down descent
-    if y_pos > 0.3 and y_vel < -0.1:  # High enough for gentle control
-        return 2  # Keep descent controlled
+    # Handling angle stabilization
+    if angle > 0.1:
+        return 3
+    elif angle < -0.1:
+        return 1
 
-    # If somewhat stable, conserve fuel
-    if abs(x_vel) < 0.1 and abs(y_vel) < 0.1:
-        return 0
+    # Handling vertical descent and maintaining stability
+    if thrust_up(y_vel, y_pos):
+        return 2
 
-    # Default safe state
-    if abs(ang_vel) > 0.1:  # Rotation correction if it's too fast
-        if ang_vel > 0:  # Clockwise rotation
-            return 1  # Push left engine
-        else:  # Counterclockwise rotation
-            return 3  # Push right engine
+    # Handling angular velocity if it's too high
+    if ang_vel > 0.1:
+        return 1
+    elif ang_vel < -0.1:
+        return 3
+
+    # Default to switch off engines in absence of specific controls
     return 0
