@@ -1,59 +1,57 @@
-import numpy as np
+import math
 
 def act(observation):
-    x_pos = observation[0]
-    y_pos = observation[1]
-    x_vel = observation[2]
-    y_vel = observation[3]
-    angle = observation[4]
-    ang_vel = observation[5]
-    left_contact = observation[6]
-    right_contact = observation[7]
+    '''
+    The function that codifies the action to be taken in each instant of time.
 
-    # If the lander has touched down, stop engines
-    if left_contact and right_contact:
-        return 0
+    Args:
+        observation (numpy.array):
+            "description": "The state of the environment after the action is taken.",
+            "positions": {  
+                "0": "X position",
+                "1": "Y position",
+                "2": "X velocity",
+                "3": "Y velocity",
+                "4": "Angle",
+                "5": "Angular velocity",
+                "6": "Left contact sensor",
+                "7": "Right contact sensor"
+            },
+            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
+            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
 
-    def control_horizontal_velocity(x_vel):
-        if x_vel > 0.1:
-            return 1
-        elif x_vel < -0.1:
-            return 3
-        return None
+    Returns:
+        Integer  : The action to be taken.
+        "options": {
+                '0' : "Switch off engines",
+                '1' : "Push left engine",
+                '2' : "Push both engines (upwards)",
+                '3' : "Push right engine"
+            }
+    '''
+    X_pos, Y_pos, X_vel, Y_vel, angle, ang_vel, left_contact, right_contact = observation
 
-    def control_angle_stabilization(angle, ang_vel):
-        if abs(angle) > 0.1:
-            if angle > 0:  # Tilted right
-                return 3
-            elif angle < -0.1:  # Tilted left
-                return 1
-            elif ang_vel > 0.1:  # Clockwise rotation
-                return 1
-            elif ang_vel < -0.1:  # Counterclockwise rotation
-                return 3
-        return None
+    # Define thresholds for decision making
+    angle_threshold = 0.1  # Near vertical
+    velocity_threshold = 0.1  # Near zero velocity
+    position_threshold = 0.1  # Near landing area
 
-    def control_vertical_descent(y_vel, y_pos):
-        if y_vel < -0.5 or (y_pos > 0.3 and y_vel < -0.1):  # Rapid descent, apply more thrust
-            return 2
-        elif y_vel < -0.1:  # Mild descent correction needed
-            return 2
-        return None
+    # Determine actions based on current state
+    # Maintain vertical orientation (angle near zero)
+    if angle < -angle_threshold:
+        return 1  # Push left engine to rotate right
+    elif angle > angle_threshold:
+        return 3  # Push right engine to rotate left
 
-    # Priority 1: Horizontal velocity stabilization
-    action = control_horizontal_velocity(x_vel)
-    if action is not None:
-        return action
+    # Control horizontal position (X velocity near zero)
+    if X_pos < -position_threshold or X_vel < -velocity_threshold:
+        return 3  # Push right engine to move left
+    elif X_pos > position_threshold or X_vel > velocity_threshold:
+        return 1  # Push left engine to move right
 
-    # Priority 2: Angle Stability
-    action = control_angle_stabilization(angle, ang_vel)
-    if action is not None:
-        return action
+    # Control vertical descent (Y velocity near zero)
+    if Y_vel < -velocity_threshold:
+        return 2  # Push both engines (upwards) to slow descent
 
-    # Priority 3: Vertical descent control
-    action = control_vertical_descent(y_vel, y_pos)
-    if action is not None:
-        return action
-
-    # Default action: conserve fuel
+    # Maintain current status (engines off)
     return 0
