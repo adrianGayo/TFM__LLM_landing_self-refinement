@@ -3,29 +3,29 @@ def act(observation):
 
     if left_contact or right_contact:  # Already landed
         return 0
-    
+
     if y_pos < 0.1 and abs(x_pos) < 0.05 and abs(x_vel) < 0.1 and abs(y_vel) < 0.1 and abs(angle) < 0.1 and abs(angular_vel) < 0.1:
         return 0  # Switch off engines for gentle landing
-    
-    if abs(angle) > 0.1:  # Correct angle
+
+    # 1. Correct angle if angle deviation is significant
+    if abs(angle) > 0.1:
         if angle > 0:
-            return 1  # Push left engine
+            return 1  # Push left engine to correct clockwise angle
         else:
-            return 3  # Push right engine
-    
-    if y_pos > 0.1:  # Control descent
-        return 2  # Push both engines upwards to slow down descent
-    
-    if abs(x_vel) > 0.1:  # Control horizontal speed
+            return 3  # Push right engine to correct counterclockwise angle
+
+    # 2. Correct horizontal velocity (x_vel) for alignment
+    if abs(x_vel) > 0.1:
         if x_vel > 0:
             return 1  # Push left engine to reduce rightward velocity
         else:
             return 3  # Push right engine to reduce leftward velocity
 
-    if abs(angular_vel) > 0.1:  # Correct angular velocity
-        if angular_vel > 0:
-            return 1  # Push left engine to counter clockwise spin
-        else:
-            return 3  # Push right engine to counter clockwise spin
+    # 3. Gradually reduce vertical velocity for descent control
+    if y_vel < -0.5:
+        return 2  # Push both engines upwards to slow down fast descent
 
-    return 0  # Default action: switch off engines
+    if y_pos > 0.1:  # Descend gently if y position is significantly above ground
+        return 2  # Push both engines upwards to slow descent
+
+    return 0  # Default action: switch off engines if conditions are stable
