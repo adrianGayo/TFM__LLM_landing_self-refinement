@@ -15,14 +15,14 @@ def act(observation):
             return 3  # Push right engine to correct counterclockwise tilt
 
     # Correct horizontal velocity for alignment
-    if abs(x_vel) >= 0.3:  # Threshold for smoother horizontal control
+    if abs(x_vel) >= 0.2:  # Lower threshold for smoother horizontal control
         if x_vel > 0:
             return 1  # Push left engine to mitigate rightward movement
         else:
             return 3  # Push right engine to mitigate leftward movement
 
     # Control vertical descent velocity for smoother descent
-    if y_vel <= -0.3 and y_pos >= 0.5:  # Manage descent speed based on altitude
+    if y_vel <= -0.5 and y_pos >= 0.3:  # Manage descent speed based on altitude
         return 2  # Use both engines to slow down
 
     if y_pos > 0.2 and y_vel < 0:  # Use vertical thrust for controlled descent
