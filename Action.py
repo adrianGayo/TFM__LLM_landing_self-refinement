@@ -12,12 +12,16 @@ def act(observation):
     if abs(x_vel) > 0.2 and abs(angle) < 0.3:
         action = 1 if x_vel > 0.2 else 3
 
-    # Contain consistent descent speed
-    if y_vel <= -0.1:  # Trigger central engines early
+    # Consistent vertical speed correction
+    if y_vel <= -0.1:
+        action = 2  # Apply central engine to reduce descent speed
+
+    # Violent vertical velocity reduction
+    if y_vel <= -0.5:  # Higher thresholds for vertical velocity
         action = 2
 
-    # Contain extreme vertical speed greater than safe margin
-    if y_vel <= -0.5:  # Further retaining level of vertical velocity.
+    # Balance decision if both horizontal and angle corrected
+    if abs(x_vel) < 0.2 and abs(angle) < 0.3 and y_vel <= -0.1:
         action = 2
 
     return action
