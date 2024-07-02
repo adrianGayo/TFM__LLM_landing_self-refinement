@@ -12,23 +12,22 @@ def act(observation):
     if left_contact == 1 and right_contact == 1:
         return 0
 
-    # Control descent speed
-    if y_velocity < -0.1:
-        return 2  # Push upward engine to slow down descent
+    # Correcting angle for stability as top priority if exceeds safe threshold
+    if angle > 0.1:
+        return 1  # Tilted right, push left engine to stabilize
+    elif angle < -0.1:
+        return 3  # Tilted left, push right engine to stabilize
 
-    # Minimize horizontal speed; prioritize stopping horizontal drift
+    # If descent speed is high, balance it correctly
+    if y_velocity < -0.1:
+        return 2  # Push up to reduce descent speed
+
+    # Control horizontal drift if high
     if abs(x_velocity) > 0.1:
         if x_velocity > 0:
-            return 1  # Push left engine to move left
+            return 1  # Push left engine to counteract right drift
         else:
-            return 3  # Push right engine to move right
+            return 3  # Push right engine to counteract left drift
 
-    # Correct tilts
-    if abs(angle) > 0.1:
-        if angle > 0:
-            return 1  # Right tilt; push left to stabilize
-        else:
-            return 3  # Left tilt; push right to stabilize
-
-    # Default to not using any engines if stable
-    return 0
+    # Ensure minimal use of engines when stable
+    return 0  # Default to switch off engines
