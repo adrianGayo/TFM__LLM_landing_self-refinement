@@ -14,33 +14,46 @@ def act(observation):
     if left_contact and right_contact:
         return 0
 
-    # Function to determine if thrust up is needed, either slightly or substantially
-    def thrust_up(y_vel, y_pos, significant=False):
-        if significant:
-            return y_vel < -0.5 or (y_pos > 0.3 and y_vel < -0.1)
-        return y_vel < -0.1
+    def control_horizontal_velocity(x_vel):
+        if x_vel > 0.1:
+            return 1
+        elif x_vel < -0.1:
+            return 3
+        return None
 
-    # Handling horizontal velocity
-    if x_vel > 0.1:
-        return 1
-    elif x_vel < -0.1:
-        return 3
+    def control_angle_stabilization(angle, ang_vel):
+        if abs(angle) > 0.1:
+            if angle > 0:  # Tilted right
+                return 3
+            elif angle < -0.1:  # Tilted left
+                return 1
+            elif ang_vel > 0.1:  # Clockwise rotation
+                return 1
+            elif ang_vel < -0.1:  # Counterclockwise rotation
+                return 3
+        return None
 
-    # Handling angle stabilization
-    if angle > 0.1:
-        return 3
-    elif angle < -0.1:
-        return 1
+    def control_vertical_descent(y_vel, y_pos):
+        if y_vel < -0.5 or (y_pos > 0.3 and y_vel < -0.1):  # Rapid descent, apply more thrust
+            return 2
+        elif y_vel < -0.1:  # Mild descent correction needed
+            return 2
+        return None
 
-    # Handling vertical descent and maintaining stability
-    if thrust_up(y_vel, y_pos):
-        return 2
+    # Priority 1: Horizontal velocity stabilization
+    action = control_horizontal_velocity(x_vel)
+    if action is not None:
+        return action
 
-    # Handling angular velocity if it's too high
-    if ang_vel > 0.1:
-        return 1
-    elif ang_vel < -0.1:
-        return 3
+    # Priority 2: Angle Stability
+    action = control_angle_stabilization(angle, ang_vel)
+    if action is not None:
+        return action
 
-    # Default to switch off engines in absence of specific controls
+    # Priority 3: Vertical descent control
+    action = control_vertical_descent(y_vel, y_pos)
+    if action is not None:
+        return action
+
+    # Default action: conserve fuel
     return 0
