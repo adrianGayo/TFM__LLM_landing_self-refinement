@@ -1,22 +1,19 @@
+import numpy as np
+
 def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
-
-    # Balance correction effectively for combined actions on vectors.
-    # Adjust angles first if significantly deviated:
-    if angle < -0.1 or angular_vel < -0.5:
-        return 1  # correct tilt left
-    elif angle > 0.1 or angular_vel > 0.5:
-        return 3  # correct tilt right
-
-    # Control horizontal position and velocity together
-    if x_pos < -0.1 or x_vel < -0.5:
-        return 3  # redirect right
-    elif x_pos > 0.1 or x_vel > 0.5:
-        return 1  # redirect left
-
-    # Control descent speed more actively
-    if y_vel < -0.2:
-        return 2  # Main engine burst to slow fast downward speed
-
-    # Default fallback ensuring balanced no-action if compounded vectors within allowed range
-    return 0
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    action = 0  # Default action is to turn off all engines
+    if y_vel < -0.2:  # Too fast horizontal
+        action = 2 # Trigger both engines to slow down
+        if x_vel > 0.3:  # Drifting to the right
+            action = 1 # Correct drifting to the right using left engine
+        elif x_vel < -0.3:  # Drifting to the left
+            action = 3 # Correct drifting to the left using right engine
+    elif abs(angle) > 0.5:  # Large angle deviation
+        if angle > 0:
+            action = 1 # Correct angle if tilted to the right
+        else:
+            action = 3 # Correct angle if tilted to the left
+    elif y_vel < -1.0:  # Too fast vertical
+        action = 2 # Trigger both engines to slow down
+    return action
