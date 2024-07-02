@@ -42,19 +42,19 @@ def act(observation):
             return 1  # Firing left engine to balance right?
         return 3  # Firing right engine to balance left?
 
-    # Regulate angle exclusively 
+    # Regulate angle exclusively
     if abs(angle) > angle_threshold:
         return safe_firing_combined(angle, ang_vel)
-        
+    
     # Single approach for vertical stability
-    elif Y_vel < descent_speed_limit>:
+    elif Y_vel < descent_speed_limit:
         return 2
 
-    # Manage primary positional keeps with X-axis corrections
+    # Manage positional keeps with X-axis corrections
     elif abs(X_pos) > pos_threshold or abs(X_vel) > vel_threshold:
         if X_pos < 0 or X_vel < 0:
             return 3  # Push Move Left Engine back level
         return 1  # Push Right level moves horizontally back.
 
-    # Optimize conserving System
+    # Optimize conserving
     return 0
