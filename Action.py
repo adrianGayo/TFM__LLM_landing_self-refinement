@@ -1,1 +1,11 @@
-def act(current_status):\n    x_position = current_status[0]\n    x_velocity = current_status[2]\n    yaw_angle = current_status[4]\n    angular_velocity = current_status[5]\n    if x_position > 0.05:\n        return 1  # Push left engine\n    elif x_position < -0.05:\n        return 3  # Push right engine\n    elif x_velocity < -0.1:\n        return 2  # Push both engines (upwards)\n    else:\n        if yaw_angle > 0.1 or yaw_angle < -0.1 or angular_velocity > 0.1 or angular_velocity < -0.1:\n            return 3  # Push right engine\n        else:\n            return 0  # Switch off engines
+def act(curr_status):
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = curr_status
+    if left_contact == 0 and right_contact == 0:
+        if x_pos < -0.1:
+            return 3  # Push right engine
+        elif x_pos > 0.1:
+            return 1  # Push left engine
+        else:
+            return 2  # Push both engines (upwards)
+    else:
+        return 0  # Switch off engines
