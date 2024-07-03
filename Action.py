@@ -14,21 +14,21 @@ class Agent:
         # Define thresholds
         SAFE_VERTICAL_SPEED = -2  # Safe descent speed
         SAFE_HORIZONTAL_SPEED = 1  # Safe lateral speed
-        CLOSE_DISTANCE = 5  # Close to landing zone margin
+        CLOSE_DISTANCE = 5
 
-        # Vertical velocity control first
+        # Continuous vertical speed control
         if vy < SAFE_VERTICAL_SPEED:
-            thrust += 1 
-        elif vy > -0.5:  # Reduce excessive upward thrust
+            thrust += 1
+        elif vy > -0.5:
             thrust -= 1
 
-        # Horizontal position and velocity control
+        # Frequent rotational adjustments for horizontal alignment
         if abs(x) > CLOSE_DISTANCE:
-            rotate = -1 if x > 0 else 1  # Rotate towards the center line
+            rotate = -1 if x > 0 else 1  # Adjust rotation towards center
             if abs(vx) > SAFE_HORIZONTAL_SPEED:
-                thrust += 1  # Apply thrust to reduce horizontal speed
+                thrust += 1  # Control horizontal speed
 
-        # Fine adjustments when close to the ground
+        # Fine adjustments when near the ground
         if y < 10:
             if vy < -0.5:
                 thrust += 1
