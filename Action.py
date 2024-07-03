@@ -23,37 +23,42 @@ def act(observation):
 
     Args:
         observation (numpy.array):
-            Description: The state of the environment after the action is taken.
-            Positions: {  
-                0: X position,
-                1: Y position,
-                2: X velocity,
-                3: Y velocity,
-                4: Angle,
-                5: Angular velocity,
-                6: Left contact sensor,
-                7: Right contact sensor
-            }
-            Min_values: [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
-            Max_values: [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
+            "description": "The state of the environment after the action is taken.",
+            "positions": {  
+                "0": "X position",
+                "1": "Y position",
+                "2": "X velocity",
+                "3": "Y velocity",
+                "4": "Angle",
+                "5": "Angular velocity",
+                "6": "Left contact sensor",
+                "7": "Right contact sensor"
+            },
+            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
+            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
 
     Returns:
-        Integer: The action to be taken.
+        Integer : The action to be taken.
+        "options": {
+                '0' : "Switch off engines",
+                '1' : "Push left engine",
+                '2' : "Push both engines (upwards)",
+                '3' : "Push right engine"
+            }
     '''
-
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
 
     # Check for successful landing
     if left_contact == 1 and right_contact == 1:
         return 0  # Switch off engines
 
-    # Adjust horizontal movement if exceeding thresholds
+    # Adjust horizontal movement
     if x_pos > HORIZONTAL_THRESHOLD or x_vel > VELOCITY_THRESHOLD:
         return 1  # Push left engine
     elif x_pos < -HORIZONTAL_THRESHOLD or x_vel < -VELOCITY_THRESHOLD:
         return 3  # Push right engine
 
-    # Maintain vertical control (upward thrust if falling fast)
+    # Maintain vertical control
     if y_vel < VERTICAL_VELOCITY_THRESHOLD or (y_pos > HORIZONTAL_THRESHOLD and y_vel < -VELOCITY_THRESHOLD):
         return 2  # Push both engines (upwards)
 
