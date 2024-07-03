@@ -9,20 +9,21 @@ class Agent:
 
         # Initialize actions
         thrust = 0
-        rotate = 0 
+        rotate = 0
 
         # Define thresholds
         SAFE_VERTICAL_SPEED = -2  # Safe descent speed
         SAFE_HORIZONTAL_SPEED = 1  # Safe lateral speed
         CLOSE_DISTANCE = 5  # Close to landing zone margin
 
-        # Vertical stabilization
+        # Predictive velocity adjustment
         if vy < SAFE_VERTICAL_SPEED:  # Falling too fast
             thrust += 1  # Increase thrust to slow descent
 
         # Horizontal stabilization
         if abs(x) > CLOSE_DISTANCE and abs(vx) > SAFE_HORIZONTAL_SPEED:  # Too far laterally and moving fast
-            thrust += 1  # Correct lateral position
+            rotate = x / abs(x)  # Adjust to correct direction
+            thrust += 1  # Apply horizontal correction thrust
 
         # Fine adjustments near ground
         if y < 10:
