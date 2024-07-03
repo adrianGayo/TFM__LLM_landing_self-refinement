@@ -1,27 +1,27 @@
+import numpy as np
+
 def act(observation):
-    # Unpacking observation elements
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    X_position, Y_position, X_velocity, Y_velocity, angle, angular_velocity, left_contact, right_contact = observation
+
+    if left_contact == 1 and right_contact == 1:
+        return 0  # If both contacts are made, engines off
     
-    # Control strategy based on observations
-    # Control angle and angular velocity first
-    if angle > 0.1:  # If tilted to the right
-        return 1  # Fire left engine to rotate left
-    elif angle < -0.1:  # If tilted to the left
-        return 3  # Fire right engine to rotate right
-    elif ang_vel > 0.5:  # If rotating clockwise fast
-        return 1  # Fire left engine to reduce rotation to left
-    elif ang_vel < -0.5:  # If rotating counter-clockwise fast
-        return 3  # Fire right engine to reduce rotation to right
-    
-    # Control horizontal velocity next
-    if x_vel > 0.5:  # Moving too fast to the right
-        return 1  # Fire left engine to reduce horizontal velocity to right
-    elif x_vel < -0.5:  # Moving too fast to the left
-        return 3  # Fire right engine to reduce horizontal velocity to left
-    
-    # Finally, control vertical descent
-    if y_vel < -1.0:  # Descending too fast
-        return 2  # Fire both engines to slow descent
-    
-    # Default action is to switch off engines to preserve fuel (scores)
-    return 0
+    # Horizontal control
+    if X_position > 0.1:  # if too far right
+        return 1  # push left engine
+    elif X_position < -0.1:  # if too far left
+        return 3  # push right engine
+
+    # Vertical control
+    if Y_velocity < -0.1:  # descending too fast
+        return 2  # push both engines
+    elif Y_velocity > -0.1 and Y_position < 0.3:  # reducing speed as close to ground
+        return 0  # turn off engines
+
+    # Angle control
+    if angle > 0.1:  # if tilted right
+        return 1  # push left engine
+    elif angle < -0.1:  # if tilted left
+        return 3  # push right engine
+
+    return 2  # Default to pushing both engines
