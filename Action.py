@@ -16,26 +16,26 @@ class Agent:
         SAFE_HORIZONTAL_SPEED = 1  # Safe lateral speed
         CLOSE_DISTANCE = 5
 
-        # Continuous vertical speed control
+        # Vertical speed control
         if vy < SAFE_VERTICAL_SPEED:
             thrust += 1
-        elif vy > -0.5:
+        elif vy > -0.5:  # Reduce excessive upward thrust
             thrust -= 1
 
-        # Frequent rotational adjustments for horizontal alignment
+        # Horizontal alignment with rotation
         if abs(x) > CLOSE_DISTANCE:
-            rotate = -1 if x > 0 else 1  # Adjust rotation towards center
+            rotate = -1 if x > 0 else 1  # Rotate towards center line
             if abs(vx) > SAFE_HORIZONTAL_SPEED:
                 thrust += 1  # Control horizontal speed
 
-        # Fine adjustments when near the ground
+        # Fine adjustments near the ground for smooth landing
         if y < 10:
-            if vy < -0.5:
+            if vy < -1:  # Stable descent speed near ground
                 thrust += 1
             if abs(vx) > 0.5:
                 thrust += 1
 
-        # Ensure thrust is within limits
+        # Ensure thrust within operational limits
         thrust = min(4, max(0, thrust))
 
         return [rotate, thrust]
