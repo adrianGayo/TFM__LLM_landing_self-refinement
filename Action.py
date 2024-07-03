@@ -28,24 +28,26 @@ def act(observation):
             }
     '''
     x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
-    action = 0  # Default to switching off engines
+    
+    # Initialize default action as switching off engines
+    action = 0  
 
-    # Reduce downward velocity first
-    if y_velocity < -0.1:
-        action = 2  # Push both engines (upwards) to counteract downward velocity
-
-    # Stabilize angle
-    elif abs(angle) > 0.1:
-        if angle < 0:
-            action = 3  # Push right engine to rotate right
+    # Prioritize reducing downward vertical velocity if it exceeds the threshold
+    if y_velocity < -0.5:
+        action = 2  # Push both engines (upwards)
+    
+    # Control and stabilize the angle if it exceeds certain range
+    elif abs(angle) > 0.1 or abs(angular_velocity) > 0.1:
+        if angle < 0 or angular_velocity < 0:
+            action = 3  # Push right engine
         else:
-            action = 1  # Push left engine to rotate left
-
-    # Control horizontal speed
-    elif abs(x_velocity) > 0.5:
-        if x_velocity > 0:
-            action = 1  # Push left engine to counteract rightward velocity
+            action = 1  # Push left engine
+    
+    # Control horizontal position and velocity to keep it centered
+    elif abs(x_velocity) > 0.5 or abs(x_position) > 0.5:
+        if x_velocity > 0 or x_position > 0:
+            action = 1  # Push left engine
         else:
-            action = 3  # Push right engine to counteract leftward velocity
+            action = 3  # Push right engine
 
     return action
