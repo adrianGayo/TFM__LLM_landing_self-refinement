@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def act(observation):
     X_pos, Y_pos, X_vel, Y_vel, angle, ang_vel, left_contact, right_contact = observation
 
@@ -7,15 +8,23 @@ def act(observation):
         # Landed successfully
         return 0
 
-    # Adjust horizontal movement and angle control
-    if X_pos > 0.1 or X_vel > 0.1 or angle > 0.1 or ang_vel > 0.1:
-        return 1  # Push left engine
-    if X_pos < -0.1 or X_vel < -0.1 or angle < -0.1 or ang_vel < -0.1:
-        return 3  # Push right engine
+    # Priority: Control Horizontal Movement
+    if abs(X_pos) > 0.1 or abs(X_vel) > 0.1:
+        if X_pos > 0 or X_vel > 0:
+            return 1  # Push left engine
+        else:
+            return 3  # Push right engine
 
-    # Maintain vertical control and stabilize descent
-    if Y_vel < -0.3 or (Y_pos > 0.1 and Y_vel < -0.1):
+    # Priority: Control Vertical Movement
+    if Y_vel < -0.5:
         return 2  # Push both engines (upwards)
 
-    # If all conditions are optimal, maintain current state
+    # Priority: Control Angle
+    if abs(angle) > 0.1 or abs(ang_vel) > 0.1:
+        if angle > 0 or ang_vel > 0:
+            return 1  # Push left engine
+        else:
+            return 3  # Push right engine
+
+    # If all conditions optimal, freeze actions
     return 0
