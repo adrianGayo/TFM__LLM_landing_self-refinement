@@ -1,67 +1,37 @@
-import numpy as np
+class Agent:
+    def __init__(self):
+        pass
 
-# Define constants for easier adjustments
-HORIZONTAL_THRESHOLD = 0.1
-VELOCITY_THRESHOLD = 0.1
-VERTICAL_VELOCITY_THRESHOLD = -0.3
-ANGLE_THRESHOLD = 0.1
+    def act(self, observation):
+        position, velocity = observation['position'], observation['velocity']
+        x, y = position
+        vx, vy = velocity
 
-# Indices for observation for clarity
-X_POS = 0
-Y_POS = 1
-X_VEL = 2
-Y_VEL = 3
-ANGLE = 4
-ANG_VEL = 5
-LEFT_CONTACT = 6
-RIGHT_CONTACT = 7
+        # Initialize actions
+        thrust = 0
+        rotate = 0 
 
+        # Define thresholds
+        SAFE_VERTICAL_SPEED = -2  # Safe descent speed
+        SAFE_HORIZONTAL_SPEED = 1  # Safe lateral speed
+        CLOSE_DISTANCE = 5  # Close to landing zone margin
 
-def act(observation):
-    '''
-    The function that codifies the action to be taken in each instant of time.
+        # Vertical stabilization
+        if vy < SAFE_VERTICAL_SPEED:  # Falling too fast
+            thrust += 1  # Increase thrust to slow descent
 
-    Args:
-        observation (numpy.array):
-            Description: The state of the environment after the action is taken.
-            Positions: {  
-                0: X position,
-                1: Y position,
-                2: X velocity,
-                3: Y velocity,
-                4: Angle,
-                5: Angular velocity,
-                6: Left contact sensor,
-                7: Right contact sensor
-            }
-            Min_values: [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
-            Max_values: [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
+        # Horizontal stabilization
+        if abs(x) > CLOSE_DISTANCE and abs(vx) > SAFE_HORIZONTAL_SPEED:  # Too far laterally and moving fast
+            thrust += 1  # Correct lateral position
 
-    Returns:
-        Integer: The action to be taken.
-    '''
+        # Fine adjustments near ground
+        if y < 10:
+            if vy < -0.5:
+                thrust += 1
+            if abs(vx) > 0.5:
+                thrust += 1
 
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+        # Ensure thrust is within limits
+        thrust = min(4, max(0, thrust))
 
-    # Check for successful landing
-    if left_contact == 1 and right_contact == 1:
-        return 0  # Switch off engines
-
-    # Adjust horizontal movement if exceeding thresholds
-    if x_pos > HORIZONTAL_THRESHOLD or x_vel > VELOCITY_THRESHOLD:
-        return 1  # Push left engine
-    elif x_pos < -HORIZONTAL_THRESHOLD or x_vel < -VELOCITY_THRESHOLD:
-        return 3  # Push right engine
-
-    # Maintain vertical control (upward thrust if falling fast)
-    if y_vel < VERTICAL_VELOCITY_THRESHOLD or (y_pos > HORIZONTAL_THRESHOLD and y_vel < -VELOCITY_THRESHOLD):
-        return 2  # Push both engines (upwards)
-
-    # Adjust angle during descent
-    if angle > ANGLE_THRESHOLD or ang_vel > ANGLE_THRESHOLD:
-        return 1  # Push left engine
-    elif angle < -ANGLE_THRESHOLD or ang_vel < -ANGLE_THRESHOLD:
-        return 3  # Push right engine
-
-    # If all conditions are optimal, do nothing
-    return 0
+        return [rotate, thrust]
