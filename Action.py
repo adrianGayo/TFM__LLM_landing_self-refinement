@@ -1,12 +1,12 @@
 import numpy as np
 
-# Define constants for easier adjustments
+# Define constants for thresholds.
 HORIZONTAL_THRESHOLD = 0.1
 VELOCITY_THRESHOLD = 0.1
 VERTICAL_VELOCITY_THRESHOLD = -0.3
 ANGLE_THRESHOLD = 0.1
 
-# Indices for observation for clarity
+# Indices for observation for clarity.
 X_POS = 0
 Y_POS = 1
 X_VEL = 2
@@ -43,25 +43,25 @@ def act(observation):
 
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
 
-    # Check for successful landing
+    # Check for successful landing.
     if left_contact == 1 and right_contact == 1:
-        return 0  # Switch off engines
+        return 0  # Switch off engines.
 
-    # Adjust horizontal movement
-    if x_pos > HORIZONTAL_THRESHOLD or x_vel > VELOCITY_THRESHOLD:
-        return 1  # Push left engine
-    elif x_pos < -HORIZONTAL_THRESHOLD or x_vel < -VELOCITY_THRESHOLD:
-        return 3  # Push right engine
+    # Horizontal adjustments.
+    if x_pos > HORIZONTAL_THRESHOLD:
+        return 1
+    elif x_pos < -HORIZONTAL_THRESHOLD:
+        return 3
 
-    # Maintain vertical control
+    # Vertical control.
     if y_vel < VERTICAL_VELOCITY_THRESHOLD or (y_pos > HORIZONTAL_THRESHOLD and y_vel < -VELOCITY_THRESHOLD):
-        return 2  # Push both engines (upwards)
+        return 2
 
-    # Adjust angle during descent
+    # Angular control.
     if angle > ANGLE_THRESHOLD or ang_vel > ANGLE_THRESHOLD:
-        return 1  # Push left engine
+        return 1
     elif angle < -ANGLE_THRESHOLD or ang_vel < -ANGLE_THRESHOLD:
-        return 3  # Push right engine
+        return 3
 
-    # If all conditions are optimal, do nothing
+    # Optimal conditions; do nothing.
     return 0
