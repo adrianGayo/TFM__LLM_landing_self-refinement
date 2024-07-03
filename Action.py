@@ -1,57 +1,26 @@
-def act(observation):
-    '''
-    The function that codifies the action to be taken in each instant of time.
+def act(state):
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = state
     
-    Args:
-        observation (numpy.array):
-            "description": "The state of the environment after the action is taken.",
-            "positions": {
-                "0": "X position",
-                "1": "Y position",
-                "2": "X velocity",
-                "3": "Y velocity",
-                "4": "Angle",
-                "5": "Angular velocity",
-                "6": "Left contact sensor",
-                "7": "Right contact sensor"
-            },
-            "min_values": [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, 0, 0],
-            "max_values": [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1, 1]
-    
-    Returns:
-        Integer  : The action to be taken.
-        "options": {
-                '0' : "Switch off engines",
-                '1' : "Push left engine",
-                '2' : "Push both engines (upwards)",
-                '3' : "Push right engine"
-            }
-    '''
-    x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
-
-    # Initialize default action as switching off engines
-    action = 0  
-    
-    # Prioritize immediate vertical velocity control
-    if y_velocity < -0.5:
-        action = 2  # Push both engines (upwards) to counteract downward velocity
-    
-    # Control and stabilize angle instantaneously
-    elif abs(angle) > 0.1 or abs(angular_velocity) > 0.1:
-        if angle < 0 or angular_velocity < 0:
-            action = 3  # Push right engine to rotate right
+    # Stabilization
+    if abs(angle) > 0.1:
+        if ang_vel > 0:
+            return 1  # Push left engine
         else:
-            action = 1  # Push left engine to rotate left
-    
-    # Control horizontal position and velocity to keep it centered, continuous adjustments
-    elif abs(x_velocity) > 0.5 or abs(x_position) > 0.5:
-        if x_velocity > 0 or x_position > 0:
-            action = 1  # Push left engine to counteract rightward velocity
-        else:
-            action = 3  # Push right engine to counteract leftward velocity
+            return 3  # Push right engine
 
-    # Introduce continuous updates while also ensuring no long action repetitions if not effective
-    if 0 < y_velocity < 0.1 and abs(x_velocity) < 0.1 and abs(angle) < 0.1 and abs(angular_velocity) < 0.1:
-        action = 0  # Switch off engines for a stabilized descent
+    # Horizontal Positioning
+    if x_pos < -0.1:
+        return 3  # Push right engine
+    elif x_pos > 0.1:
+        return 1  # Push left engine
 
-    return action
+    # Descent Control
+    if y_vel < -0.1:
+        return 2  # Push both engines
+
+    # Landing Phase
+    if y_pos < 0.1 and abs(y_vel) < 0.1 and abs(x_vel) < 0.1:
+        return 0  # Switch off engines
+
+    # Default action
+    return 2  # Push both engines
