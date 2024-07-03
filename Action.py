@@ -28,26 +28,30 @@ def act(observation):
             }
     '''
     x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
-    
+
     # Initialize default action as switching off engines
     action = 0  
-
-    # Prioritize reducing downward vertical velocity if it exceeds the threshold
-    if y_velocity < -0.5:
-        action = 2  # Push both engines (upwards)
     
-    # Control and stabilize the angle if it exceeds certain range
+    # Prioritize managing vertical velocity if the spacecraft is descending too fast
+    if y_velocity < -0.5:
+        action = 2  # Push both engines (upwards) to counteract downward velocity
+    
+    # Control and stabilize the angle and angular velocity
     elif abs(angle) > 0.1 or abs(angular_velocity) > 0.1:
         if angle < 0 or angular_velocity < 0:
-            action = 3  # Push right engine
+            action = 3  # Push right engine to rotate right
         else:
-            action = 1  # Push left engine
+            action = 1  # Push left engine to rotate left
     
     # Control horizontal position and velocity to keep it centered
     elif abs(x_velocity) > 0.5 or abs(x_position) > 0.5:
         if x_velocity > 0 or x_position > 0:
-            action = 1  # Push left engine
+            action = 1  # Push left engine to counteract rightward velocity
         else:
-            action = 3  # Push right engine
+            action = 3  # Push right engine to counteract leftward velocity
+    
+    # If the downward speed is reduced to a safe level, then consider turning off the engines
+    if 0 < y_velocity < 0.1 and abs(x_velocity) < 0.1 and abs(angle) < 0.1 and abs(angular_velocity) < 0.1:
+        action = 0  # Switch off engines for a stabilized descent
 
     return action
