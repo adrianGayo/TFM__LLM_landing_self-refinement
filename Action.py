@@ -14,7 +14,9 @@ VEL_TOLERANCE = 0.1
 def should_fire_side_engines(angle):
     return abs(angle) > ANGLE_TOLERANCE
 
- def act(observation):
+# Main function to decide action based on observation
+
+def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
     
     # Stabilize the angle first
@@ -23,25 +25,30 @@ def should_fire_side_engines(angle):
             return 1  # Fire left engine
         else:
             return 3  # Fire right engine
+    
     # Control vertical speed
     if y_vel < -SAFE_VERTICAL_SPEED:
         return 2  # Fire main engine to reduce vertical speed
+
     # Control horizontal speed
     if abs(x_vel) > SAFE_HORIZONTAL_SPEED:
         if x_vel > 0:
             return 1  # Fire left engine to reduce horizontal speed
         else:
             return 3  # Fire right engine to reduce horizontal speed
+
     # In case spacecraft is too tilted
     if abs(angle) > SAFE_ANGLE:
         if angle > 0:
             return 1  # Fire left engine
         else:
             return 3  # Fire right engine
+
     # Fire in case vertical speed is slow but you need positioning
     if abs(x_pos) > SAFE_HORIZONTAL_SPEED:
         if x_pos < 0:
             return 3  # Fire right engine to lurch left
         else:
             return 1  # Fire left engine to lurch right
+    
     return 0  # Default action: turn off engines
