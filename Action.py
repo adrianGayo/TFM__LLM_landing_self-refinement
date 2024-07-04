@@ -20,9 +20,9 @@ class SpacecraftLandingAgent:
             return 1  # Push left engine to reduce rightward velocity
 
         # 3. Control Vertical Descent and Gentle Landing
-        if y_pos < 0.3 and y_vel >= -0.3:
+        if y_pos < 0.3 and y_vel >= -0.1:
             if left_contact or right_contact:
                 return 0  # Switch off engines for touchdown
-        elif y_vel < -0.3 or y_pos > 0.3:
+        if y_vel < -0.1 and y_pos > 0.5:
             return 2  # Push both engines to slow down
         return 0  # Default to gravity when descent rate is manageable
