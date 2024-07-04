@@ -4,34 +4,33 @@ class Action:
 
     def act(self, observation):
         x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+
         action = 0  # Default action: Switch off engines
 
-        # Prioritize stabilization in ang_vel and angle
-        if ang_vel > 0.1 or angle > 0.1:  # Tilting or rotating right
+        # Stabilize angle and angular velocity first
+        if angle > 0.1 or ang_vel > 0.1: # Tilting or rotating right
             return 1
-        elif ang_vel < -0.1 or angle < -0.1:  # Tilting or rotating left
+        elif angle < -0.1 or ang_vel < -0.1: # Tilting or rotating left
             return 3
 
-        # Gradual vertical thrust for rate reduction, mindful of y_vel not over-accelerating upwards
-        if y_vel < -0.3:  # Fast descent mitigation
+        # Adjust vertical velocity if descending too fast
+        if y_vel < -0.3: # Descending too fast
             return 2
-        elif y_vel > 0.2:  # Avoid upward surge by switching off
-            return 0
 
-        # Lateral velocities adjustments 
-        if x_vel > 0.3:  # Excessive right shift
+        # Adjust horizontal velocity for position correction
+        if x_vel > 0.2: # Movement right too fast
             return 1
-        elif x_vel < -0.3:  # Excessive left shift
+        elif x_vel < -0.2:  # Movement left too fast
             return 3
 
-        # Fine-tune near-ground stabilities
-        if y_pos < 0.1 and abs(y_vel) < 0.3:  # Close with stable descent velocity
-            return 0
+        # Adjust while close: final precision adjustments for soft landing
+        if y_pos < 0.1 and y_vel < -0.1: 
+            return 2
 
-        # If both contacts are detected, affirm landing completion
+        # Once landed and in stable contact, ensure no engine thruster
         if left_contact and right_contact:
             return 0
-
+        
         return action
 
 act_controller = Action()
