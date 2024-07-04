@@ -1,37 +1,34 @@
-import numpy as np
-
 class Action:
     def __init__(self):
         pass
 
     def act(self, observation):
         x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+        action = 0  # Default action: Switch off engines
+        
+        # Threshold values for decision making
+        MAX_VERTICAL_SPEED = -0.5
+        MAX_HORIZONTAL_SPEED = 0.3
+        MAX_TILT = 0.1
 
-        # Initial action is to do nothing
-        action = 0
-
-        # Stabilize angle and angular velocity first
-        if ang_vel > 0.1 or angle > 0.1:  # Tilting or rotating right
+        # Adjust vertical descent speed
+        if y_vel < MAX_VERTICAL_SPEED:  # If descending too fast, push both engines
+            action = 2
+        
+        # Adjust horizontal speed
+        if x_vel > MAX_HORIZONTAL_SPEED:
             action = 1
-        elif ang_vel < -0.1 or angle < -0.1:  # Tilting or rotating left
+        elif x_vel < -MAX_HORIZONTAL_SPEED:
+            action = 3
+        
+        # Correct tilt to be as upright as possible
+        if angle > MAX_TILT or ang_vel > 0.1:
+            action = 1
+        elif angle < -MAX_TILT or ang_vel < -0.1:
             action = 3
 
-        # Adjust vertical velocity if descending too fast or too slow
-        if y_vel < -0.3:  # Descending too fast
-            action = 2
-
-        # Adjust horizontal velocity to correct horizontal position
-        if x_vel > 0.2:  # Moving right too fast
-            action = 1
-        elif x_vel < -0.2:  # Moving left too fast
-            action = 3
-
-        # If close to landing, ensure fine adjustments and softly turn off engines
-        if y_pos < 0.1 and y_vel < -0.1:  # Close to ground and not fast descent
-            action = 2
-
-        # Switch off engines if stable and close to ground
-        if left_contact and right_contact:  # Both contacts made, indicating a stable land
+        # If both contacts are made, switch off engines
+        if left_contact and right_contact:
             action = 0
 
         return action
