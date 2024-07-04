@@ -14,41 +14,34 @@ VEL_TOLERANCE = 0.1
 def should_fire_side_engines(angle):
     return abs(angle) > ANGLE_TOLERANCE
 
-# Main function to decide action based on observation
 
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
     
-    # Stabilize the angle first
+    # Step 1: Stabilize angle, highest priority
     if should_fire_side_engines(angle) or abs(ang_vel) > ANGLE_TOLERANCE:
         if angle < 0:
-            return 1  # Fire left engine
+            return 1  # Fire left engine to correct angle
         else:
-            return 3  # Fire right engine
+            return 3  # Fire right engine to correct angle
     
-    # Control vertical speed
+    # Step 2: Control vertical speed
     if y_vel < -SAFE_VERTICAL_SPEED:
         return 2  # Fire main engine to reduce vertical speed
 
-    # Control horizontal speed
+    # Step 3: Control horizontal speed
     if abs(x_vel) > SAFE_HORIZONTAL_SPEED:
         if x_vel > 0:
-            return 1  # Fire left engine to reduce horizontal speed
+            return 1  # Fire left engine to reduce speed
         else:
-            return 3  # Fire right engine to reduce horizontal speed
+            return 3  # Fire right engine to reduce speed
 
-    # In case spacecraft is too tilted
-    if abs(angle) > SAFE_ANGLE:
-        if angle > 0:
-            return 1  # Fire left engine
-        else:
-            return 3  # Fire right engine
-
-    # Fire in case vertical speed is slow but you need positioning
+    # Step 4: Minor positional adjustments closer to the ground
     if abs(x_pos) > SAFE_HORIZONTAL_SPEED:
         if x_pos < 0:
-            return 3  # Fire right engine to lurch left
+            return 3  # Fire right engine to move left
         else:
-            return 1  # Fire left engine to lurch right
+            return 1  # Fire left engine to move right
     
-    return 0  # Default action: turn off engines
+    # Default to turning off engines when no corrections needed.
+    return 0
