@@ -4,33 +4,33 @@ class Action:
 
     def act(self, observation):
         x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+        action = 0  # Default action: Switch off engines
 
-        # Default to do nothing
-        action = 0
-
-        # Priority 1: Stabilize angle and angular velocity
-        if ang_vel > 0.1 or angle > 0.1:  # Tilting or rotating right
-            return 1
-        elif ang_vel < -0.1 or angle < -0.1:  # Tilting or rotating left
-            return 3
-
-        # Priority 2: Adjust vertical descent speed if too fast
-        if y_vel < -0.3:  # Descending too fast
-            action = 2
-
-        # Priority 3: Adjust horizontal velocity to align the x position
-        if x_vel > 0.2:  # Moving right too fast
+        # Angle and angular velocity adjustments
+        if ang_vel > 0.1 or angle > 0.1:  # Tilting right
             action = 1
-        elif x_vel < -0.2:  # Moving left too fast
+        elif ang_vel < -0.1 or angle < -0.1:  # Tilting left
             action = 3
 
-        # Priority 4: Near-ground final adjustments if necessary
-        if y_pos < 0.1 and y_vel < -0.1:  # Close to ground and descending fast
+        # Vertically mitigate only fast descents while abstaining from continuous thrust
+        elif y_vel < -0.5:  # Fast Descend
             action = 2
-        
-        # Check for stable landing condition
-        if left_contact and right_contact:
-            return 0
+        elif y_vel > -0.1:  # Check to stabilize ascent rate.
+            action = 0
+
+        # Horizontal position adjustments for drift exceedence
+        elif x_vel > 0.3:  # Moving right too fast
+            action = 1
+        elif x_vel < -0.3:  # Moving left too fast
+            action = 3
+
+        # Manage low altitudes nearing landing zones
+        elif y_pos < 0.1 and y_vel < -0.1:  # Near ground approached controlled
+            action = 2
+
+        # Check combined footer contact and completely stabilize
+        if left_contact and right_contact:  # Successful landing detection
+            action = 0
 
         return action
 
