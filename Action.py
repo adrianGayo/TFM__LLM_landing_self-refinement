@@ -1,22 +1,28 @@
 import numpy as np
 
-class Action:
-    def __init__(self):
-        pass
+def act(observation):
+    x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
 
-    def act(self, observation):
-        x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-        action = 0  # Default action: Switch off engines
-        if y_vel < -0.3:  # If descending too fast, push both engines
-            action = 2
-        elif y_vel > -0.1:  # If ascending or stable, don't push both engines
-            action = 0
-        if ang_vel > 0.1 or angle > 0.1:  # If rotating right or angled right, push left engine
-            action = 1
-        elif ang_vel < -0.1 or angle < -0.1:  # If rotating left or angled left, push right engine
-            action = 3
-        if left_contact and right_contact:  # If both contacts are made, switch off engines
-            action = 0
-        return action
+    # Threshold values for decision making
+    MAX_VERTICAL_SPEED = -0.5
+    MAX_HORIZONTAL_SPEED = 0.5
+    MAX_TILT = 0.1
 
-act_controller = Action()
+    # Correct vertical descent speed if too high
+    if y_velocity < MAX_VERTICAL_SPEED:
+        return 2
+
+    # Minimize horizontal movement
+    if x_velocity < -MAX_HORIZONTAL_SPEED or x_position > 0.1:
+        return 1
+    if x_velocity > MAX_HORIZONTAL_SPEED or x_position < -0.1:
+        return 3
+
+    # Correct tilt to be as upright as possible
+    if angle > MAX_TILT:
+        return 1
+    if angle < -MAX_TILT:
+        return 3
+
+    # If everything is within safe limits, switch off engines
+    return 0
