@@ -1,34 +1,54 @@
+import math
+
+# Constants for safe landing
+SAFE_HORIZONTAL_SPEED = 0.2
+SAFE_VERTICAL_SPEED = 0.4
+SAFE_ANGLE = 0.1
+
+# Control gains
+MAIN_ENGINE_BURST = -0.3
+SIDE_ENGINE_BURST = -0.03
+ANGLE_TOLERANCE = math.radians(5)
+VEL_TOLERANCE = 0.1
+
+# Helper function to decide if action is needed
+
+def should_fire_side_engines(angle):
+    return abs(angle) > ANGLE_TOLERANCE
+    
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-
-    # Correct X position using side engines
-    if x_pos > 0.1:  # If too far right, move left
-        return 1  # Activate left engine
-    elif x_pos < -0.1:  # If too far left, move right
-        return 3  # Activate right engine
-
-    # If horizontally aligned, focus on Y velocity control
-    elif y_vel < -0.5:  # If falling too fast, push upwards
-        return 2  # Activate both engines (upwards)
-
-    # Fine adjustments for maintaining near-zero velocity and tilted correction
-    elif x_vel > 0.3:  # If moving too fast to the right, counteract
-        return 1  # Activate left engine
-    elif x_vel < -0.3:  # If moving too fast to the left, counteract
-        return 3  # Activate right engine
-
-    elif abs(angle) > 0.4:  # If too tilted, adjust according to angle
-        if angle > 0:
-            return 1  # Tilt correction
+    
+    # Stabilize the angle first
+    if should_fire_side_engines(angle) or abs(ang_vel) > ANGLE_TOLERANCE:
+        if angle < 0:
+            return 1  # Fire left engine
         else:
-            return 3  # Tilt correction
+            return 3  # Fire right engine
+    
+    # Control vertical speed
+    if y_vel < -SAFE_VERTICAL_SPEED:
+        return 2  # Fire main engine to reduce vertical speed
 
-    # Minimal engine usage for fine adjustments close to landing
-    elif y_pos < 0.2 and y_vel < -0.2:  # If approaching ground too fast at low height
-        return 2  # Use central engine to slow down
-    elif y_pos < 0.2 and abs(y_vel) < 0.2:  # Hover or near-zero velocity
-        return 0  # Switch off engines for small adjustments
+    # Control horizontal speed
+    if abs(x_vel) > SAFE_HORIZONTAL_SPEED:
+        if x_vel > 0:
+            return 1  # Fire left engine to reduce horizontal speed
+        else:
+            return 3  # Fire right engine
+    
+    # In case spacecraft is too tilted
+    if abs(angle) > SAFE_ANGLE:
+        if angle > 0:
+            return 1  # Fire left engine
+        else:
+            return 3  # Fire right engine
 
-    # If no critical changes needed
-    return 0  # Default to no engine for stability
-
+    # Fire in case vertical speed is slow but you need positioning
+    if abs(x_pos) > SAFE_HORIZONTAL_SPEED:
+        if x_pos < 0:
+            return 3  # Fire right engine to lurch left
+        else:
+            return 1  # Fire left engine to lurch right
+    
+    return 0  # Default action: turn off engines
