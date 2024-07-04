@@ -7,28 +7,29 @@ class SpacecraftLandingAgent:
     def act(self, state):
         x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = state
 
-        # Stabilize angular position first if it's too large
+        # 1. Stabilize angular position first if it's too large
         if abs(angle) > 0.1:
             if angle < 0:
                 return 3  # Push right engine to rotate counter-clockwise
             else:
                 return 1  # Push left engine to rotate clockwise
 
-        # Reduce horizontal speed if too high
+        # 2. Reduce horizontal speed if it's too high
         if abs(x_vel) > 0.1:
             if x_vel < 0:
                 return 3  # Push right engine to move right
             else:
                 return 1  # Push left engine to move left
 
-        # Reduce vertical speed when close to the ground
-        if y_pos < 0.5 and y_vel < -0.1:
+        # 3. Approach landing zone in gentle vertical descent
+        # If very close to ground and not descending too fast, try to land
+        if y_pos < 0.1 and abs(y_vel) < 0.1 and (left_contact or right_contact):
+            return 0  # Switch off engines
+        # If close to ground and descending faster
+        elif y_pos < 0.5 and y_vel < -0.3:
             return 2  # Push both engines to slow descent
-
-        # When near zero altitude and speed, and sensors indicate contact
-        if y_pos < 0.1 and y_vel > -0.1:
-            if left_contact and right_contact:
-                return 0  # Switch off engines
-
-        # Otherwise, push both engines to stabilize descent
-        return 2
+        # If further up and descending
+        elif y_vel < -0.5:
+            return 2  # Push both engines to slow descent
+        else:
+            return 0  # Default action
