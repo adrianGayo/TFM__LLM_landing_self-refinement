@@ -1,4 +1,3 @@
-
 import math
 
 # Constants for safe landing
@@ -15,41 +14,34 @@ VEL_TOLERANCE = 0.1
 def should_fire_side_engines(angle):
     return abs(angle) > ANGLE_TOLERANCE
 
-# Main function to decide action based on observation
 
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
     
-    # Stabilize the angle first
+    # Step 1: Stabilize angle control first, primary aspect stability
     if should_fire_side_engines(angle) or abs(ang_vel) > ANGLE_TOLERANCE:
         if angle < 0:
-            return 1  # Fire left engine
+            return 1  # Fire left engine, stabilizing leftward
         else:
-            return 3  # Fire right engine
+            return 3  # Fire right engine, stabilizing rightward
     
-    # Control vertical speed
+    # Step 2: Vertical speed moderation preventing rapid fall
     if y_vel < -SAFE_VERTICAL_SPEED:
-        return 2  # Fire main engine to reduce vertical speed
+        return 2  # Fire main engine for slowing descent
 
-    # Control horizontal speed
+    # Step 3: Horizontal speed control to prevent drifts, manageable limits
     if abs(x_vel) > SAFE_HORIZONTAL_SPEED:
         if x_vel > 0:
-            return 1  # Fire left engine to reduce horizontal speed
+            return 1  # Correction leftwards
         else:
-            return 3  # Fire right engine to reduce horizontal speed
+            return 3  # Correction rightwards
 
-    # In case spacecraft is too tilted
-    if abs(angle) > SAFE_ANGLE:
-        if angle > 0:
-            return 1  # Fire left engine
-        else:
-            return 3  # Fire right engine
-
-    # Fire in case vertical speed is slow but you need positioning
+    # Step 4: Minor positional tweaks closer proximity steady
     if abs(x_pos) > SAFE_HORIZONTAL_SPEED:
         if x_pos < 0:
-            return 3  # Fire right engine to lurch left
+            return 3  # Fire right engine incrementally
         else:
-            return 1  # Fire left engine to lurch right
-    
-    return 0  # Default action: turn off engines
+            return 1  # Fire left engine incrementally
+
+    # Default stable when corrections unnecessary.
+    return 0
