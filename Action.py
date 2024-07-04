@@ -2,46 +2,46 @@ import math
 
 # Constants for safe landing
 SAFE_HORIZONTAL_SPEED = 0.2
-SAFE_VERTICAL_SPEED = 0.4
+SAFE_VERTICAL_SPEED = 0.3
 SAFE_ANGLE = 0.1
+
+SAFE_ANGULAR_VELOCITY = 0.1
 
 # Control gains
 ANGLE_TOLERANCE = math.radians(5)
-VEL_TOLERANCE = 0.1
 
 # Helper function to decide if action is needed
 
-def should_fire_side_engines(angle):
-    return abs(angle) > ANGLE_TOLERANCE
+def should_fire_side_engines(angle, ang_vel):
+    return abs(angle) > SAFE_ANGLE or abs(ang_vel) > SAFE_ANGULAR_VELOCITY
 
 
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
     
-    # Step 1: Stabilize angle control first, primary aspect stability
-    if should_fire_side_engines(angle) or abs(ang_vel) > ANGLE_TOLERANCE:
-        if angle < 0:
-            return 1  # Fire left engine, stabilizing leftward
+    # Stabilize the angle first
+    if should_fire_side_engines(angle, ang_vel):
+        if angle < 0 or ang_vel < 0:
+            return 1  # Fire left engine
         else:
-            return 3  # Fire right engine, stabilizing rightward
-    
-    # Step 2: Vertical speed moderation preventing rapid fall
-    if y_vel < -SAFE_VERTICAL_SPEED:
-        return 2  # Fire main engine for slowing descent
+            return 3  # Fire right engine
 
-    # Step 3: Horizontal speed control to prevent drifts, manageable limits
+    # Control vertical speed
+    if y_vel < -SAFE_VERTICAL_SPEED:
+        return 2  # Fire main engine to cut down vertical speed
+
+    # Control horizontal speed
     if abs(x_vel) > SAFE_HORIZONTAL_SPEED:
         if x_vel > 0:
-            return 1  # Correction leftwards
+            return 1  # Fire left engine to reduce horizontal speed
         else:
-            return 3  # Correction rightwards
-
-    # Step 4: Minor positional tweaks closer proximity steady
-    if abs(x_pos) > SAFE_HORIZONTAL_SPEED:
-        if x_pos < 0:
-            return 3  # Fire right engine incrementally
+            return 3  # Fire right engine
+    
+    # Fine-tuning in case the angle is beyond marginal safety but not too severe
+    if abs(angle) > SIDE_ENGINE_THRESHOLD:
+        if angle > 0:
+            return 1  # Fire left engine
         else:
-            return 1  # Fire left engine incrementally
+            return 3  # Fire right engine
 
-    # Default stable when corrections unnecessary.
-    return 0
+    return 0  # Default action: turn off engines
