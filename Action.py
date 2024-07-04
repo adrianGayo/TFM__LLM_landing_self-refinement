@@ -4,33 +4,35 @@ class Action:
 
     def act(self, observation):
         x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+
+        # Start with default action to do nothing
         action = 0  # Default action: Switch off engines
 
-        # Angle and angular velocity adjustments
-        if ang_vel > 0.1 or angle > 0.1:  # Tilting right
-            action = 1
-        elif ang_vel < -0.1 or angle < -0.1:  # Tilting left
-            action = 3
+        # Priority 1: stabilize angle and angular velocity
+        if angle > 0.1 or ang_vel > 0.1:  # Tilting/rotating right
+            return 1
+        elif angle < -0.1 or ang_vel < -0.1:  # Tilting/rotating left
+            return 3
 
-        # Vertically mitigate only fast descents while abstaining from continuous thrust
-        elif y_vel < -0.5:  # Fast Descend
-            action = 2
-        elif y_vel > -0.1:  # Check to stabilize ascent rate.
-            action = 0
+        # Priority 2: Control vertical descent
+        if y_vel < -0.4:  # Descending too fast
+            return 2
+        elif y_vel > -0.1:  # Stabilized or ascending
+            return 0
 
-        # Horizontal position adjustments for drift exceedence
-        elif x_vel > 0.3:  # Moving right too fast
-            action = 1
-        elif x_vel < -0.3:  # Moving left too fast
-            action = 3
+        # Priority 3: Horizontal control
+        if x_vel > 0.2:  # Moving right too fast
+            return 1
+        elif x_vel < -0.2:  # Moving left too fast
+            return 3
 
-        # Manage low altitudes nearing landing zones
-        elif y_pos < 0.1 and y_vel < -0.1:  # Near ground approached controlled
-            action = 2
+        # Close proximity adjustments for soft landing
+        if y_pos < 0.1 and y_vel < -0.1:  # Near ground and descending
+            return 2
 
-        # Check combined footer contact and completely stabilize
-        if left_contact and right_contact:  # Successful landing detection
-            action = 0
+        # Check for stable landing
+        if left_contact and right_contact:  # Both contacts indicate stability
+            return 0
 
         return action
 
