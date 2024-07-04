@@ -1,5 +1,3 @@
-import numpy as np
-
 class Action:
     def __init__(self):
         pass
@@ -7,35 +5,31 @@ class Action:
     def act(self, observation):
         x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
 
-        # Default action is to switch off engines
+        # Default to do nothing
         action = 0
 
-        # Priority 1: Correct angle and angular velocity for stabilization
-        if ang_vel > 0.1 or angle > 0.1:    # Right tilt or rotation correction
-            return 1  # Push left engine to counter
-        elif ang_vel < -0.1 or angle < -0.1: # Left tilt or rotation correction
-            return 3  # Push right engine to counter
-
-        # Priority 2a: Adjust vertical velocity if descending too fast using central engine
-        if y_vel < -0.5:  # Unsafe descent speed
-            return 2
-
-        # Priority 2b: Switch off central engine if ascending or descent well managed
-        if y_vel > -0.3:  # Slight ascent or near-zero descent
-            action = 0  # Minimize resource use
-
-        # Priority 3: Correct horizontal velocity to prevent drifting away
-        if x_vel > 0.2:  # Excessive rightward drift brings left engine to balance
+        # Priority 1: Stabilize angle and angular velocity
+        if ang_vel > 0.1 or angle > 0.1:  # Tilting or rotating right
             return 1
-        elif x_vel < -0.2:   # Excessive leftward drift right engine to balance
+        elif ang_vel < -0.1 or angle < -0.1:  # Tilting or rotating left
             return 3
 
-        # Safety Check: Edge-case scenario for final adjustments close to ground
-        if y_pos < 0.1 and y_vel < -0.1:   # Near-ground fast descent
-            return 2
+        # Priority 2: Adjust vertical descent speed if too fast
+        if y_vel < -0.3:  # Descending too fast
+            action = 2
 
-        # Landing Confirmation: No stabilization necessary if both contacts detect ground
-        if left_contact and right_contact:    # Upon landing, no engine usage
+        # Priority 3: Adjust horizontal velocity to align the x position
+        if x_vel > 0.2:  # Moving right too fast
+            action = 1
+        elif x_vel < -0.2:  # Moving left too fast
+            action = 3
+
+        # Priority 4: Near-ground final adjustments if necessary
+        if y_pos < 0.1 and y_vel < -0.1:  # Close to ground and descending fast
+            action = 2
+        
+        # Check for stable landing condition
+        if left_contact and right_contact:
             return 0
 
         return action
