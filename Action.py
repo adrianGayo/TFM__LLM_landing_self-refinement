@@ -7,7 +7,7 @@ class SpacecraftLandingAgent:
     def act(self, state):
         x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = state
 
-        # 1. Stabilize orientation first
+        # 1. Stabilize orientation
         if angle < -0.1:
             return 3  # Push right engine to rotate counter-clockwise
         elif angle > 0.1:
@@ -19,16 +19,16 @@ class SpacecraftLandingAgent:
         elif x_vel > 0.1:
             return 1  # Push left engine to reduce rightward velocity
 
-        # 3. Vertical movement control
+        # 3. Manage vertical velocity
         if y_vel < -0.5:
-            return 2  # Push both engines to slow down descent
-        elif y_vel > 0.5:
-            return 0  # Switch off engines if moving upwards significantly
+            return 2  # Push both engines to slow descent
+        elif y_vel > 0.2:
+            return 0  # Switch off engines if moving upwards
+        elif y_pos < 1.0 and y_vel < -0.2:
+            return 2  # Push both engines to control descent as it approaches ground
 
-        # 4. Gentle landing preparation as the distance to the ground decreases
-        if y_pos < 0.1 and abs(y_vel) < 0.3 and (left_contact or right_contact):
-            return 0  # Switch off engines for smooth touchdown
-        elif y_pos < 0.5:
-            return 2  # Push both engines to slow down descent
+        # Switch off engines for landing when contacts are detected
+        if y_pos < 0.1 and abs(y_vel) < 0.1 and (left_contact or right_contact):
+            return 0  # Switch off engines for touch down
 
         return 0  # Default action is to let it fall with gravity when stable
