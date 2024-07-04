@@ -1,36 +1,27 @@
 def act(state):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = state
 
-    # Constants for thresholds
-    ANGLE_THRESHOLD = 0.05
-    X_POSITION_THRESHOLD = 0.02
-    X_VELOCITY_THRESHOLD = 0.02
-    Y_VELOCITY_THRESHOLD = 0.05
-    Y_POSITION_THRESHOLD = 1
+    # Constants for simplification and scaling
+    X_POS_THRESHOLD = 0.05
+    Y_VEL_THRESHOLD = 0.05
+    ANGLE_THRESHOLD = 0.1
 
-    # 1. Vertical stabilization
-    if y_vel < -Y_VELOCITY_THRESHOLD:
-        return 2  # Push both engines to reduce descent speed
-
-    # 2. Angular stabilization
-    if abs(angle) > ANGLE_THRESHOLD:
-        if angle > 0:
-            return 3  # Push right engine
-        else:
-            return 1  # Push left engine
-
-    # 3. Horizontal Positioning
-    if abs(x_vel) > X_VELOCITY_THRESHOLD:
-        if x_vel > 0:
-            return 1  # Push left engine for countering drift
-        else:
-            return 3  # Push right engine to counter drift
-
-    # 4. Position Centering
-    if x_pos < -X_POSITION_THRESHOLD:
-        return 3  # Push right engine to move to center
-    elif x_pos > X_POSITION_THRESHOLD:
-        return 1  # Push left to move to center
-
-    # Default action
-    return 0  # Switch off engines
+    # Determine actions based on current state
+    if angle < -ANGLE_THRESHOLD:  # If angle is to the left
+        return 3  # Push right engine to stabilize
+    elif angle > ANGLE_THRESHOLD:  # If angle is to the right
+        return 1  # Push left engine to stabilize
+    elif abs(x_pos) > X_POS_THRESHOLD:  # If the horizontal position is far from center
+        if x_pos > 0:  # If too far right
+            return 1  # Push left engine to move left
+        else:  # If too far left
+            return 3  # Push right engine to move right
+    elif abs(x_vel) > X_POS_THRESHOLD:  # If horizontal velocity is high
+        if x_vel > 0:  # If moving too fast to the right
+            return 1  # Push left engine to slow down
+        else:  # If moving too fast to the left
+            return 3  # Push right engine to slow down
+    elif y_vel < -Y_VEL_THRESHOLD:  # If falling too fast
+        return 2  # Push both engines upwards to slow down descent
+    else:  # Default to switching off engines
+        return 0
