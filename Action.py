@@ -1,26 +1,22 @@
-def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+import numpy as np
 
-    # Dictionary for possible actions
-    actions = {'off': 0, 'left': 1, 'up': 2, 'right': 3}
+class Action:
+    def __init__(self):
+        pass
 
-    # Prioritize reducing y_velocity and x_velocity
-    action = actions['off']
+    def act(self, observation):
+        x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+        action = 0  # Default action: Switch off engines
+        if y_vel < -0.3:  # If descending too fast, push both engines
+            action = 2
+        elif y_vel > -0.1:  # If ascending or stable, don't push both engines
+            action = 0
+        if ang_vel > 0.1 or angle > 0.1:  # If rotating right or angled right, push left engine
+            action = 1
+        elif ang_vel < -0.1 or angle < -0.1:  # If rotating left or angled left, push right engine
+            action = 3
+        if left_contact and right_contact:  # If both contacts are made, switch off engines
+            action = 0
+        return action
 
-    # If falling too quickly, engage the main engine
-    if y_vel < -0.5:
-        action = actions['up']
-
-    # Adjust horizontal movements
-    elif x_vel > 0.1:   # Moving right
-        action = actions['left']
-    elif x_vel < -0.1:  # Moving left
-        action = actions['right']
-
-    # Correct angular position
-    if angle > 0.1:      # Tilted right
-        action = actions['left']
-    elif angle < -0.1:   # Tilted left
-        action = actions['right']
-
-    return action
+act_controller = Action()
