@@ -1,20 +1,25 @@
-import numpy as np
-
 def act(observation):
-    X_pos, Y_pos, X_vel, Y_vel, angle, angular_velocity, left_contact, right_contact = observation
+    X_position, Y_position, X_velocity, Y_velocity, Angle, Angular_velocity, Left_contact, Right_contact = observation
+
+    # If both legs hit the ground with minimal speed and tilt, cut off engines
+    if Left_contact and Right_contact:
+        return 0
     
-    # Condition-specific Actions
-    if Y_vel < -0.3:
-        return 2  # Push both engines (Upwards) to reduce descending speed
-    elif abs(angle) > 0.1:
-        if angle > 0:
-            return 1 # Push left engine to correct right tilt
-        else:
-            return 3 # Push right engine to correct left tilt
-    elif abs(X_vel) > 0.2:
-        if X_vel > 0:
-            return 1 # Push left engine to correct right drift
-        else:
-            return 3 # Push right engine to correct left drift
-    else:
-        return 0  # Switch off engines if all conditions are within safe bounds
+    # Correct horizontal drift
+    if X_position > 0.1 and X_velocity > -0.1:
+        return 1  # Push left engine to move left
+    elif X_position < -0.1 and X_velocity < 0.1:
+        return 3  # Push right engine to move right
+    
+    # Correct vertical speed
+    if Y_velocity < -0.4:
+        return 2  # Push both engines to slow descent
+    
+    # Correct angle rotation
+    if Angle > 0.1 and Angular_velocity > -0.1:
+        return 1  # Push left engine to rotate left
+    elif Angle < -0.1 and Angular_velocity < 0.1:
+        return 3  # Push right engine to rotate right
+
+    # Default action is to stop engines if above conditions are not met
+    return 0
