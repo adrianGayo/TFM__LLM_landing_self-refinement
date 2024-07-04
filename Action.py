@@ -1,36 +1,20 @@
-import numpy as np
+def act(observation):
+    x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
 
-class LunarLander:
-    def __init__(self):
-        pass
+    # Parameters for deciding about vertical thrust (center engine)
+    max_y_vel = -0.1
+    max_x_vel = 0.1
+    max_angle = 0.1
 
-    def act(self, observation):
-        x_pos, y_pos, x_vel, y_vel, angle, angular_velocity, left_contact, right_contact = observation
-        score_threshold = 200
+    # Apply upward thrust if descending too quickly or horizontally too off
+    if y_vel < max_y_vel or x_vel > max_x_vel or x_vel < -max_x_vel:
+        return 2  # Push both engines upward
+    
+    # Apply left or right engine thrust if angle is deviating or to correct slight horizontal velocities
+    if angle > max_angle or x_vel > max_x_vel:
+        return 1  # Push left engine
+    elif angle < -max_angle or x_vel < -max_x_vel:
+        return 3  # Push right engine
 
-        # Apply upward thrust if descending too quickly
-        if y_vel < -0.1:
-            return 2  # Push both engines upwards
-        # Apply lateral thrust to correct horizontal velocity if too large
-        elif x_vel > 0.1:
-            return 1  # Push left engine to move left
-        elif x_vel < -0.1:
-            return 3  # Push right engine to move right
-        # Correct the angle if it's too tilted
-        elif angle > 0.1:
-            return 1  # Push left engine to rotate counter-clockwise
-        elif angle < -0.1:
-            return 3  # Push right engine to rotate clockwise
-        # Use controlled upward thrust as a stabilizing measure if horizontal movement and angle are within acceptable limits
-        elif abs(x_vel) < 0.1 and abs(angle) < 0.1:
-            return 2  # Push both engines upwards
-        # Otherwise, turn off the engines to save score
-        else:
-            return 0  # Switch off engines
-
-lander = LunarLander()
-
-# Example of usage
-# observation = np.array([0.006, 1.393, 0.31, -0.402, -0.005, -0.029, 0.0, 0.0])
-# action = lander.act(observation)
-# print(action)
+    # Switch off engines if in control
+    return 0
