@@ -7,28 +7,27 @@ def act(state):
     ANGLE_THRESHOLD = 0.1
     X_VEL_THRESHOLD = 0.2
 
-    # Determine actions based on current state
-    # 1. Correct the angle first
-    if angle < -ANGLE_THRESHOLD:  # If angle is to the left, push right engine
-        return 3
-    elif angle > ANGLE_THRESHOLD:  # If angle is to the right, push left engine
-        return 1
-
-    # 2. Correct horizontal velocity
-    if x_vel > X_VEL_THRESHOLD:  # If moving too fast to the right
-        return 1  # Push left engine to slow down
-    elif x_vel < -X_VEL_THRESHOLD:  # If moving too fast to the left
-        return 3  # Push right engine to slow down
-    
-    # 3. Correct horizontal position
-    if x_pos > X_POS_THRESHOLD:  # If too far right
+    # 1. Correction of the angle: Stabilize nconfiguration early.
+    if angle < -ANGLE_THRESHOLD:  # Angles to the left
+        return 3  # Push right engine
+    elif angle > ANGLE_THRESHOLD:  # Angles to the right
         return 1  # Push left engine
-    elif x_pos < -X_POS_THRESHOLD:  # If too far left
+
+    # 2. Priority correction of vertical descent velocity.
+    if y_vel < -Y_VEL_THRESHOLD:  # Falling too fast
+        return 2  # Push both engines to slow descent
+
+    # 3. Correction of horizontal velocity.
+    if x_vel > X_VEL_THRESHOLD:  # Rightward movement
+        return 1  # Push left engine to slow
+    elif x_vel < -X_VEL_THRESHOLD:  # Leftward movement
+        return 3  # Push right engine slow
+
+    # 4. Horizontal positional adjustments.
+    if x_pos > X_POS_THRESHOLD:  # Rightwards drift
+        return 1  # Push left engine
+    elif x_pos < -X_POS_THRESHOLD:  # Leftwards drift
         return 3  # Push right engine
 
-    # 4. Correct vertical velocity for safe descent
-    if y_vel < -Y_VEL_THRESHOLD:  # If falling too fast
-        return 2  # Push both engines upwards to slow descent
-
-    # Default: Stabilize
+    # Default stabilization
     return 0
