@@ -2,45 +2,53 @@ import math
 
 # Constants for safe landing
 SAFE_HORIZONTAL_SPEED = 0.2
-SAFE_VERTICAL_SPEED = 0.3
+SAFE_VERTICAL_SPEED = 0.4
 SAFE_ANGLE = 0.1
-SAFE_ANGULAR_VELOCITY = 0.1
 
 # Control gains
-SIDE_ENGINE_THRESHOLD = math.radians(5)  # Angle threshold before using side engines
+ANGLE_TOLERANCE = math.radians(5)
+VEL_TOLERANCE = 0.1
 
-# Helper function to decide if angle correction is needed
+# Helper function to decide if action is needed
 
-def should_fire_side_engines(angle, ang_vel):
-    return abs(angle) > SAFE_ANGLE or abs(ang_vel) > SAFE_ANGULAR_VELOCITY
+def should_fire_side_engines(angle):
+    return abs(angle) > ANGLE_TOLERANCE
 
+# Main function to decide action based on observation
 
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
     
     # Stabilize the angle first
-    if should_fire_side_engines(angle, ang_vel):
-        if angle < 0 or ang_vel < 0:
+    if should_fire_side_engines(angle) or abs(ang_vel) > ANGLE_TOLERANCE:
+        if angle < 0:
             return 1  # Fire left engine
         else:
             return 3  # Fire right engine
-
+    
     # Control vertical speed
     if y_vel < -SAFE_VERTICAL_SPEED:
-        return 2  # Fire main engine to cut down vertical speed
+        return 2  # Fire main engine to reduce vertical speed
 
     # Control horizontal speed
     if abs(x_vel) > SAFE_HORIZONTAL_SPEED:
         if x_vel > 0:
             return 1  # Fire left engine to reduce horizontal speed
         else:
-            return 3  # Fire right engine
-    
-    # Fine-tuning in case the angle is beyond marginal safety but not too severe
-    if abs(angle) > SIDE_ENGINE_THRESHOLD:
+            return 3  # Fire right engine to reduce horizontal speed
+
+    # Ensure vertical alignment
+    if abs(angle) > SAFE_ANGLE:
         if angle > 0:
             return 1  # Fire left engine
         else:
             return 3  # Fire right engine
 
+    # Final positioning adjustments
+    if abs(x_pos) > SAFE_HORIZONTAL_SPEED:
+        if x_pos < 0:
+            return 3  # Fire right engine to lurch left
+        else:
+            return 1  # Fire left engine to lurch right
+    
     return 0  # Default action: turn off engines
