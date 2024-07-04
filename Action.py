@@ -1,28 +1,36 @@
 import numpy as np
 
-def act(observation):
-    x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
+class LunarLander:
+    def __init__(self):
+        pass
 
-    # Threshold values for decision making
-    MAX_VERTICAL_SPEED = -0.5
-    MAX_HORIZONTAL_SPEED = 0.5
-    MAX_TILT = 0.1
+    def act(self, observation):
+        x_pos, y_pos, x_vel, y_vel, angle, angular_velocity, left_contact, right_contact = observation
+        score_threshold = 200
 
-    # Correct vertical descent speed if too high
-    if y_velocity < MAX_VERTICAL_SPEED:
-        return 2
+        # Apply upward thrust if descending too quickly
+        if y_vel < -0.1:
+            return 2  # Push both engines upwards
+        # Apply lateral thrust to correct horizontal velocity if too large
+        elif x_vel > 0.1:
+            return 1  # Push left engine to move left
+        elif x_vel < -0.1:
+            return 3  # Push right engine to move right
+        # Correct the angle if it's too tilted
+        elif angle > 0.1:
+            return 1  # Push left engine to rotate counter-clockwise
+        elif angle < -0.1:
+            return 3  # Push right engine to rotate clockwise
+        # Use controlled upward thrust as a stabilizing measure if horizontal movement and angle are within acceptable limits
+        elif abs(x_vel) < 0.1 and abs(angle) < 0.1:
+            return 2  # Push both engines upwards
+        # Otherwise, turn off the engines to save score
+        else:
+            return 0  # Switch off engines
 
-    # Minimize horizontal movement
-    if x_velocity < -MAX_HORIZONTAL_SPEED or x_position > 0.1:
-        return 1
-    if x_velocity > MAX_HORIZONTAL_SPEED or x_position < -0.1:
-        return 3
+lander = LunarLander()
 
-    # Correct tilt to be as upright as possible
-    if angle > MAX_TILT:
-        return 1
-    if angle < -MAX_TILT:
-        return 3
-
-    # If everything is within safe limits, switch off engines
-    return 0
+# Example of usage
+# observation = np.array([0.006, 1.393, 0.31, -0.402, -0.005, -0.029, 0.0, 0.0])
+# action = lander.act(observation)
+# print(action)
