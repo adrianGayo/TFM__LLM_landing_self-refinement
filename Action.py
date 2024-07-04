@@ -7,29 +7,39 @@ class SpacecraftLandingAgent:
     def act(self, state):
         x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = state
 
-        # 1. Stabilize angular position first if it's too large
+        # 1. Immediate Angular Correction
         if abs(angle) > 0.1:
             if angle < 0:
                 return 3  # Push right engine to rotate counter-clockwise
             else:
                 return 1  # Push left engine to rotate clockwise
 
-        # 2. Reduce horizontal speed if it's too high
-        if abs(x_vel) > 0.1:
+        # 2. Control Horizontal Movement
+        if abs(x_vel) > 0.05:
             if x_vel < 0:
-                return 3  # Push right engine to move right
+                return 3  # Push right engine to reduce left velocity
             else:
-                return 1  # Push left engine to move left
+                return 1  # Push left engine to reduce right velocity
 
-        # 3. Approach landing zone in gentle vertical descent
-        # If very close to ground and not descending too fast, try to land
-        if y_pos < 0.1 and abs(y_vel) < 0.1 and (left_contact or right_contact):
-            return 0  # Switch off engines
-        # If close to ground and descending faster
-        elif y_pos < 0.5 and y_vel < -0.3:
-            return 2  # Push both engines to slow descent
-        # If further up and descending
-        elif y_vel < -0.5:
-            return 2  # Push both engines to slow descent
+        # 3. Smooth Vertical Descent
+        if y_pos > 1.0:
+            if y_vel < -0.3:
+                return 2  # Push both engines to slow down
+            else:
+                return 0  # Let it fall with gravity.
+        elif y_pos > 0.5:
+            if y_vel < -0.2:
+                return 2  # Push both engines to control descent
+            else:
+                return 0  # Let it fall with gravity.
         else:
-            return 0  # Default action
+            if y_vel < -0.1:
+                return 2  # Push both engines to gentle the landing
+            else:
+                return 0  # Let it fall with gravity.
+
+        # 4. Final gentle landing when contacts are made
+        if (left_contact or right_contact) and abs(y_vel) < 0.2:
+            return 0  # Switch off engines
+        else:
+            return 2  # Gently push engines for controlled descent
