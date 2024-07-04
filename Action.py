@@ -37,14 +37,14 @@ def act(observation):
         else:
             return 3  # Fire right engine to reduce horizontal speed
 
-    # Ensure vertical alignment
+    # In case spacecraft is too tilted
     if abs(angle) > SAFE_ANGLE:
         if angle > 0:
             return 1  # Fire left engine
         else:
             return 3  # Fire right engine
 
-    # Final positioning adjustments
+    # Fire in case vertical speed is slow but you need positioning
     if abs(x_pos) > SAFE_HORIZONTAL_SPEED:
         if x_pos < 0:
             return 3  # Fire right engine to lurch left
