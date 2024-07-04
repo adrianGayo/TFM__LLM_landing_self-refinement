@@ -1,38 +1,36 @@
-import numpy as np
-
 class Action:
     def __init__(self):
         pass
 
     def act(self, observation):
         x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+        action = 0  # Default action: Switch off engines
 
-        # Default to do nothing
-        action = 0
-
-        # Priority 1: Stabilize angle and angular velocity
+        # Prioritize stabilization in ang_vel and angle
         if ang_vel > 0.1 or angle > 0.1:  # Tilting or rotating right
-            action = 1
-        elif ang_vel < -0.1 or angle < -0.1:  # Tilting or rotating left
-            action = 3
-
-        # Priority 2: If both contact sensors are activated, switch off engines
-        if left_contact and right_contact:
-            return 0
-
-        # Priority 3: Adjust vertical velocity if descending too fast
-        if y_vel < -0.5:  # Descending too fast
-            return 2
-
-        # Priority 4: Adjust horizontal velocity to correct horizontal position
-        if x_vel > 0.3:  # Moving right too fast
             return 1
-        elif x_vel < -0.3:  # Moving left too fast
+        elif ang_vel < -0.1 or angle < -0.1:  # Tilting or rotating left
             return 3
 
-        # Priority 5: Near-ground final adjustments if necessary
-        if y_pos < 0.1 and y_vel < -0.1:  # Close to ground and descending fast
+        # Gradual vertical thrust for rate reduction, mindful of y_vel not over-accelerating upwards
+        if y_vel < -0.3:  # Fast descent mitigation
             return 2
+        elif y_vel > 0.2:  # Avoid upward surge by switching off
+            return 0
+
+        # Lateral velocities adjustments 
+        if x_vel > 0.3:  # Excessive right shift
+            return 1
+        elif x_vel < -0.3:  # Excessive left shift
+            return 3
+
+        # Fine-tune near-ground stabilities
+        if y_pos < 0.1 and abs(y_vel) < 0.3:  # Close with stable descent velocity
+            return 0
+
+        # If both contacts are detected, affirm landing completion
+        if left_contact and right_contact:
+            return 0
 
         return action
 
