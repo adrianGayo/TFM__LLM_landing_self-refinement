@@ -7,46 +7,42 @@ SAFE_ANGLE = 0.1
 ANGLE_TOLERANCE = math.radians(5)
 
 # Helper function to decide if action is needed
-
-
 def should_fire_side_engines(angle):
     return abs(angle) > ANGLE_TOLERANCE
 
-
+# Main function to decide action based on observation
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
     
-    # Step 1: Stabilize angle, primary critical level correction
+    # Stabilize the angle first
     if should_fire_side_engines(angle) or abs(ang_vel) > ANGLE_TOLERANCE:
         if angle < 0:
-            return 1  # Left engine correcting leftward
+            return 1  # Fire left engine
         else:
-            return 3  # Right Engine correcting rightward
-            
-    # Step 2: Vertical Speed regulation descending preventing abrupt falls
+            return 3  # Fire right engine
+        
+    # Control vertical speed
     if y_vel < -SAFE_VERTICAL_SPEED:
-        return 2  # Initiate central thruster slightly dampening vertical speed
+        return 2  # Fire main engine to reduce vertical speed
 
-    # Step 3: Drift management broad-level horizontal speed standard
+    # Control horizontal speed
     if abs(x_vel) > SAFE_HORIZONTAL_SPEED:
         if x_vel > 0:
-            return 1  # Rightward drift reducing manageable speed
+            return 1  # Fire left engine to reduce horizontal speed
         else:
-            return 3  # Leftward drift manageable allowing correction toward center
+            return 3  # Fire right engine to reduce horizontal speed
 
-    # Positional minor tweaks hard ensuring gradual controlled stable disposition
+    # Positional Adjustments and Maintain Alignment
     if abs(x_pos) > SAFE_HORIZONTAL_SPEED:
         if x_pos < 0:
-            return 3  # Correct positional offset rightwards minor boost
+            return 3  # Fire right engine to lurch left
         else:
-            return 1  # Correct positional drift leftwards reintegration
-
-    # Last Step: Angle steady ensuring maintained straight vertical aligned nearer descent
+            return 1  # Fire left engine to lurch right
+    
+    # Ensure the lander is aligned vertically
     if abs(angle) > SAFE_ANGLE:
         if angle > 0:
-            return 1  # Minor stabilization for left correction ensuring nearer centered
+            return 1  # Fire left engine
         else:
-            return 3  # Minor stabilization, right maintaining near aligned
-
-    # Default state stable mild fluctuations handling minimum resources displaced
-    return 0
+            return 3  # Fire right engine
+    return 0  # Default action: turn off engines
