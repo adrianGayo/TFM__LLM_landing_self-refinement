@@ -5,27 +5,23 @@ class Agent:
     def act(self, observation):
         x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
         
-        # Thrusters' action
-        action = 0 # Default is to switch off engines
+        # Prioritize actions for control
+        action = 0 # Default to switching off engines
 
-        # Minimize tilt
+        # 1. Stabilize the angle to be upright
         if angle < -0.1:
-            action = 3 # Push right engine to reduce left tilt
+            return 3 # Push right engine to reduce left tilt
         elif angle > 0.1:
-            action = 1 # Push left engine to reduce right tilt
-        
-        # Control descent speed
-        if y_velocity < -1.0:
-            action = 2 # Push both engines to slow down descent
-        
-        # Correct horizontal position
-        if x_position < -0.1:
-            action = 3 # Push right engine to move right
-        elif x_position > 0.1:
-            action = 1 # Push left engine to move left
+            return 1 # Push left engine to reduce right tilt
 
-        # Ensure we only increase velocity control if necessary
-        if y_velocity < -1.0 and abs(y_position) < 0.5:
-            action = 2
+        # 2. Control descent: use upward thrusters if we are descending too quickly
+        if y_velocity < -0.5:
+            return 2 # Push both engines to slow the descent
+
+        # 3. Control horizontal position: while horizontal movement is manageable
+        if x_position < -0.2:
+            return 3 # Push right engine to move right
+        elif x_position > 0.2:
+            return 1 # Push left engine to move left
 
         return action
