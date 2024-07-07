@@ -1,48 +1,26 @@
-import math
-
-# Constants for safe landing
-SAFE_HORIZONTAL_SPEED = 0.2
-SAFE_VERTICAL_SPEED = 0.4
-SAFE_ANGLE = 0.1
-ANGLE_TOLERANCE = math.radians(5)
-
-# Helper function to decide if action is needed
-def should_fire_side_engines(angle):
-    return abs(angle) > ANGLE_TOLERANCE
-
-# Main function to decide action based on observation
-def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+def act(current_status):
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_sensor, right_sensor = current_status
+    score = 0
     
-    # Stabilize the angle first
-    if should_fire_side_engines(angle) or abs(ang_vel) > ANGLE_TOLERANCE:
-        if angle < 0:
-            return 1  # Fire left engine
+    # Adjust actions based on current status for optimal landing
+    if y_pos > 1.0:
+        # Apply actions to correct position for Y axis
+        score -= 0.3
+        action = 1
+    elif y_pos < -0.5:
+        # Apply actions to correct position for Y axis
+        score -= 0.3
+        action = 3
+    else:
+        if x_pos > 0.1:
+            # Apply actions to adjust position for X axis
+            score -= 0.2
+            action = 3
+        elif x_pos < -0.1:
+            # Apply actions to adjust position for X axis
+            score -= 0.2
+            action = 1
         else:
-            return 3  # Fire right engine
-        
-    # Control vertical speed
-    if y_vel < -SAFE_VERTICAL_SPEED:
-        return 2  # Fire main engine to reduce vertical speed
-
-    # Control horizontal speed
-    if abs(x_vel) > SAFE_HORIZONTAL_SPEED:
-        if x_vel > 0:
-            return 1  # Fire left engine to reduce horizontal speed
-        else:
-            return 3  # Fire right engine to reduce horizontal speed
-
-    # Positional Adjustments and Maintain Alignment
-    if abs(x_pos) > SAFE_HORIZONTAL_SPEED:
-        if x_pos < 0:
-            return 3  # Fire right engine to lurch left
-        else:
-            return 1  # Fire left engine to lurch right
+            action = 0  # Switch off engines when close to the landing zone
     
-    # Ensure the lander is aligned vertically
-    if abs(angle) > SAFE_ANGLE:
-        if angle > 0:
-            return 1  # Fire left engine
-        else:
-            return 3  # Fire right engine
-    return 0  # Default action: turn off engines
+    return action, score
