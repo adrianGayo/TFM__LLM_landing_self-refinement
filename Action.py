@@ -5,47 +5,56 @@ def act(observation):
     xpos, ypos, xvel, yvel, angle, ang_vel, left_contact, right_contact = observation
     
     # Target states for successful landing
-    target_xvel, target_yvel = 0, -0.5  # Target a controlled descent
-    max_yvel = -1.0  # Safety threshold for descent speed
-    max_angle = 0.1  # Tighter control on angle for stability
+    target_xvel, target_yvel = 0, -0.5  # Target gentle descent
+    max_yvel = -1.0  # Max descent speed threshold
+    max_angle = 0.1  # Max angle threshold
+    min_angle_control = 0.02  # Minimal angle adjustment threshold
 
     # Action decision logic
-    if ypos > 0.5:  # Higher altitude, prioritize descent control
+    if ypos > 0.5:  # Higher altitude
         if abs(angle) > max_angle or abs(ang_vel) > 0.1:  # Stabilize angle early
-            if angle < 0: return 1
-            else: return 3
-        elif yvel < max_yvel:  # Improve vertical speed control
+            if angle < 0:
+                return 1
+            return 3
+        if yvel < max_yvel:  # Control vertical speed
             return 2
-        elif abs(xvel) > 0.1:  # Fine-tune horizontal speed
-            if xvel > 0: return 1
-            else: return 3
-    elif ypos > 0.3:  # Medium altitude, balance descent and horizontal drift
-        if yvel < target_yvel:  # Smooth descent
+        if abs(xvel) > 0.1:  # Horizontal stability
+            if xvel > 0:
+                return 1
+            return 3
+    elif ypos > 0.3:  # Medium altitude
+        if yvel < target_yvel:  # Approaching gentle descent
             return 2
-        elif abs(angle) > max_angle or abs(ang_vel) > 0.1:  # Angle stability
-            if angle < 0: return 1
-            else: return 3
-        elif abs(xvel) > 0.05:  # Reduce horizontal drift
-            if xvel > 0: return 1
-            else: return 3
-    elif ypos > 0.1:  # Lower altitude, prepare for landing
-        if abs(angle) > max_angle:  # Ensure minimal angle
-            if angle < 0: return 1
-            else: return 3
-        elif abs(xvel) > 0.02:  # Maintain low horizontal speed
-            if xvel > 0: return 1
-            else: return 3
-        elif yvel < target_yvel:  # Control descent speed
+        if abs(angle) > min_angle_control:  # Correct minimal angle deviations
+            if angle < 0:
+                return 1
+            return 3
+        if abs(xvel) > 0.05:  # Correct horizontal drift
+            if xvel > 0:
+                return 1
+            return 3
+    elif ypos > 0.1:  # Lower altitude
+        if abs(angle) > min_angle_control:  # Correct angle
+            if angle < 0:
+                return 1
+            return 3
+        if abs(xvel) > 0.02:  # Control horizontal speed
+            if xvel > 0:
+                return 1
+            return 3
+        if yvel < target_yvel:  # Ensure gentle descent
             return 2
-    else:  # Very near ground, ensure stable touchdown
-        if not (left_contact and right_contact):  # Touchdown stability
+    else:  # Near ground, ensure smooth touchdown
+        if not (left_contact and right_contact):  # Stabilize landing
             if abs(xvel) > 0.01:  # Minimize lateral drift
-                if xvel > 0: return 1
-                else: return 3
-            elif abs(angle) > max_angle:  # Prevent tilt at touchdown
-                if angle < 0: return 1
-                else: return 3
-            elif yvel < max_yvel:  # Gentle descent at landing
+                if xvel > 0:
+                    return 1
+                return 3
+            if abs(angle) > min_angle_control:  # Maintain angle stability
+                if angle < 0:
+                    return 1
+                return 3
+            if yvel < max_yvel:  # Controlled descent
                 return 2
 
-    return 0  # Default to engine off if stable and near ground
+    return 0  # Default to engine off if stable
