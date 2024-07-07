@@ -1,60 +1,31 @@
-import numpy as np
+class Agent:
+    def __init__(self):
+        pass
 
-def act(observation):
-    # Extract observations for better readability
-    xpos, ypos, xvel, yvel, angle, ang_vel, left_contact, right_contact = observation
-    
-    # Target states for successful landing
-    target_xvel, target_yvel = 0, -0.5  # Target gentle descent
-    max_yvel = -1.0  # Max descent speed threshold
-    max_angle = 0.1  # Max angle threshold
-    min_angle_control = 0.02  # Minimal angle adjustment threshold
+    def act(self, observation):
+        x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
+        
+        # Thrusters' action
+        action = 0 # Default is to switch off engines
 
-    # Action decision logic
-    if ypos > 0.5:  # Higher altitude
-        if abs(angle) > max_angle or abs(ang_vel) > 0.1:  # Stabilize angle early
-            if angle < 0:
-                return 1
-            return 3
-        if yvel < max_yvel:  # Control vertical speed
-            return 2
-        if abs(xvel) > 0.1:  # Horizontal stability
-            if xvel > 0:
-                return 1
-            return 3
-    elif ypos > 0.3:  # Medium altitude
-        if yvel < target_yvel:  # Approaching gentle descent
-            return 2
-        if abs(angle) > min_angle_control:  # Correct minimal angle deviations
-            if angle < 0:
-                return 1
-            return 3
-        if abs(xvel) > 0.05:  # Correct horizontal drift
-            if xvel > 0:
-                return 1
-            return 3
-    elif ypos > 0.1:  # Lower altitude
-        if abs(angle) > min_angle_control:  # Correct angle
-            if angle < 0:
-                return 1
-            return 3
-        if abs(xvel) > 0.02:  # Control horizontal speed
-            if xvel > 0:
-                return 1
-            return 3
-        if yvel < target_yvel:  # Ensure gentle descent
-            return 2
-    else:  # Near ground, ensure smooth touchdown
-        if not (left_contact and right_contact):  # Stabilize landing
-            if abs(xvel) > 0.01:  # Minimize lateral drift
-                if xvel > 0:
-                    return 1
-                return 3
-            if abs(angle) > min_angle_control:  # Maintain angle stability
-                if angle < 0:
-                    return 1
-                return 3
-            if yvel < max_yvel:  # Controlled descent
-                return 2
+        # Minimize tilt
+        if angle < -0.1:
+            action = 3 # Push right engine to reduce left tilt
+        elif angle > 0.1:
+            action = 1 # Push left engine to reduce right tilt
+        
+        # Control descent speed
+        if y_velocity < -1.0:
+            action = 2 # Push both engines to slow down descent
+        
+        # Correct horizontal position
+        if x_position < -0.1:
+            action = 3 # Push right engine to move right
+        elif x_position > 0.1:
+            action = 1 # Push left engine to move left
 
-    return 0  # Default to engine off if stable
+        # Ensure we only increase velocity control if necessary
+        if y_velocity < -1.0 and abs(y_position) < 0.5:
+            action = 2
+
+        return action
