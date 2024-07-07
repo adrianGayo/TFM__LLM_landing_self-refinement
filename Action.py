@@ -20,7 +20,7 @@ def act(observation):
     elif ypos > 0.3:  # Medium altitude, primarily stabilize descent
         if yvel < target_yvel:  # Apply gentle descent
             return 2
-        elseif abs(angle) > max_angle or abs(ang_vel) > 0.1:  # Need to stabilize angle
+        elif abs(angle) > max_angle or abs(ang_vel) > 0.1:  # Need to stabilize angle
             return 1 if angle < 0 else 3
         elif abs(xvel) > 0.05:  # Minimize horizontal drift further
             return 1 if xvel > 0 else 3
