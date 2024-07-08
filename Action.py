@@ -1,21 +1,22 @@
 def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, angular_vel, left_contact, right_contact = observation
+    # Extract observation parameters
+    x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
     
-    # Thresholds
-    x_vel_threshold = 0.2
-    y_vel_threshold = 0.2
-    angle_threshold = 0.1
+    # Angle control
+    if abs(angle) > 0.1:
+        if angle > 0:
+            return 1  # Push left engine
+        else:
+            return 3  # Push right engine
     
-    # Action selection
-    if angle > angle_threshold:
-        return 1  # Push left engine to correct tilt
-    elif angle < -angle_threshold:
-        return 3  # Push right engine to correct tilt
-    elif y_vel > y_vel_threshold:
-        return 2  # Push both engines to reduce vertical speed
-    elif x_vel > x_vel_threshold:
-        return 1  # Push left engine to reduce rightward speed
-    elif x_vel < -x_vel_threshold:
-        return 3  # Push right engine to reduce leftward speed
-    else:
-        return 0  # Switch off engines to conserve fuel and minimize score penalty
+    # Horizontal and vertical velocity control
+    if abs(x_velocity) > 0.3:
+        if x_velocity > 0:
+            return 1  # Push left engine to counteract right drift
+        else:
+            return 3  # Push right engine to counteract left drift
+    
+    if y_velocity < -0.3:
+        return 2  # Push both engines upwards to slow down descent
+    
+    return 0  # Switch off engines and drift if close to stationary
