@@ -3,6 +3,7 @@ import random
 # Thresholds for decision-making
 MIN_ANGLE = -0.1
 MAX_ANGLE = 0.1
+MAX_Y_VELOCITY = -0.3
 SAFE_Y_VELOCITY = -0.5
 SAFE_X_VELOCITY = 0.1
 MAX_X_VELOCITY = 0.03
@@ -17,30 +18,22 @@ def act(observation):
     if left_contact == 1 and right_contact == 1:
         return 0  # The spacecraft has landed
 
-    # Control vertical descent
+    # Control angle first
+    if abs(angle) > MAX_ANGLE or abs(ang_vel) > MAX_ANGULAR_VELOCITY:
+        if angle > 0 or ang_vel > 0:
+            return 3  # Thrust right engine to correct to the left, or counter right spin
+        elif angle < 0 or ang_vel < 0:
+            return 1  # Thrust left engine to correct to the right, or counter left spin
+
+    # Control vertical descent speed
     if y_vel < SAFE_Y_VELOCITY:
-        return 2  # Apply upward thrust to control descent speed
+        return 2  # Apply upward thrust to manage descent
 
-    # Angle correction should be done gradually to avoid overcorrection
-    if abs(angle) > MAX_ANGLE:
-        if angle > 0:
-            return 3  # Thrust right engine to correct to the left
-        else:
-            return 1  # Thrust left engine to correct to the right
-
-    # Horizontal velocity adjustments also need to be gradual
+    # Fine-tune lateral movements minimally
     if abs(x_vel) > SAFE_X_VELOCITY:
-        if x_vel > 0:
-            return 1  # Apply thrust to the left engine to reduce positive X velocity
-        else:
-            return 3  # Apply thrust to the right engine to reduce negative X velocity
+        if x_vel > 0:  # Apply left engine thrust to reduce positive X velocity
+            return 1
+        elif x_vel < 0:  # Apply right engine thrust to reduce negative X velocity
+            return 3
 
-    # Control angular velocity, but do so gently
-    if abs(ang_vel) > MAX_ANGULAR_VELOCITY:
-        if ang_vel > 0:
-            return 1  # Apply thrust to the left engine to counter the right spin
-        else:
-            return 3  # Apply thrust to the right engine to counter the left spin
-    
-    # Default action is to switch off engines when stable
-    return 0
+    return 0  # Default action is to switch off engines
