@@ -12,12 +12,13 @@ def act(log_entry):
 
         action = 0  # Default to turning off engines
 
+        # If the spacecraft is landed, turn off engines
         if left_contact == 1 and right_contact == 1:
-            action = 0  # Turn off engines if landed
+            action = 0  # Turn off engines
         else:
-            # Adjust vertical speed
-            if y_vel < -0.2:
-                action = 2  # Push both engines to reduce descent speed
+            # Control descent speed
+            if y_vel < -0.5:
+                action = 2  # Engage both engines to slow descent
             # Adjust horizontal position
             elif x_pos < -0.1:
                 action = 3  # Push right engine to move left
@@ -32,4 +33,4 @@ def act(log_entry):
         return action
     except Exception as e:
         print(f"Error processing log entry: {e}")
-        return 0  # Return default action in case of error
+        return 0  # Default action in case of error
