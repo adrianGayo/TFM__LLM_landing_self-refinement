@@ -1,28 +1,24 @@
-class Agent:
-    def __init__(self):
-        pass
+def act(observation):
+    X_pos, Y_pos, X_velocity, Y_velocity, angle, angular_velocity, left_contact, right_contact = observation
+    if left_contact == 1 and right_contact == 1:
+        return 0  # If both contacts are on, keep engines off
+    
+    # Control horizontal position
+    if X_pos < -0.1:  # Move right
+        return 3
+    elif X_pos > 0.1:  # Move left
+        return 1
 
-    def act(self, observation):
-        x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
-        
-        # Default action to switch off engines
-        action = 0
+    # Control angle
+    if angle < -0.1:
+        return 1  # Push left engine
+    elif angle > 0.1:
+        return 3  # Push right engine
 
-        # 1. Immediate correction for angle stability
-        if angle < -0.05:
-            return 3  # Push right engine to counter left tilt
-        elif angle > 0.05:
-            return 1  # Push left engine to counter right tilt
+    # Control vertical speed
+    if Y_velocity > -0.3:
+        return 2  # Push both engines
+    elif Y_velocity < -0.5:
+        return 0  # Turn off engines, if falling fast, coast to slow down
 
-        # 2. Aggressive control for descent speed
-        if y_velocity < -0.3:
-            return 2  # Push both engines to slow descent
-
-        # 3. Proactive horizontal adjustments when angle is stable
-        if abs(angle) < 0.05:  # Ensure angle stability before horizontal corrections
-            if x_position < -0.1:
-                return 3  # Push right engine to move right
-            elif x_position > 0.1:
-                return 1  # Push left engine to move left
-
-        return action
+    return 0  # Default action
