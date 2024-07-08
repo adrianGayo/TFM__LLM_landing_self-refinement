@@ -11,11 +11,11 @@ def act(observation):
     # Unpack observations
     x, y, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
     
-    # Prioritize vertical speed correction if descending rapidly
+    # Prioritize vertical speed correction
     if y_vel < -MAX_VERTICAL_SPEED:
         return 2
 
-    # Balance horizontal velocity correction and angle correction
+    # Correct horizontal velocity and angle jointly
     if abs(x_vel) > MAX_HORIZONTAL_SPEED or abs(angle) > MAX_ANGLE:
         if x_vel > 0 and angle > 0:
             return 1  # Push left engine
@@ -26,7 +26,7 @@ def act(observation):
         else:
             return 1  # Push left engine
 
-    # Correct angular velocity if needed
+    # Correct angular velocity
     if abs(ang_vel) > MAX_ANGULAR_VELOCITY:
         if ang_vel > 0:
             return 1  # Push left engine
