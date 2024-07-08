@@ -10,28 +10,26 @@ def act(log_entry):
         left_contact = current_status[6]
         right_contact = current_status[7]
 
-        action = 0  # Default action: switch off engines
+        action = 0  # Default to turning off engines
 
-        # If landed, switch off all engines
         if left_contact == 1 and right_contact == 1:
-            action = 0
+            action = 0  # Turn off engines if landed
         else:
-            # Control descent speed
-            if y_vel < -0.5:
-                action = 2  # Engage both engines to slow descent
-            # If stable descent speed, adjust horizontal position
-            elif x_pos < -0.1 or x_pos > 0.1:
-                if x_vel > 0.1:
-                    action = 1  # Push left engine to counter right drift
-                elif x_vel < -0.1:
-                    action = 3  # Push right engine to counter left drift
-            # If vertical and horizontal movements are stable, adjust angle
-            elif angle < -0.1 or angle > 0.1:
-                if angle > 0.1:
-                    action = 1  # Push left engine to correct right tilt
-                elif angle < -0.1:
-                    action = 3  # Push right engine to correct left tilt
+            # Adjust vertical speed
+            if y_vel < -0.2:
+                action = 2  # Push both engines to reduce descent speed
+            # Adjust horizontal position
+            elif x_pos < -0.1:
+                action = 3  # Push right engine to move left
+            elif x_pos > 0.1:
+                action = 1  # Push left engine to move right
+            # Stabilize angle
+            elif angle < -0.1:
+                action = 3  # Push right engine to correct left tilt
+            elif angle > 0.1:
+                action = 1  # Push left engine to correct right tilt
+
         return action
     except Exception as e:
         print(f"Error processing log entry: {e}")
-        return 0  # Default action in case of error
+        return 0  # Return default action in case of error
