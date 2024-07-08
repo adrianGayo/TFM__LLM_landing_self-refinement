@@ -3,7 +3,7 @@ def act(logs):
     for log_entry in logs:
         if isinstance(log_entry, dict) and 'current status' in log_entry:
             current_status = log_entry['current status']
-            if len(current_status) == 8:
+            if isinstance(current_status, list) and len(current_status) == 8:
                 x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = current_status
                 action = 0  # Default action is to switch off engines
 
@@ -29,7 +29,7 @@ def act(logs):
 
                 final_decision.append(action)
             else:
-                print(f'Unexpected current_status length: {len(current_status)}')
+                print(f'Error in current_status format or length: {current_status}')
         else:
-            print(f'Unexpected log_entry format: {log_entry}')
+            print(f'Error in log_entry format or missing current status field: {log_entry}')
     return final_decision
