@@ -1,53 +1,36 @@
 def act(observation):
     x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
 
-    # Early Phase: Large height, manage horizontal velocity primarily, stabilize descent second
-    if y_position > 1.0:
-        if abs(x_velocity) > 0.2:  # Prioritize horizontal stabilization
-            if x_velocity > 0:
-                return 1  # Left engine to slow rightward drift
-            else:
-                return 3  # Right engine to slow leftward drift
-        elif y_velocity < -0.5:  # Control excessive downward speed
-            return 2
-        elif abs(angle) > 0.1:   # Moderate angular correction if necessary
-            if angle > 0:
-                return 3  # Right engine to correct tilt
-            else:
-                return 1  # Left engine to correct tilt
+    # Adjust horizontal velocity to be near zero
+    if abs(x_velocity) > 0.2:
+        if x_velocity < 0:
+            return 3
         else:
-            return 0  # Balanced descent
+            return 1
 
-    # Mid Phase: Transition closer to ground, balance lateral and vertical with more sensitivity
-    elif y_position > 0.3:
-        if abs(x_velocity) > 0.1:
-            if x_velocity > 0:
-                return 1
-            else:
-                return 3
-        elif y_velocity < -0.3:
-            return 2
-        elif abs(angle) > 0.05:
-            if angle > 0:
-                return 3
-            else:
-                return 1
+    # Reduce vertical speed if falling too fast
+    if y_velocity < -0.5:
+        return 2
+
+    # Correct significant tilt
+    if abs(angle) > 0.1:
+        if angle < 0:
+            return 1
         else:
-            return 0
+            return 3
+        
+    # Prevent further tilt from engines activating too quickly
+    if abs(angular_velocity) > 0.1:
+        return 0  # let it stabilize momentarily
 
-    # Final Pre-landing Phase: Minor & precise tuning for near-final descent
-    else:
-        if abs(x_position) > 0.05:
+    # Ensure reduced speed and stable position and descent close to landing
+    if y_position < 0.3:
+        if abs(horizontal_velocity) > 0.1 or abs(x_position) > 0.1:
             if x_position < 0:
                 return 3
             else:
                 return 1
-        elif abs(y_velocity) > 0.1:
-            return 2
-        elif abs(angle) > 0.02:
-            if angle < 0:
-                return 1
-            else:
-                return 3
         else:
-            return 0
+            return 2
+
+    return 0 # Reverting to stabilize if all checks pass
