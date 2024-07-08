@@ -1,35 +1,30 @@
-import numpy as np
-
 def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-    
-    # Define threshold values
-    pos_threshold = 0.1  # Horizontal position threshold
-    x_vel_threshold = 0.05  # Horizontal velocity threshold
-    y_vel_threshold = -0.1  # Vertical velocity threshold
-    angle_threshold = 0.1  # Angle threshold
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, l_contact, r_contact = observation
 
-    # If we have landed, turn off engines
-    if left_contact == 1 and right_contact == 1:
-        return 0
+    x_threshold = 0.05
+    vertical_threshold = -0.1
+    angle_threshold = 0.1
 
-    # Prioritize angle correction
+    # Landing has been achieved if both contact sensors are triggered
+    if l_contact == 1 and r_contact == 1:
+        return 0  # Switch off engines if both sensors indicate landing
+
+    # Correcting angle before anything else
     if abs(angle) > angle_threshold:
         if angle > 0:
-            return 3 # Push right engine to counteract positive tilt
+            return 3  # Push right engine to counteract positive tilt
         else:
-            return 1 # Push left engine to counteract negative tilt
+            return 1  # Push left engine to counteract negative tilt
 
-    # Correct horizontal position and velocity
-    if abs(x_vel) > x_vel_threshold or abs(x_pos) > pos_threshold:
-        if x_vel > 0 or x_pos > 0.1:  # Move left if moving or positioned right
-            return 1  # Push left engine
-        elif x_vel < 0 or x_pos < -0.1:  # Move right if moving or positioned left
-            return 3  # Push right engine
+    # Correcting horizontal velocity
+    if abs(x_vel) > x_threshold:
+        if x_vel > 0:
+            return 1  # Push left engine to counteract x_vel to the right
+        else:
+            return 3  # Push right engine to counteract x_vel to the left
 
-    # Adjust vertical descent
-    if y_vel < y_vel_threshold or y_pos > 0.1:
-        return 2  # Push both engines (upward thrust)
+    # Manage descending velocity and position
+    if y_pos > 0.1 or y_vel < vertical_threshold:
+        return 2  # Push both engines (upwards) to slow descent
 
-    # Switch off engines when stable
-    return 0
+    return 0  # Default action switches off engines.
