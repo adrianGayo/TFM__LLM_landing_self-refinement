@@ -1,27 +1,27 @@
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
     
-    # Landed condition
+    # Check if the lander has landed
     if left_contact == 1 and right_contact == 1:
         return 0  # Turn off all engines to stay stable
+    
+    # Stabilize horizontal position with immediate adjustments for closer proximity
+    if x_pos > 0.05:  # Lander is to the right of target
+        if x_vel > -0.3:  # Slightly more tolerant velocity threshold
+            return 1  # Push left engine to adjust
+    elif x_pos < -0.05:  # Lander is to the left of target
+        if x_vel < 0.3:  # Slightly more tolerant velocity threshold
+            return 3  # Push right engine to adjust
 
-    # Stabilize horizontal position with dynamic thresholds
-    if x_pos > 0.1:  # Lander to the right of target
-        if x_vel > -0.3:  # Allow smoother adjustment
-            return 1  # Push left engine
-    elif x_pos < -0.1:  # Lander to the left of target
-        if x_vel < 0.3:  # Allow smoother adjustment
-            return 3  # Push right engine
+    # Stabilize vertical velocity with earlier and finer control
+    if y_vel < -0.3:
+        return 2  # Push both engines upwards to slow descent
 
-    # Moderate vertical velocity
-    if y_vel < -0.5:
-        return 2  # Push both engines upwards
+    # Correct angle with immediate and finer adjustments
+    if angle > 0.05:  # Tilted to the right
+        return 1  # Push left engine to counter
+    elif angle < -0.05:  # Tilted to the left
+        return 3  # Push right engine to counter
 
-    # Correct angle deviation
-    if angle > 0.1:
-        return 1  # Push left engine to correct
-    elif angle < -0.1:
-        return 3  # Push right engine to correct
-
-    # Default state management
-    return 0  # Maintain engine off when conditions are stable
+    # If all conditions are satisfactorily met, maintain engines off
+    return 0
