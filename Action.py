@@ -6,35 +6,35 @@ class Agent:
         x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = current_status
 
         if left_contact or right_contact:
-            return 0  # Vessel is landed or crashed, stop all engines.
+            return 0  # Stop engines on landing or crashing.
 
-        # Prevent excessive vertical speed, give priority to slower vertical descent
-        if y_vel < -0.5:  # High descent speed
-            return 2  # Push both engines upward to reduce descent speed.
+        # Vertical descent control to ensure smooth landing
+        if y_vel < -0.5:  # High descent speed priority
+            return 2  # Push both engines upwards to reduce descent speed.
 
-        # Stabilize angle first if deviation is significantly large
-        if abs(angle) > 0.2:  # Significant angle deviation
+        # Control horizontal position more conservatively
+        if abs(x_pos) > 0.2:  # Major horizontal offset correction
+            if x_pos < -0.2:
+                return 3  # Move right to center
+            elif x_pos > 0.2:
+                return 1  # Move left to center
+        if abs(x_vel) > 0.2:  # Horizontal velocity correction
+            if x_vel < 0:
+                return 3  # Moving left, stabilize right
+            else:
+                return 1  # Moving right, stabilize left
+        
+        # Angle stabilization focusing on small incremental adjustments
+        if abs(angle) > 0.1:  # Large angle deviation correction
             if angle < 0:
-                return 3  # Push right to correct negative angle
+                return 3  # Push right to reduce negative angle
             else:
-                return 1  # Push left to correct positive angle
-        if abs(ang_vel) > 0.2:  # Angular velocity correction needed
+                return 1  # Push left to reduce positive angle
+        if abs(ang_vel) > 0.1:  # Angular velocity correction
             if ang_vel < 0:
-                return 3  # Push right to counteract left rotation
+                return 3  # Correct leftward angular velocity
             else:
-                return 1  # Push left to counteract right rotation
+                return 1  # Correct rightward angular velocity
 
-        # Control horizontal position and velocity sparingly
-        if abs(x_pos) > 0.2:  # Significant horizontal offset
-            if x_pos < -0.2:  # Offset to left, correct rightward
-                return 3
-            elif x_pos > 0.2:  # Offset to right, correct leftward
-                return 1
-        if abs(x_vel) > 0.2:  # Significant horizontal velocity
-            if x_vel < 0:  # Moving left, push right to stabilize
-                return 3
-            else:  # Moving right, push left to stabilize
-                return 1
-
-        # Soft control by keeping engines off to maintain descension gradually
+        # Default action to stabilize descent gradually
         return 0
