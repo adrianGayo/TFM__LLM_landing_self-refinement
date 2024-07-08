@@ -3,22 +3,22 @@ def act(observation):
     if left_contact == 1 and right_contact == 1:
         return 0  # If both contacts are on, keep engines off
     
-    # Control horizontal position
-    if X_pos < -0.1:  # Move right
-        return 3
-    elif X_pos > 0.1:  # Move left
-        return 1
-
-    # Control angle
+    # Prioritize angle correction
     if angle < -0.1:
         return 1  # Push left engine
     elif angle > 0.1:
         return 3  # Push right engine
 
     # Control vertical speed
-    if Y_velocity > -0.3:
-        return 2  # Push both engines
-    elif Y_velocity < -0.5:
-        return 0  # Turn off engines, if falling fast, coast to slow down
+    if Y_velocity > -0.2:
+        return 0  # Turn off engines when ascending or slow descent
+    elif Y_velocity < -0.4:
+        return 2  # Push both engines to slow descent
 
-    return 0  # Default action
+    # Control horizontal position
+    if X_pos < -0.2:  # Too far left
+        return 3
+    elif X_pos > 0.2:  # Too far right
+        return 1
+
+    return 0  # Default action to conserve fuel and avoid unnecessary thrust
