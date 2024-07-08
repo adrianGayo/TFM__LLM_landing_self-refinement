@@ -18,7 +18,7 @@ def act(observation):
         return 0  # The spacecraft has landed
 
     # Control vertical descent
-    if y_vel < SAFE_Y_VELOCITY or y_vel < 0.0:  # more active control
+    if y_vel < SAFE_Y_VELOCITY:
         return 2  # Apply upward thrust to control descent speed
 
     # Angle correction should be done gradually to avoid overcorrection
@@ -41,6 +41,6 @@ def act(observation):
             return 1  # Apply thrust to the left engine to counter the right spin
         else:
             return 3  # Apply thrust to the right engine to counter the left spin
-
+ 
     # Default action is to switch off engines when stable
     return 0
