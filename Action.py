@@ -1,13 +1,13 @@
 import numpy as np
 
-
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
 
     # Define threshold values
     angle_threshold = 0.1  # Angle threshold
     x_vel_threshold = 0.1  # Horizontal velocity threshold
-    y_vel_threshold = -0.5  # Vertical velocity threshold
+    y_vel_threshold = -0.5  # Negative Vertical velocity threshold
+    y_vel_stabilize = -0.1  # Near zero vertical velocity threshold for stability
 
     # If we have landed, turn off engines
     if left_contact == 1 and right_contact == 1:
@@ -31,5 +31,9 @@ def act(observation):
         else:
             return 3  # Push right engine to counteract x_vel to the left
 
-    # If all within thresholds, switch off engines
+    # Fine descent stabilization if stabilization threshold is met
+    if y_vel < y_vel_stabilize:
+        return 2  # Push both engines lightly to stabilize descent
+
+    # If all within thresholds, switch off engines to conserve points
     return 0
