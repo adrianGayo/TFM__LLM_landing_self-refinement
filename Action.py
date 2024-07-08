@@ -1,26 +1,30 @@
 def act(observation):
     x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
-    threshold = 0.05
-    angle_threshold = 0.05  # tighter angle correction
-    y_velocity_threshold = -0.1  # max safe velocity for descent
-    
-    # Stage 1: Correct angle first
-    if abs(angle) > angle_threshold:
+    angle_threshold = 0.1
+    velocity_threshold = 0.1
+    max_y_velocity_threshold = -0.3
+    min_y_velocity_threshold = -1.0
+    max_angle_threshold = 0.2
+
+    # Prioritize descent stabilization
+    if y_velocity < max_y_velocity_threshold:
+        return 2  # Push both engines to ensure slowing down descent speed
+    if y_velocity > min_y_velocity_threshold and right_contact == 0:
+        return 2  # Use both engines to keep safe descent
+
+    # Angular stability second
+    if abs(angle) > max_angle_threshold:
         if angle > 0:
-            return 1  # Push left engine to counteract positive tilt
+            return 3  # Push right engine to correct tilting positively
         else:
-            return 3  # Push right engine to counteract negative tilt
+            return 1  # Push left engine to correct tilting negatively
 
-    # Stage 2: Adjust horizontal velocity
-    if abs(x_velocity) > threshold:
+    # Adjust horizontal drift
+    if abs(x_velocity) > velocity_threshold:
         if x_velocity > 0:
-            return 1  # Push left engine to slow right drift
+            return 1  # Adjust drift by left engine to correct rightward movement
         else:
-            return 3  # Push right engine to slow left drift
+            return 3  # Adjust drift by right engine to correct leftward movement
 
-    # Stage 3: Adjust vertical velocity, if descent is too quick
-    if y_velocity < y_velocity_threshold or y_position > 0.1:
-        return 2  # Use central engine to slow descent
-
-    # If within acceptable range, switch off engines
+    # Stabilize everything else by switching off all engines
     return 0
