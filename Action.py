@@ -6,7 +6,7 @@ def act(observation):
     y_velocity_threshold = -0.5
 
     # Stabilize descent speed first
-    if y_velocity < y_velocity_threshold:
+    if y_vel < y_velocity_threshold:
         return 2  # Push both engines (upwards) to slow descent
 
     # Correct angular tilt only if significant
@@ -17,11 +17,11 @@ def act(observation):
             return 1  # Push left engine to counteract negative tilt
 
     # Adjust horizontal drift if necessary
-    if abs(x_velocity) > velocity_threshold:
-        if x_velocity > 0:
+    if abs(x_vel) > velocity_threshold:
+        if x_vel > 0:
             return 1  # Push left engine to counteract x_velocity to the right
         else:
-            return 3  # Push right engine to counteract x_velocity to left
+            return 3  # Push right engine to counteract x_velocity to the left
 
     # If all within thresholds, switch off engines
     return 0
