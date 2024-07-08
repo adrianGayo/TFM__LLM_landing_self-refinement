@@ -1,34 +1,24 @@
-import random
-
-# Define thresholds for decision-making
-MIN_ANGLE = -0.1
-MAX_ANGLE = 0.1
-
-MAX_Y_VELOCITY = -0.1
-
-MAX_X_VELOCITY = -0.03
-
-# Define decision-making function
+import numpy as np
 
 def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    x, y, vx, vy, angle, angular_velocity, left_contact, right_contact = observation
     
-    if left_contact == 1 and right_contact == 1:
-        return 0  # The spacecraft has landed
-
-    if y_vel < MAX_Y_VELOCITY:
-        return 2  # Apply upward thrust to slow descent
-
-    if abs(angle) > MAX_ANGLE or ang_vel != 0:
-        if angle < 0:
-            return 1  # Apply thrust to the left engine to correct angle
-        else:
-            return 3  # Apply thrust to the right engine to correct angle
+    # Step 1: Stabilize the angle
+    if angle < -0.1:  # Tilted left
+        return 3  # Fire right engine to tilt to the right
+    elif angle > 0.1:  # Tilted right
+        return 1  # Fire left engine to tilt to the left
     
-    if abs(x_vel) > MAX_X_VELOCITY:
-        if x_vel > 0:
-            return 1  # Apply left engine thrust to reduce positive X velocity
-        else:
-            return 3  # Apply right engine thrust to reduce negative X velocity
-
-    return 0  # Switch off engines to avoid unnecessary thrust
+    # Step 2: Velocity Control
+    if vy < -0.5:  # Falling fast
+        return 2  # Fire both engines to slow descent
+    elif vy > -0.2:  # Moving upwards or slow fall
+        return 0  # Switch off engines to let it fall naturally
+    
+    # Step 3: Centering
+    if x > 0.1:  # Drifting right
+        return 1  # Fire left engine for left movement
+    elif x < -0.1:  # Drifting left
+        return 3  # Fire right engine for right movement
+    
+    return 0  # all stable, turn off engines
