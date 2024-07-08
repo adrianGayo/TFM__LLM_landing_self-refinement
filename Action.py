@@ -16,19 +16,21 @@ def act(log_entry):
         if left_contact == 1 and right_contact == 1:
             action = 0
         else:
+            # Control descent speed
             if y_vel < -0.5:
                 action = 2  # Engage both engines to slow descent
-
-            elif x_pos < -0.1 and x_vel < 0.1:
-                action = 3  # Push right engine to move left
-            elif x_pos > 0.1 and x_vel > -0.1:
-                action = 1  # Push left engine to move right
-
-            elif angle < -0.1 and ang_vel < 0.1:
-                action = 3  # Push right engine to correct left tilt
-            elif angle > 0.1 and ang_vel > -0.1:
-                action = 1  # Push left engine to correct right tilt
-
+            # If stable descent speed, adjust horizontal position
+            elif x_pos < -0.1 or x_pos > 0.1:
+                if x_vel > 0.1:
+                    action = 1  # Push left engine to counter right drift
+                elif x_vel < -0.1:
+                    action = 3  # Push right engine to counter left drift
+            # If vertical and horizontal movements are stable, adjust angle
+            elif angle < -0.1 or angle > 0.1:
+                if angle > 0.1:
+                    action = 1  # Push left engine to correct right tilt
+                elif angle < -0.1:
+                    action = 3  # Push right engine to correct left tilt
         return action
     except Exception as e:
         print(f"Error processing log entry: {e}")
