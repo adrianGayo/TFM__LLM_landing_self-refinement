@@ -1,40 +1,33 @@
-import random
-
-# Thresholds for decision-making
-MIN_ANGLE = -0.1
-MAX_ANGLE = 0.1
-MAX_Y_VELOCITY = -0.1
-MAX_X_VELOCITY = 0.03
-MAX_ANGULAR_VELOCITY = 0.1
-SAFE_Y_VELOCITY = -0.5
-SAFE_X_VELOCITY = 0.1
+import numpy as np
 
 def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-    
-    # Successful landing conditions
+    x, y, vx, vy, angle, angular_velocity, left_contact, right_contact = observation
+
+    # Constants for thresholds and actions
+    ANGLE_THRESHOLD = 0.1
+    ANGLE_CORRECTION = 0.05
+    VELOCITY_THRESHOLD = -0.5
+    X_VELOCITY_THRESHOLD = 0.2
+    X_POSITION_THRESHOLD = 0.2
+
+    # Stabilize Angle
+    if angle < -ANGLE_THRESHOLD or angular_velocity < -ANGLE_CORRECTION:
+        return 3  # Correct to the right
+    elif angle > ANGLE_THRESHOLD or angular_velocity > ANGLE_CORRECTION:
+        return 1  # Correct to the left
+
+    # Correct Vertical Velocity
+    if vy < VELOCITY_THRESHOLD:
+        return 2  # Apply engines to slow down descent
+
+    # Correct X Position and Velocity
+    if x > X_POSITION_THRESHOLD or vx > X_VELOCITY_THRESHOLD:
+        return 1  # Adjust left
+    elif x < -X_POSITION_THRESHOLD or vx < -X_VELOCITY_THRESHOLD:
+        return 3  # Adjust right
+
+    # If left and right contact detected, we have safely landed
     if left_contact == 1 and right_contact == 1:
-        return 0  # The spacecraft has landed
+        return 0  # Switch off engines and maintain position
 
-    if y_vel < SAFE_Y_VELOCITY:
-        return 2  # Apply upward thrust to control descent speed
-
-    if abs(angle) > MAX_ANGLE:
-        if angle > 0:
-            return 3  # Thrust right engine to correct to the left
-        else:
-            return 1  # Thrust left engine to correct to the right
-
-    if abs(x_vel) > SAFE_X_VELOCITY:
-        if x_vel > 0:
-            return 1  # Apply thrust to the left engine to reduce positive X velocity
-        else:
-            return 3  # Apply thrust to the right engine to reduce negative X velocity
-
-    if abs(ang_vel) > MAX_ANGULAR_VELOCITY:
-        if ang_vel > 0:
-            return 1  # Apply thrust to the left engine to counter the right spin
-        else:
-            return 3  # Apply thrust to the right engine to counter the left spin
-
-    return 0  # Default action is to switch off engines to conserve fuel and minimize sudden movements
+    return 0  # Default case to switch off engines to avoid unnecessary corrections
