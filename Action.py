@@ -7,21 +7,22 @@ def act(observation):
     DOWNWARD_VEL_LIMIT = -0.5 # m/s, acceptable downward velocity
     SAFE_ANGLE_VEL = 0.1   # radians/sec, acceptable angular velocity
 
-    # Priority 1: Control descent speed
-    if y_vel < DOWNWARD_VEL_LIMIT:
+    # Step 1: Control descent speed
+    if y_vel < DOWNWARD_VEL_LIMIT and not left_contact and not right_contact:
         return 2  # Push both engines to slow descent
 
-    # Priority 2: Correct angle and reduce angular velocity
-    if angle > ANGLE_THRESHOLD or ang_vel > SAFE_ANGLE_VEL:
-        return 3  # Push right engine to stabilize
-    elif angle < -ANGLE_THRESHOLD or ang_vel < -SAFE_ANGLE_VEL:
-        return 1  # Push left engine to stabilize
+    # Step 2: Correct angle and angular velocity only if descent is under control
+    if y_vel >= DOWNWARD_VEL_LIMIT:
+        if angle > ANGLE_THRESHOLD or ang_vel > SAFE_ANGLE_VEL:
+            return 3  # Push right engine to stabilize
+        elif angle < -ANGLE_THRESHOLD or ang_vel < -SAFE_ANGLE_VEL:
+            return 1  # Push left engine to stabilize
 
-    # Priority 3: Manage horizontal drift
+    # Step 3: Manage horizontal drift concurrently
     if x_vel > VELOCITY_THRESHOLD:
         return 1  # Push left to reduce rightward drift
     elif x_vel < -VELOCITY_THRESHOLD:
         return 3  # Push right to reduce leftward drift
 
-    # Endgame: when everything is stable, switch off engines
+    # Default idle state when stable
     return 0  # Switch off engines
