@@ -3,7 +3,6 @@ import random
 # Thresholds for decision-making
 MIN_ANGLE = -0.1
 MAX_ANGLE = 0.1
-MAX_Y_VELOCITY = -0.1
 SAFE_Y_VELOCITY = -0.5
 SAFE_X_VELOCITY = 0.1
 MAX_X_VELOCITY = 0.03
@@ -19,28 +18,29 @@ def act(observation):
         return 0  # The spacecraft has landed
 
     # Control vertical descent
-    if y_vel < SAFE_Y_VELOCITY:
+    if y_vel < SAFE_Y_VELOCITY or y_vel < 0.0:  # more active control
         return 2  # Apply upward thrust to control descent speed
 
-    # Control angle
+    # Angle correction should be done gradually to avoid overcorrection
     if abs(angle) > MAX_ANGLE:
         if angle > 0:
             return 3  # Thrust right engine to correct to the left
         else:
             return 1  # Thrust left engine to correct to the right
 
-    # Control horizontal velocity
+    # Horizontal velocity adjustments also need to be gradual
     if abs(x_vel) > SAFE_X_VELOCITY:
         if x_vel > 0:
             return 1  # Apply thrust to the left engine to reduce positive X velocity
         else:
             return 3  # Apply thrust to the right engine to reduce negative X velocity
 
-    # Control angular velocity
+    # Control angular velocity, but do so gently
     if abs(ang_vel) > MAX_ANGULAR_VELOCITY:
         if ang_vel > 0:
             return 1  # Apply thrust to the left engine to counter the right spin
         else:
             return 3  # Apply thrust to the right engine to counter the left spin
 
-    return 0  # Default action is to switch off engines to conserve fuel and minimize sudden movements
+    # Default action is to switch off engines when stable
+    return 0
