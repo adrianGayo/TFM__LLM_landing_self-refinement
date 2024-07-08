@@ -1,15 +1,18 @@
-import numpy as np
+import random
+
+# Thresholds for decision-making
+MIN_ANGLE = -0.1
+MAX_ANGLE = 0.1
+MAX_Y_VELOCITY = -0.1
+SAFE_Y_VELOCITY = -0.5
+SAFE_X_VELOCITY = 0.1
+MAX_X_VELOCITY = 0.03
+MAX_ANGULAR_VELOCITY = 0.1
+
+# Define improved decision-making function
 
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-
-    # Constants for thresholds and actions
-    MIN_ANGLE = -0.1
-    MAX_ANGLE = 0.1
-    SAFE_Y_VELOCITY = -0.5
-    SAFE_X_VELOCITY = 0.1
-    MAX_X_VELOCITY = 0.03
-    MAX_ANGULAR_VELOCITY = 0.1
 
     # Successful landing conditions
     if left_contact == 1 and right_contact == 1:
@@ -40,5 +43,4 @@ def act(observation):
         else:
             return 3  # Apply thrust to the right engine to counter the left spin
 
-    # Default action is to switch off engines to conserve fuel and minimize sudden movements
-    return 0
+    return 0  # Default action is to switch off engines to conserve fuel and minimize sudden movements
