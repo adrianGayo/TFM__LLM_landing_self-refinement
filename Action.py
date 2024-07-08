@@ -1,17 +1,32 @@
+import random
+
+# Define thresholds for decision-making
+MIN_ANGLE = -0.1
+MAX_ANGLE = 0.1
+MAX_Y_VELOCITY = -0.1
+MAX_X_VELOCITY = -0.03
+
+# Define decision-making function
+
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-    if y_vel < -0.5 and y_pos > 0.2:  # Fast descent, high altitude
-        return 2  # Engage upward thrust
-    if abs(x_vel) > 0.2:  # Large horizontal velocity
-        if x_vel < 0:
-            return 3  # Thrust right (counteract leftward movement)
-        else:
-            return 1  # Thrust left (counteract rightward movement)
-    if abs(angle) > 0.1:  # Tilted
+    
+    if left_contact == 1 and right_contact == 1:
+        return 0  # The spacecraft has landed
+
+    if y_vel < MAX_Y_VELOCITY:
+        return 2  # Apply upward thrust to slow descent
+
+    if abs(angle) > MAX_ANGLE or ang_vel != 0:
         if angle < 0:
-            return 3  # Correct counter-clockwise tilt
+            return 1  # Apply thrust to the left engine to correct angle
         else:
-            return 1  # Correct clockwise tilt
-    if y_pos > 0.1 and y_vel < -0.2:  # Moderate descent below safe velocity
-        return 2  # Engage upward thrust
-    return 0  # Switch off engines for minor corrections
+            return 3  # Apply thrust to the right engine to correct angle
+    
+    if abs(x_vel) > MAX_X_VELOCITY:
+        if x_vel > 0:
+            return 1  # Apply left engine thrust to reduce positive X velocity
+        else:
+            return 3  # Apply right engine thrust to reduce negative X velocity
+
+    return 0  # Switch off engines to avoid unnecessary thrust
