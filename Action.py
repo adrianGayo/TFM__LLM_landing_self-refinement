@@ -10,7 +10,7 @@ def act(observation):
                 return 3  # Right engine to slow leftward drift
         elif y_velocity < -0.5:  # Control excessive downward speed
             return 2  # Center engine to slow descent
-        elif abs(angle) > 0.1:  # Moderate angular correction if necessary
+        elif abs(angle) > 0.05:  # Slightly more sensitive to early phase angle corrections
             if angle > 0:
                 return 3  # Right engine to correct tilt
             else:
@@ -18,7 +18,7 @@ def act(observation):
         else:
             return 0  # Balanced descent
 
-    # Mid Phase: Transition closer to ground, balanced corrections about horizontal and vertical stabilities
+    # Mid Phase: Transition closer to ground, balance lateral and vertical with more sensitivity
     elif y_position > 0.3:
         if abs(x_velocity) > 0.1:
             if x_velocity > 0:
@@ -26,7 +26,7 @@ def act(observation):
             else:
                 return 3
         elif y_velocity < -0.3:
-            return 2  # Use center engine more to stabilize slow descent
+            return 2
         elif abs(angle) > 0.05:
             if angle > 0:
                 return 3
@@ -35,19 +35,19 @@ def act(observation):
         else:
             return 0
 
-    # Final Phase: Pre-landing with minimalistic corrections for stabilization and final approach
+    # Final Pre-landing Phase: Minor & precise tuning
     else:
-        if abs(x_position) > 0.05:
+        if abs(x_position) > 0.03:  # More precise positioning
             if x_position < 0:
                 return 3
             else:
                 return 1
         elif abs(y_velocity) > 0.1:
-            return 2  # Favor descent stabilization
-        elif abs(angle) > 0.02:
-            if angle < 0:
-                return 1
+            return 2  # Gentle descent
+        elif abs(angle) > 0.02:  # Heightened sensitivity to angle corrections
+            if angle > 0:
+                return 3  # Correct tilt
             else:
-                return 3
+                return 1  # Correct tilt
         else:
-            return 0  # Smooth controlled descent
+            return 0  # Final balancing for pre-landing
