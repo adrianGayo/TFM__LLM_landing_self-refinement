@@ -9,8 +9,8 @@ def act(observation):
             else:
                 return 3  # Right engine to slow leftward drift
         elif y_velocity < -0.5:  # Control excessive downward speed
-            return 2  # Center engine to slow descent
-        elif abs(angle) > 0.1:  # Moderate angular correction if necessary
+            return 2  # Center engine to reduce descent speed
+        elif abs(angle) > 0.05:  # More sensitive angular corrections
             if angle > 0:
                 return 3  # Right engine to correct tilt
             else:
@@ -37,17 +37,17 @@ def act(observation):
 
     # Final Pre-landing Phase: Minor & precise tuning for near-final descent
     else:
-        if abs(x_position) > 0.05:
+        if abs(x_position) > 0.03:  # More precise positioning
             if x_position < 0:
                 return 3
             else:
                 return 1
         elif abs(y_velocity) > 0.1:
-            return 2
+            return 2  # Gentle descent
         elif abs(angle) > 0.02:
-            if angle < 0:
-                return 1
+            if angle > 0:
+                return 3  # Correct tilt
             else:
-                return 3
+                return 1  # Correct tilt
         else:
-            return 0  # Controlled descent
+            return 0
