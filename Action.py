@@ -1,33 +1,36 @@
 def act(observation):
     x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
 
-    # Reduce horizontal speed if too high
+    # Adjust horizontal velocity to be near zero
     if abs(x_velocity) > 0.2:
-        if x_velocity > 0:
-            return 1  # Fire left engine to reduce rightward drift
+        if x_velocity < 0:
+            return 3
         else:
-            return 3  # Fire right engine to reduce leftward drift
+            return 1
 
-    # Control vertical speed if falling too fast
+    # Reduce vertical speed if falling too fast
     if y_velocity < -0.5:
-        return 2  # Fire the center engine to slow down descent
+        return 2
 
-    # Maintain upright orientation if angle deviates significantly
+    # Correct significant tilt
     if abs(angle) > 0.1:
-        if angle > 0:
-            return 3  # Fire right engine to correct tilt
+        if angle < 0:
+            return 1
         else:
-            return 1  # Fire left engine to correct tilt
+            return 3
+        
+    # Prevent further tilt from engines activating too quickly
+    if abs(angular_velocity) > 0.1:
+        return 0  # let it stabilize momentarily
 
-    # Fine-tune horizontal position and descent when close to ground
+    # Ensure reduced speed and stable position and descent close to landing
     if y_position < 0.3:
-        if abs(x_position) > 0.1:
+        if abs(horizontal_velocity) > 0.1 or abs(x_position) > 0.1:
             if x_position < 0:
-                return 3  # Push right to center
+                return 3
             else:
-                return 1  # Push left to center
+                return 1
         else:
-            return 2  # Gentle descent
+            return 2
 
-    # Default to switching off engines
-    return 0  # Controlled descent
+    return 0 # Reverting to stabilize if all checks pass
