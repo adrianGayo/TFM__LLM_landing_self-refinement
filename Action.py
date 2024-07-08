@@ -1,26 +1,19 @@
 def act(observation):
-    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
+    threshold = 0.05
+    if abs(x_velocity) > threshold:
+        if x_velocity > 0:
+            return 1  # Push left engine to counteract x_velocity to right
+        else:
+            return 3  # Push right engine to counteract x_velocity to left
     
-    # First, check if the lander has landed
-    if left_contact == 1 and right_contact == 1:
-        return 0  # Turn off all engines to stay stable 
-    
-    # Stabilize horizontal position to fine-grain
-    if x_pos > 0.1:  # Lander is to the right of target
-        if x_vel > -0.1:  # Fine-tuned tolerant velocity
-            return 1  # Push left engine to adjust
-    elif x_pos < -0.1:  # Lander is to the left of target
-        if x_vel < 0.1:  # Fine-tuned tolerant velocity
-            return 3  # Push right engine to adjust
+    if abs(angle) > threshold:
+        if angle > 0:
+            return 1  # Push left engine to counteract positive tilt
+        else:
+            return 3  # Push right engine to counteract negative tilt
 
-    # Stabilize vertical velocity with balance and fine tuning
-    if y_vel < -0.5:
-        return 2  # Push both engines upwards to slow descent
-
-    # Correct moderate angles
-    if angle > 0.1:  # Tilted to the right within moderate
-        return 1  # Push left to correct
-    elif angle < -0.1:  # Tilted to the left within moderate
-        return 3  # Push right to correct
+    if y_velocity < -threshold or y_position > 0.1:
+        return 2  # Push upward to slow descent
     
-    return 0
+    return 0  # If all within thresholds, switch off engines
