@@ -1,35 +1,27 @@
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
     
-    # Define finely tuned thresholds
-    x_pos_threshold = 0.05
-    x_vel_threshold = 0.2
-    y_vel_threshold = 0.3
-    angle_threshold = 0.1
-    ang_vel_threshold = 0.2  
-    left_contact, right_contact = observation[6], observation[7]
-
-    # Check if landed
+    # First, check if the lander has landed
     if left_contact == 1 and right_contact == 1:
-        return 0 # Turn off engines
+        return 0  # Turn off all engines to stay stable
+    
+    # Stabilize horizontal position using better tuned thresholds
+    if x_pos > 0.1:  # Lander is to the right of target
+        if x_vel > -0.3:  # Slightly more tolerant velocity threshold
+            return 1  # Push left engine to adjust
+    elif x_pos < -0.1:  # Lander is to the left of target
+        if x_vel < 0.3:  # Slightly more tolerant velocity threshold
+            return 3  # Push right engine to adjust
 
-    # Moderate horizontal movements
-    if x_pos > x_pos_threshold and x_vel > -x_vel_threshold:
-        return 1 # Thrust left
-    elif x_pos < -x_pos_threshold and x_vel < x_vel_threshold:
-        return 3 # Thrust right
+    # Stabilize vertical velocity with conservative engine usage
+    if y_vel < -0.5:
+        return 2  # Push both engines upwards to slow descent
 
-    # Stabilize vertical descent
-    if y_vel < -y_vel_threshold:
-        return 2 # Thrust both upwards
+    # Correct angle with improved angular thresholds
+    if angle > 0.1:  # Tilted to the right
+        return 1  # Push left engine to counter
+    elif angle < -0.1:  # Tilted to the left
+        return 3  # Push right engine to counter
 
-    # Keep the spacecraft upright
-    if angle > angle_threshold:
-        return 1 # Thrust left
-    elif angle < -angle_threshold:
-        return 3 # Thrust right
-
-    if abs(ang_vel) > ang_vel_threshold:
-        return 1 if ang_vel > 0 else 3
-
+    # If all conditions are satisfactorily met, maintain engine off
     return 0
