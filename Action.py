@@ -1,7 +1,7 @@
 def act(logs):
     final_decision = []
     for log in logs:
-        current_status = log['current status'] 
+        current_status = log['current status']
         x_pos = current_status[0]
         y_pos = current_status[1]
         x_vel = current_status[2]
@@ -10,6 +10,7 @@ def act(logs):
         ang_vel = current_status[5]
         left_contact = current_status[6]
         right_contact = current_status[7]
+
         action = 0  # Default action is to switch off engines
 
         # Prioritize stabilization if on-ground
