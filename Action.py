@@ -1,33 +1,21 @@
+import numpy as np
+
 def act(observation):
-    x_position, y_position, x_velocity, y_velocity, angle, angular_velocity, left_contact, right_contact = observation
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+    action = 0  # default action is to switch off engines
 
-    # If we are too far from the landing zone horizontally, reduce horizontal speed
-    if abs(x_velocity) > 0.2:
-        if x_velocity < 0:
-            return 3  # Fire right engine to push left (reduce negative x velocity)
-        else:
-            return 1  # Fire left engine to push right (reduce positive x velocity)
+    if y_vel < -1:  # if the vertical speed is high, slow down
+        action = 2  # use main engine to reduce vertical speed
+    
+    if x_vel > 0.5:  # if moving too fast to the right, push left engine
+        action = 1
+    elif x_vel < -0.5:  # if moving too fast to the left, push right engine
+        action = 3
 
-    # Control descent speed
-    if y_velocity < -0.5:  # If falling too fast
-        return 2  # Fire the center engine to slow down descent
+    if abs(angle) > 0.1:  # if the spacecraft is tilted, correct the tilt
+        if angle < 0:  # if tilted to the left, push right engine
+            action = 3
+        else:  # if tilted to the right, push left engine
+            action = 1
 
-    # Maintain upright orientation
-    if abs(angle) > 0.1:
-        if angle < 0:
-            return 1  # Fire left engine to rotate clockwise
-        else:
-            return 3  # Fire right engine to rotate counterclockwise
-
-    # Fine-tune horizontal position and descent when close to the ground
-    if y_position < 0.3:
-        if abs(x_position) > 0.1:
-            if x_position < 0:
-                return 3  # Push right to center
-            else:
-                return 1  # Push left to center
-        else:
-            return 2  # Gentle descent
-
-    # Default action is to continue descent if no immediate adjustments are needed
-    return 0  # Switch off engines for controlled descent
+    return action
