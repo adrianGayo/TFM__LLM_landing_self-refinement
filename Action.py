@@ -1,29 +1,34 @@
-def act(observation):
-    X_position, Y_position, X_velocity, Y_velocity, Angle, Angular_velocity, Left_contact, Right_contact = observation
-    
-    # Vertical and horizontal stabilization
-    if Y_velocity < -0.5:  # Descending too fast
-        if Angle > 0.1:  # If tilted to the right
-            return 1  # Activate left engine to counteract
-        elif Angle < -0.1:  # If tilted to the left
-            return 3  # Activate right engine to counteract
-        return 2  # Otherwise, activate both engines to slow down descent
-    
-    if X_velocity > 0.25:  # Moving too fast to the right
-        return 1  # Activate left engine to counteract
-    elif X_velocity < -0.25:  # Moving too fast to the left
-        return 3  # Activate right engine to counteract
+import numpy as np
 
-    # Small adjustments
-    if abs(Angle) > 0.1:  # Correct angle if tilted
-        if Angle > 0:
-            return 1
-        else:
-            return 3
-        
-    # If close to safe, switch off engines
-    if abs(X_velocity) < 0.1 and abs(Y_velocity) < 0.5 and abs(Angle) < 0.1:
-        return 0  # Switch off engines to save fuel
-    
-    # Otherwise, maintain course
-    return 0
+
+def act(observation):
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
+
+    # Constants
+    safe_angle = 0.1  # Define what is considered a safe angle range for landing
+    max_safe_speed = -0.1  # Define what is considered a safe vertical speed range for landing
+    max_horizontal_drift = 0.02  # Define what is considered a safe horizontal speed at landing
+
+    # If already contacted the ground
+    if left_contact == 1 and right_contact == 1:
+        return 0  # Turn off engines, we're landed
+
+    # If the spacecraft is tilting too much to the left or right, correct it by using side thrusters
+    if angle > safe_angle:
+        return 3  # Push right engine to rotate left
+    elif angle < -safe_angle:
+        return 1  # Push left engine to rotate right
+
+    # If horizontal velocity is too high, counteract it:
+    if x_vel > max_horizontal_drift:
+        return 1  # Push left engine to move left
+    elif x_vel < -max_horizontal_drift:
+        return 3  # Push right engine to move right
+
+    # Control the vertical speed
+    if y_vel < max_safe_speed:  # If descending too fast
+        return 2  # Push both engines to slow down
+    else:
+        return 0  # Otherwise, turn off engines to save fuel
+
+    return 0  # Default action is doing nothing
