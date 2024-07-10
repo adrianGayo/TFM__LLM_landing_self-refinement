@@ -1,20 +1,19 @@
-import numpy as np
-
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
-
-    # Decision rules based on observation criteria
-    if y_pos > 1.0 or (y_vel < -0.3 and x_pos > 0.05):
-        return 2  # Push both engines to gain height or reduce descent speed
-    elif x_pos < -0.05 and angle < 0.1:
-        return 1  # Push left engine to move right
-    elif x_pos > 0.05 and angle > -0.1:
-        return 3  # Push right engine to move left
-    elif angle > 0.1:
-        return 1  # Push left engine to stabilize angle
-    elif angle < -0.1:
-        return 3  # Push right engine to stabilize angle
-    else:
-        return 0  # Switch off engines
-
-    return action
+    # Define thresholds for taking certain actions
+    ANGLE_TOLERANCE = 0.1  # radians
+    VEL_TOLERANCE = 0.1  # m/s
+    if abs(angle) > ANGLE_TOLERANCE:
+        if angle > 0:
+            return 1  # Push left engine to counteract tilt
+        else:
+            return 3  # Push right engine to counteract tilt
+    elif abs(y_vel) > VEL_TOLERANCE:
+        return 2  # Use center engine to slow vertical descent
+    elif abs(x_vel) > VEL_TOLERANCE:
+        if x_vel > 0:
+            return 1  # Push left engine to counteract positive horizontal velocity
+        else:
+            return 3  # Push right engine to counteract negative horizontal velocity
+    else:  # If everything is within the desired range, switch off engines
+        return 0
