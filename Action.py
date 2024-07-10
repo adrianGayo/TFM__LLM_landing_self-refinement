@@ -1,24 +1,30 @@
 import numpy as np
 
+
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
 
+    # Check for landing contact first.
     if left_contact or right_contact:
-        return 0  # Switch off engines if contact sensors indicate landing.
+        return 0
 
-    if np.abs(angle) > 0.1:  # Angle correction has higher priority
-        if angle > 0:
-            return 1  # Push left engine to correct clockwise rotation
-        else:
-            return 3  # Push right engine to correct anticlockwise rotation
+    # Vertical descent control: ensure descent is gentle
+    if y_vel < -0.5:
+        return 2
 
-    if np.abs(x_vel) > 0.2:  # Control horizontal velocity
+    # Horizontal velocity control: mitigate drift
+    if np.abs(x_vel) > 0.2:
         if x_vel > 0:
-            return 1  # Push left engine to counter positive X velocity
+            return 1
+        elif x_vel < 0:
+            return 3
+
+    # Angular velocity control: neutralize rotation
+    if np.abs(angle) > 0.1:
+        if angle > 0:
+            return 1
         else:
-            return 3  # Push right engine to counter negative X velocity
+            return 3
 
-    if np.abs(y_vel) > 0.5:  # Reduce high downward velocity
-        return 2  # Use central engine to slow descent
-
-    return 0  # Default action - switch off engines for stable state
+    # Switch off engines by default if stable
+    return 0
