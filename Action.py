@@ -1,10 +1,13 @@
+import numpy as np
+
+
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
 
     # Constants
     safe_angle = 0.1  # Define safe angle range for landing
     max_safe_speed = -0.2  # Define safe vertical speed range for landing
-    max_horizontal_drift = 0.1  # Define safe horizontal speed at landing
+    max_horizontal_drift = 0.05  # Define safe horizontal speed at landing
     max_ang_vel = 0.1  # Define safe angular velocity at landing
 
     # If already contacted the ground
