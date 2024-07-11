@@ -1,46 +1,32 @@
-import numpy as np
-
 def act(observation):
     x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_contact, right_contact = observation
 
-    # Constants
+    # Constants for safe landing
     safe_angle = 0.1  # Safe angle range for landing
-    max_safe_y_speed = -0.2  # Safe descent vertical speed
-    max_horizontal_drift = 0.1  # Allowable horizontal speed
-    max_ang_vel = 0.1  # Safe angular velocity range
+    safe_angle_vel = 0.1  # Safe angular velocity
+    safe_vertical_speed = -0.2  # Safe vertical descent speed
+    safe_horizontal_speed = 0.1  # Safe horizontal speed
 
-    # If already contacted the ground
+    # If the spacecraft has already landed
     if left_contact == 1 and right_contact == 1:
-        return 0  # Engines off—landed successfully
+        return 0  # Turn off engines
 
-    # Correct orientation
-    if angle > safe_angle or ang_vel > max_ang_vel:
-        return 3  # Push right to rotate left
-    elif angle < -safe_angle or ang_vel < -max_ang_vel:
-        return 1  # Push left to rotate right
+    # Correct angle and reduce angular velocity first
+    if abs(angle) > safe_angle or abs(ang_vel) > safe_angle_vel:
+        if angle > safe_angle or ang_vel > safe_angle_vel:
+            return 3  # Push right engine to correct left tilt
+        elif angle < -safe_angle or ang_vel < -safe_angle_vel:
+            return 1  # Push left engine to correct right tilt
+    
+    # Control vertical speed
+    if y_vel < safe_vertical_speed:
+        return 2  # Push both engines to slow descent
 
-    # Special attention to angles deviations handling
-    if abs(angle) >= safe_angle * 0.8:
-        if angle > 0:
-            return 3  # Push right
-        else:
-            return 1  # Push left
+    # Control horizontal drift only if angle and angular velocity adjustments are minor
+    if abs(angle) < safe_angle and abs(ang_vel) < safe_angle_vel:
+        if x_vel > safe_horizontal_speed:
+            return 1  # Push left engine to move left
+        elif x_vel < -safe_horizontal_speed:
+            return 3  # Push right engine to move right
 
-    # Manage descent—Control vertical speed
-    if y_vel < max_safe_y_speed:  # Slow descent
-        return 2  # Push both engines
-
-    # Control horizontal speed only if angle-stable and ang_vel-secure within limits
-    if abs(angle) < safe_angle and abs(ang_vel) < max_ang_vel:
-        if x_vel > max_horizontal_drift:
-            return 1  # Rectify rightward drift by pushing left
-        elif x_vel < -max_horizontal_drift:
-            return 3  # Rectify leftward drift by pushing right
-
-    return 0  # Default: Turn off engines to conserve fuel
-
-if __name__ == "__main__":
-    # Sample observation for function testing
-    sample_observation = np.array([0.1, 1.4, 0.05, -0.5, 0.01, 0.2, 0.0, 0.0])
-    action = act(sample_observation)
-    print(f"Determined action: {action}")
+    return 0  # Default action is turning off the engines

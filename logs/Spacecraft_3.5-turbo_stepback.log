@@ -1,0 +1,144 @@
+2024-07-07 18:51:52,047 - INFO - HTTP Request: POST https://api.openai.com/v1/assistants "HTTP/1.1 200 OK"
+2024-07-07 18:51:52,362 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-07-07 18:51:52,751 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/messages "HTTP/1.1 200 OK"
+2024-07-07 18:51:53,010 - INFO - Iteration: 1
+2024-07-07 18:51:53,515 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs "HTTP/1.1 200 OK"
+2024-07-07 18:51:53,849 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:51:53,856 - INFO - Status: queued
+2024-07-07 18:51:54,058 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:52:14,060 - INFO - Status: queued
+2024-07-07 18:52:14,330 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:52:34,342 - INFO - Status: requires_action
+2024-07-07 18:52:34,342 - INFO - Arguments: {'reasoning': 'The reasoning behind the code is to implement logic that optimizes the spacecraft landing by considering factors such as the position, velocity, angle, angular velocity, and side engines firing. The goal is to maximize the score by adjusting actions based on the current status of the spacecraft.', 'code': 'def act(current_status):\n    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_sensor, right_sensor = current_status\n    score = 0\n    \n    # Adjust actions based on current status for optimal landing\n    if y_pos > 1.0:\n        # Apply actions to correct position for Y axis\n        score -= 0.3\n        action = 1\n    elif y_pos < -0.5:\n        # Apply actions to correct position for Y axis\n        score -= 0.3\n        action = 3\n    else:\n        if x_pos > 0.1:\n            # Apply actions to adjust position for X axis\n            score -= 0.2\n            action = 3\n        elif x_pos < -0.1:\n            # Apply actions to adjust position for X axis\n            score -= 0.2\n            action = 1\n        else:\n            action = 0  # Switch off engines when close to the landing zone\n    \n    return action, score\n', 'filename': 'Action.py'}
+2024-07-07 18:52:34,343 - INFO - 
+Razonamiento:
+The reasoning behind the code is to implement logic that optimizes the spacecraft landing by considering factors such as the position, velocity, angle, angular velocity, and side engines firing. The goal is to maximize the score by adjusting actions based on the current status of the spacecraft.
+2024-07-07 18:52:34,344 - INFO - 
+Codigo generado:
+def act(current_status):
+    x_pos, y_pos, x_vel, y_vel, angle, ang_vel, left_sensor, right_sensor = current_status
+    score = 0
+    
+    # Adjust actions based on current status for optimal landing
+    if y_pos > 1.0:
+        # Apply actions to correct position for Y axis
+        score -= 0.3
+        action = 1
+    elif y_pos < -0.5:
+        # Apply actions to correct position for Y axis
+        score -= 0.3
+        action = 3
+    else:
+        if x_pos > 0.1:
+            # Apply actions to adjust position for X axis
+            score -= 0.2
+            action = 3
+        elif x_pos < -0.1:
+            # Apply actions to adjust position for X axis
+            score -= 0.2
+            action = 1
+        else:
+            action = 0  # Switch off engines when close to the landing zone
+    
+    return action, score
+
+2024-07-07 18:52:37,620 - ERROR - Error: (1, -0.3) (<class 'tuple'>) invalid 
+Traceback (most recent call last):
+  File "C:\Users\adria\AppData\Local\Temp\ipykernel_23812\3249554590.py", line 67, in create_and_run_llm_loop
+    logs = lunar_lander(n_games=1, display=True, recoder=True, video_filename=f"video/iteration_{i+1}.mp4")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\adria\AppData\Local\Temp\ipykernel_23812\3374499487.py", line 56, in lunar_lander
+    next_state, reward, terminated, truncated, info = video_recorder.step(action)
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\wrappers\record_video.py", line 166, in step
+    ) = self.env.step(action)
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\wrappers\time_limit.py", line 57, in step
+    observation, reward, terminated, truncated, info = self.env.step(action)
+                                                       ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\wrappers\order_enforcing.py", line 56, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\wrappers\env_checker.py", line 49, in step
+    return env_step_passive_checker(self.env, action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\utils\passive_env_checker.py", line 208, in env_step_passive_checker
+    result = env.step(action)
+             ^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\envs\box2d\lunar_lander.py", line 524, in step
+    assert self.action_space.contains(
+AssertionError: (1, -0.3) (<class 'tuple'>) invalid 
+2024-07-07 18:52:38,124 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13/submit_tool_outputs "HTTP/1.1 200 OK"
+2024-07-07 18:52:38,126 - ERROR - Error: (1, -0.3) (<class 'tuple'>) invalid .
+2024-07-07 18:52:38,127 - INFO - Status: requires_action
+2024-07-07 18:52:38,337 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:53:08,341 - INFO - Status: in_progress
+2024-07-07 18:53:08,629 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:53:38,632 - INFO - Status: requires_action
+2024-07-07 18:53:38,907 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:54:08,912 - INFO - Status: requires_action
+2024-07-07 18:54:09,174 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:54:39,181 - INFO - Status: requires_action
+2024-07-07 18:54:39,466 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:55:09,469 - INFO - Status: requires_action
+2024-07-07 18:55:09,751 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:55:39,757 - INFO - Status: requires_action
+2024-07-07 18:55:40,023 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:56:10,028 - INFO - Status: requires_action
+2024-07-07 18:56:10,371 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:56:40,374 - INFO - Status: requires_action
+2024-07-07 18:56:40,731 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:57:10,735 - INFO - Status: requires_action
+2024-07-07 18:57:11,009 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:57:41,015 - INFO - Status: requires_action
+2024-07-07 18:57:41,261 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:58:11,263 - INFO - Status: requires_action
+2024-07-07 18:58:11,654 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:58:41,656 - INFO - Status: requires_action
+2024-07-07 18:58:41,896 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:59:11,900 - INFO - Status: requires_action
+2024-07-07 18:59:12,160 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 18:59:42,165 - INFO - Status: requires_action
+2024-07-07 18:59:42,493 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 19:00:12,495 - INFO - Status: requires_action
+2024-07-07 19:00:12,857 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 19:00:42,862 - INFO - Status: requires_action
+2024-07-07 19:00:43,130 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 19:01:13,133 - INFO - Status: requires_action
+2024-07-07 19:01:14,682 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 19:01:44,686 - INFO - Status: requires_action
+2024-07-07 19:01:44,931 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 19:02:14,934 - INFO - Status: requires_action
+2024-07-07 19:02:15,200 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_iKKAlPdmF28GTXhOlLOZeN13 "HTTP/1.1 200 OK"
+2024-07-07 19:02:45,205 - ERROR - The code generated has an error. Please, try again. Error: (1, -0.3) (<class 'tuple'>) invalid . Trace: Traceback (most recent call last):
+  File "C:\Users\adria\AppData\Local\Temp\ipykernel_23812\3249554590.py", line 67, in create_and_run_llm_loop
+    logs = lunar_lander(n_games=1, display=True, recoder=True, video_filename=f"video/iteration_{i+1}.mp4")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\adria\AppData\Local\Temp\ipykernel_23812\3374499487.py", line 56, in lunar_lander
+    next_state, reward, terminated, truncated, info = video_recorder.step(action)
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\wrappers\record_video.py", line 166, in step
+    ) = self.env.step(action)
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\wrappers\time_limit.py", line 57, in step
+    observation, reward, terminated, truncated, info = self.env.step(action)
+                                                       ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\wrappers\order_enforcing.py", line 56, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\wrappers\env_checker.py", line 49, in step
+    return env_step_passive_checker(self.env, action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\utils\passive_env_checker.py", line 208, in env_step_passive_checker
+    result = env.step(action)
+             ^^^^^^^^^^^^^^^^
+  File "c:\Users\adria\anaconda3\Lib\site-packages\gymnasium\envs\box2d\lunar_lander.py", line 524, in step
+    assert self.action_space.contains(
+AssertionError: (1, -0.3) (<class 'tuple'>) invalid 
+
+2024-07-07 19:02:45,485 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/messages "HTTP/1.1 200 OK"
+2024-07-07 19:02:45,924 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs "HTTP/1.1 200 OK"
+2024-07-07 19:02:46,174 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_WDxsdpXlLoy7obiJbOtWdbmf "HTTP/1.1 200 OK"
+2024-07-07 19:02:46,176 - INFO - Status: queued
+2024-07-07 19:02:46,376 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_Bsjdlu2Ihl2ZCWZ8vWtXlj28/runs/run_WDxsdpXlLoy7obiJbOtWdbmf "HTTP/1.1 200 OK"
+2024-07-07 19:03:06,381 - INFO - Status: failed
